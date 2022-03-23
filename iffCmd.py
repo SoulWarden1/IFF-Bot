@@ -38,7 +38,7 @@ class iffCog(commands.Cog):
 
         try:
             f = open(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/storage/pastSelectId.txt",
+                "IFF Bot/storage/pastSelectId.txt",
                 "w",
             )
         except:
@@ -132,7 +132,7 @@ class iffCog(commands.Cog):
     async def comWel(self, ctx, rct: discord.User):
         try:
             file = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/8e.png",
+                "IFF Bot/files/8e.png",
                 filename="8e.png",
             )
         except:
@@ -216,7 +216,7 @@ class iffCog(commands.Cog):
 
         try:
             file = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/8e.png",
+                "IFF Bot/files/8e.png",
                 filename="8e.png",
             )
         except:
@@ -945,7 +945,7 @@ class iffCog(commands.Cog):
         # Command skin 1 pic
         try:
             cmdImg = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/cmd_skin.png",
+                "IFF Bot/files/cmd_skin.png",
                 filename="cmd_skin.png",
             )
         except:
@@ -956,7 +956,7 @@ class iffCog(commands.Cog):
         # Command skin 2 pic
         try:
             cmd2Img = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/cmd_skin2.png",
+                "IFF Bot/files/cmd_skin2.png",
                 filename="cmd_skin2.png",
             )
         except:
@@ -967,7 +967,7 @@ class iffCog(commands.Cog):
         # 4e skin pic
         try:
             fourImg = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/4e_skin.jpeg",
+                "IFF Bot/files/4e_skin.jpeg",
                 filename="4e_skin.jpeg",
             )
         except:
@@ -978,7 +978,7 @@ class iffCog(commands.Cog):
         # 7e skin pic
         try:
             sevenImg = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/7e_skin.png",
+                "IFF Bot/files/7e_skin.png",
                 filename="7e_skin.png",
             )
         except:
@@ -989,7 +989,7 @@ class iffCog(commands.Cog):
         # 8e skin pic
         try:
             eightImg = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/8e_skin.png",
+                "IFF Bot/files/8e_skin.png",
                 filename="8e_skin.png",
             )
         except:
@@ -1000,7 +1000,7 @@ class iffCog(commands.Cog):
         # 9e skin pic
         try:
             nineImg = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/9e_skin.png",
+                "IFF Bot/files/9e_skin.png",
                 filename="9e_skin.png",
             )
         except:
@@ -1011,7 +1011,7 @@ class iffCog(commands.Cog):
         # Admin skin pic
         try:
             adminImg = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/admin_skin.png",
+                "IFF Bot/files/admin_skin.png",
                 filename="admin_skin.png",
             )
         except:
@@ -1022,7 +1022,7 @@ class iffCog(commands.Cog):
         # Cav skin pic
         try:
             cavImg = discord.File(
-                "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/files/cav_skin.png",
+                "IFF Bot/files/cav_skin.png",
                 filename="cav_skin.png",
             )
         except:

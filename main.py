@@ -45,7 +45,7 @@ logger = logging.getLogger("discord")
 logger.setLevel(logging.DEBUG)
 try:
     handler = logging.FileHandler(
-        filename="C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/storage/discord.log",
+        filename="IFF Bot/storage/discord.log",
         encoding="utf-8",   
         mode="w",
     )
@@ -73,7 +73,7 @@ async def on_ready():
 
     try:
         f = open(
-            f"C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/storage/memberList.txt",
+            f"IFF Bot/storage/memberList.txt",
             "r",
         )
     except:
@@ -87,7 +87,7 @@ async def on_ready():
 
     try:
         f = open(
-            "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/storage/pastSelectId.txt",
+            "IFF Bot/storage/pastSelectId.txt",
             "r",
         )
     except:

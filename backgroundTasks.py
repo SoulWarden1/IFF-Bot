@@ -40,7 +40,7 @@ class backgroundTasks(commands.Cog):
 
             try:
                 f = open(
-                    "C:/Users/Ryan/OneDrive - Haileybury/2022/Software Dev/VS Code Work/IFF Bot/storage/pastSelectId.txt", "w")
+                    "IFF Bot/storage/pastSelectId.txt", "w")
             except:
                 f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
 
