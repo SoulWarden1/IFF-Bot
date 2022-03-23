@@ -1,0 +1,25 @@
+
+owners = [499816773122654219]
+admins = [499816773122654219, 292613296148709377, 439333081250398210, 758927071308546078, 279500561236099073]
+#           Me              Bronze              Josh                    Ace                 Rabbi
+members = []
+pastSelectId = 0
+logChannel = 948702866414112818 
+companyChannel = 806427204896292864
+platform = False
+statusRotation = True
+leaderPingMsgId = 0
+botDms = {}
+insult = True
+
+
+
+#token = "OTQ4NTE4MjE1NDEwMTQ3MzM4.Yh8-bQ.A6WEQL0sKMOWmqMx9T602s4Q3ew"
+#^Actual bot
+
+token = "OTUzNDUwMDE5ODUwMTU4MTQw.YjEvhg.8ZSOEgAjJWGpQXOZOqkvfZr4iqE"
+#^Test bot
+    
+
+#/home/pi/Desktop/iffBot
+#499816773122654219,439333081250398210,758927071308546078,292613296148709377,279500561236099073,196584564615806976,147616466227822593,245139958938075137
