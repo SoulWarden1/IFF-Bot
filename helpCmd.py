@@ -90,7 +90,7 @@ class helpCog(commands.Cog):
         
     @help.command(pass_context=True,aliases=["Username","user","User","name","Name"])
     async def username(self, ctx):
-        embed=discord.Embed(title="IFF Bot - Help - ID", description="The username command",color=0x17169a)
+        embed=discord.Embed(title="IFF Bot - Help - Username", description="The username command",color=0x17169a)
         embed.add_field(name="Command", value="_username [user id]", inline=False)
         embed.add_field(name="Aliases", value="Username, user, User, name, Name", inline=False)
         embed.add_field(name="Description", value="Takes the inputed id and converts it into a username", inline=True)
@@ -99,10 +99,38 @@ class helpCog(commands.Cog):
         
     @help.command(pass_context=True,aliases=["ID","Id"])
     async def id(self, ctx):
-        embed=discord.Embed(title="IFF Bot - Help - ", description="The  command",color=0x17169a)
+        embed=discord.Embed(title="IFF Bot - Help - ID", description="The id command",color=0x17169a)
         embed.add_field(name="Command", value="_id [user]", inline=False)
         embed.add_field(name="Aliases", value="id, ID, Id", inline=False)
         embed.add_field(name="Description", value="Gives the pinged users id", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    #IFF COMMANDS ------------------------------------------------------------------------
+    @help.command(pass_context=True,aliases=["Template","temp","Temp"])
+    async def template(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - Template", description="The template command",color=0x17169a)
+        embed.add_field(name="Command", value="_template", inline=False)
+        embed.add_field(name="Aliases", value="template, Template, temp, Temp", inline=False)
+        embed.add_field(name="Description", value="Dm's the user an announcement template", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @help.command(pass_context=True,aliases=["Schedule", "timetable", "Timetable"])
+    async def schedule(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - Schedule", description="The schedule command",color=0x17169a)
+        embed.add_field(name="Command", value="_schedule", inline=False)
+        embed.add_field(name="Aliases", value="schedule, Schedule, timetable, Timetable", inline=False)
+        embed.add_field(name="Description", value="Points the user to the IFF schedule channel", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @help.command(pass_context=True,aliases=["Ranks", "rank", "Rank"])
+    async def ranks(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - Rank", description="The rank command",color=0x17169a)
+        embed.add_field(name="Command", value="_rank", inline=False)
+        embed.add_field(name="Aliases", value="ranks, Ranks, rank, Rank", inline=False)
+        embed.add_field(name="Description", value="Points the user to the IFF rank channel", inline=True)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
     
