@@ -28,7 +28,7 @@ intents.members = True
 description = """A bot developed by SoulWarden for the IFF"""
 activity = discord.Activity(type=discord.ActivityType.watching, name="me start up")
 bot = commands.Bot(
-    command_prefix="?",
+    command_prefix="_",
     description=description,
     intents=intents,
     activity=activity,
