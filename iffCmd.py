@@ -130,6 +130,8 @@ class iffCog(commands.Cog):
     @commands.cooldown(1, 5, commands.BucketType.guild)
     @commands.guild_only()
     async def comWel(self, ctx, rct: discord.User):
+        eightStr = ""
+        nineStr = ""
         try:
             file = discord.File(
                 "IFF Bot/files/8e.png",
@@ -166,7 +168,6 @@ class iffCog(commands.Cog):
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    # @commands.has_role(845007589674188839)
     @commands.command(aliases=["Wargames", "wg", "Wg"])
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
