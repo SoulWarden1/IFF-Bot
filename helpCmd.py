@@ -41,6 +41,7 @@ class helpCog(commands.Cog):
         embed.add_field(name="Spread", value="Moves all users in parade ground to their respective company channel", inline=False)
         embed.add_field(name="Muster", value="Creates the muster roll", inline=False)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
             
     @help.command(pass_context=True, aliases=["Wargames", "wg", "Wg"])
     async def wargames(self, ctx):
