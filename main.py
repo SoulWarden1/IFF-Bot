@@ -14,6 +14,12 @@ from randomCmd import randomCog
 from backgroundTasks import backgroundTasks
 import varStore
 
+from dotenv import load_dotenv
+from os import getenv
+load_dotenv()
+
+token = getenv("TOKEN")
+
 # intents = discord.Intents.default()
 intents = discord.Intents.all()
 intents.members = True
@@ -410,4 +416,4 @@ async def load(ctx, extension: str = None):
         await ctx.reply(embed=embed)
 
 
-bot.run(varStore.token)
+bot.run(token)
