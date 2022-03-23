@@ -16,9 +16,11 @@ import varStore
 
 from dotenv import load_dotenv
 from os import getenv
+import os
+
 load_dotenv()
 
-token = getenv("TOKEN")
+token = os.getenv('TOKEN')
 
 # intents = discord.Intents.default()
 intents = discord.Intents.all()
@@ -28,7 +30,7 @@ intents.members = True
 description = """A bot developed by SoulWarden for the IFF"""
 activity = discord.Activity(type=discord.ActivityType.watching, name="me start up")
 bot = commands.Bot(
-    command_prefix="_",
+    command_prefix="?",
     description=description,
     intents=intents,
     activity=activity,
