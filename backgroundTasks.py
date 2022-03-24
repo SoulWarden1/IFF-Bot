@@ -53,7 +53,7 @@ class backgroundTasks(commands.Cog):
             await announceChannel.send(f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '_template' (Although this isn't recommended)")
 
             activity = discord.Activity(
-                type=discord.ActivityType.watching, name=f"{user.name}'s annoucement")
+                type=discord.ActivityType.watching, name=f"{user.name}'s announcement")
             await self.bot.change_presence(status=discord.Status.online, activity=activity)
 
             print(f"Announcement rolled at {current_time}")

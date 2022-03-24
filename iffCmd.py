@@ -17,7 +17,7 @@ class iffCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # Rolls the person doing the annoucement
+    # Rolls the person doing the announcement
     @commands.command(aliases=["Roll"])
     # Command, Officer, NCO, Dev
     @commands.has_any_role(
@@ -53,7 +53,7 @@ class iffCog(commands.Cog):
         )
 
         activity = discord.Activity(
-            type=discord.ActivityType.watching, name=f"{user.name}'s annoucement"
+            type=discord.ActivityType.watching, name=f"{user.name}'s announcement"
         )
         await self.bot.change_presence(status=discord.Status.online, activity=activity)
 
