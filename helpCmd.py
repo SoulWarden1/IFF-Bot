@@ -146,7 +146,7 @@ class helpCog(commands.Cog):
             embed=discord.Embed(title="IFF Bot - Help - NCO Commands", description="All available commands for NCO's. Run _help nco [command] for further information",color=0x17169a)
             embed.add_field(name="Roll", value="Auto rolls the person doing the 8e announcement", inline=False)
             embed.add_field(name="Company Welcome", value="Welcomes a pinged user to the company (8e only currently)", inline=False)
-            embed.add_field(name="Annoucement", value="Automatically posts an annoucement with an inputted message (8e only currently)", inline=False)
+            embed.add_field(name="Announcement", value="Automatically posts an announcement with an inputted message (8e only currently)", inline=False)
             embed.add_field(name="Wargames", value="Automatically creates a wargames rotation with pinged users", inline=False)
             embed.add_field(name="Attendance", value="Displays total and company attendance numbers as well as all users in vc's (including mercs and recruits)", inline=False)
             embed.add_field(name="Leadership attendance", value="Creates the leadership attendance form (8e only)", inline=False)
@@ -159,32 +159,113 @@ class helpCog(commands.Cog):
             embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
             
-    @nco.command(pass_context=True, aliases=["Wargames", "wg", "Wg"])
-    async def wargames(self, ctx):
-        embed=discord.Embed(title="IFF Bot - Help - Wargames", description="The wargames command",color=0x17169a)
-        embed.add_field(name="Command", value="_wargames [user1] [user2] [user3] [user4] [user5] [user6]", inline=False)
-        embed.add_field(name="Aliases", value="wargames, Wargames, wg, Wg", inline=False)
-        embed.add_field(name="Description", value="Takes up to 6 inputted users and creates a wargames leader rotation", inline=True)
+    @nco.command(pass_context=True, aliases=["Roll"])
+    async def roll(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Roll", description="The roll command",color=0x17169a)
+        embed.add_field(name="Command", value="_roll", inline=False)
+        embed.add_field(name="Aliases", value="roll, Roll", inline=False)
+        embed.add_field(name="Description", value="Randomly selects who will do the 8e announcement", inline=True)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
-        await ctx.send(embed=embed)
-            
+      
     @nco.command(pass_context=True, aliases=["comWelcome","comwel","ComWel","Comwel","companywelcome","Companywelcome"])
     async def comWell(self, ctx):
-        embed=discord.Embed(title="IFF Bot - Help - Company Welcome", description="The company welcome command",color=0x17169a)
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Company Welcome", description="The company welcome command",color=0x17169a)
         embed.add_field(name="Command", value="_comWel [Recruit]", inline=False)
         embed.add_field(name="Aliases", value="comWelcome, comwel, ComWel, Comwel, companywelcome, Companywelcome", inline=False)
         embed.add_field(name="Description", value="Takes the inputed user id and posts a welcome message in a specified channel", inline=True)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed)       
         
     @nco.command(pass_context=True, aliases=["Lazy","lazy","Announcement","announce","Announce"])
     async def announcement(self, ctx):
-        embed=discord.Embed(title="IFF Bot - Help - Announcement", description="The annoucement command",color=0x17169a)
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Announcement", description="The announcement command",color=0x17169a)
         embed.add_field(name="Command", value="_announcement [message]", inline=False)
         embed.add_field(name="Aliases", value="announcement, Lazy, lazy, Announcement, announce, Announce", inline=False)
         embed.add_field(name="Description", value="Posts an announcement preset, user must input a message to go along with it. User can manually ping if they want", inline=True)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
+        
+    @nco.command(pass_context=True, aliases=["Wargames", "wg", "Wg"])
+    async def wargames(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Wargames", description="The wargames command",color=0x17169a)
+        embed.add_field(name="Command", value="_wargames [user1] [user2] [user3] [user4] [user5] [user6]", inline=False)
+        embed.add_field(name="Aliases", value="wargames, Wargames, wg, Wg", inline=False)
+        embed.add_field(name="Description", value="Takes up to 6 inputted users and creates a wargames leader rotation", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @nco.command(pass_context=True, aliases=["Attendance","attend"])
+    async def attendance(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Attendance", description="The attendnace command",color=0x17169a)
+        embed.add_field(name="Command", value="_attend", inline=False)
+        embed.add_field(name="Aliases", value="attendance, Attendance, attend", inline=False)
+        embed.add_field(name="Description", value="Provides the current total IFF attendance and company attendance plus the users connect to the voice chats", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @nco.command(pass_context=True, aliases=["leadattend","leadershipAttendnace"])
+    async def leadAttend(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Leadership Attendnace", description="The leadership attendnace command",color=0x17169a)
+        embed.add_field(name="Command", value="_leadattend", inline=False)
+        embed.add_field(name="Aliases", value="leadAttend, leadattend, leadershipAttendnace", inline=False)
+        embed.add_field(name="Description", value="Generates the form for 8e leadership", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @nco.command(pass_context=True, aliases=[""])
+    async def split(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Split", description="The split command",color=0x17169a)
+        embed.add_field(name="Command", value="_split", inline=False)
+        embed.add_field(name="Aliases", value="split, Split", inline=False)
+        embed.add_field(name="Description", value="Splits the users in the current voice chat into the other company chat. The user running the command must be in the company they wish to split", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @nco.command(pass_context=True, aliases=["Merge"])
+    async def merge(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Merge", description="The merge command",color=0x17169a)
+        embed.add_field(name="Command", value="_merge", inline=False)
+        embed.add_field(name="Aliases", value="merge, Merge", inline=False)
+        embed.add_field(name="Description", value="Merges the users from the secondary company chat to the primary one. The user running the command must be in the company they wish to merge", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+
+    @nco.command(pass_context=True, aliases=["Parade"])
+    async def parade(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Parade", description="The parade command",color=0x17169a)
+        embed.add_field(name="Command", value="_parade", inline=False)
+        embed.add_field(name="Aliases", value="parade, Parade", inline=False)
+        embed.add_field(name="Description", value="Moves all users in the currently connect voice chat to parade ground", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @nco.command(pass_context=True, aliases=["Forceparade","unfuck","return"])
+    async def forceparade(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Force Parade", description="The force parade command",color=0x17169a)
+        embed.add_field(name="Command", value="_forceparade", inline=False)
+        embed.add_field(name="Aliases", value="forceparade, Forceparade, unfuck, return", inline=False)
+        embed.add_field(name="Description", value="Forces all users in the holdfast voice chats to parade ground. Use with caution", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed) 
+        
+    @nco.command(pass_context=True, aliases=["Spread","fuckoff"])
+    async def spread(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Spread", description="The spread command",color=0x17169a)
+        embed.add_field(name="Command", value="_spread", inline=False)
+        embed.add_field(name="Aliases", value="spread, Spread, fuckoff", inline=False)
+        embed.add_field(name="Description", value="Moves the users in parade ground to their appropriate company channels", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @nco.command(pass_context=True, aliases=["Muster"])
+    async def muster(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Muster", description="The muster command",color=0x17169a)
+        embed.add_field(name="Command", value="_muster", inline=False)
+        embed.add_field(name="Aliases", value="muster, Muster", inline=False)
+        embed.add_field(name="Description", value="Autogenerates the muster roll", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
         
 def setup(bot):
     bot.add_cog(helpCog(bot))
