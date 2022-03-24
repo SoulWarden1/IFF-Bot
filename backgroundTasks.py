@@ -53,7 +53,7 @@ class backgroundTasks(commands.Cog):
             await announceChannel.send(f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '_template' (Although this isn't recommended)")
 
             activity = discord.Activity(
-                type=discord.ActivityType.watching, name=f"{user.name}'s annoucement")
+                type=discord.ActivityType.watching, name=f"{user.name}'s announcement")
             await self.bot.change_presence(status=discord.Status.online, activity=activity)
 
             print(f"Announcement rolled at {current_time}")
@@ -83,6 +83,100 @@ class backgroundTasks(commands.Cog):
 
             varStore.leaderPingMsgId = msg.id
             
+        elif current_time == "20:30" and datetime.today().weekday() in eventDays and varStore.platform:
+            vcCatId = 948180967607136306
+            iffGuild = self.bot.get_guild(592559858482544641)
+            vcChannelsIds = []
+            totalUsers = 0
+            channelUsers = []
+            sevenUsers = []
+            eightUsers = []
+            nineUsers = []
+            fourUsers = []
+            otherUsers = []
+            
+            for channel in iffGuild.voice_channels:
+                if channel.category_id == vcCatId:
+                    vcChannelsIds.append(channel.id)
+                    
+            for channelId in vcChannelsIds:
+                channel = self.bot.get_channel(channelId)
+                channelUsers.append(channel.members)
+                totalUsers += len(channel.members)
+            
+            role = discord.utils.find(
+                lambda r: r.name == "7e Voltigeurs de la Garde", iffGuild.roles
+            )
+            
+            for user in channelUsers:
+                for x in user:
+                    if role in x.roles:
+                        sevenUsers.append(x.display_name)
+                        
+            
+            role = discord.utils.find(
+                lambda r: r.name == "8e Chasseurs de la Garde", iffGuild.roles
+            )
+            
+            for user in channelUsers:
+                for x in user:
+                    if role in x.roles:
+                        eightUsers.append(x.display_name)
+                        
+                        
+            role = discord.utils.find(
+                lambda r: r.name == "9e Grenadiers de la Garde", iffGuild.roles
+            )
+            
+            for user in channelUsers:
+                for x in user:
+                    if role in x.roles:
+                        nineUsers.append(x.display_name)
+                        
+                        
+            role = discord.utils.find(
+                lambda r: r.name == "4e Batterie d'Artillerie à Pied", iffGuild.roles
+            )
+            
+            for user in channelUsers:
+                for x in user:
+                    if role in x.roles:
+                        fourUsers.append(x.display_name)
+                        
+            role = discord.utils.find(
+                lambda r: r.name == "La Recrue (Recruit)", iffGuild.roles
+            )
+            
+            for user in channelUsers:
+                for x in user:
+                    if role in x.roles:
+                        otherUsers.append(x.display_name)
+                        
+            role = discord.utils.find(
+                lambda r: r.name == "Mercenary", iffGuild.roles
+            )
+            
+            for user in channelUsers:
+                for x in user:
+                    if role in x.roles:
+                        otherUsers.append(x.display_name)
+                        
+            fourStr = ", ".join(fourUsers)
+            sevenStr = ", ".join(sevenUsers)
+            eightStr = ", ".join(eightUsers)
+            nineStr = ", ".join(nineUsers)
+            otherStr = ", ".join(otherUsers)
+            
+            ncoChannel = self.bot.get_channel(954194296809095188)
+            
+            embed=discord.Embed(title="IFF Attendance", description="Current IFF attendance", color=0x151798)
+            embed.add_field(name=f"Total Players", value=f"{totalUsers}", inline=False)
+            embed.add_field(name=f"4e Players (Total: {len(fourUsers)})", value=f"\u200b{fourStr}", inline=False)
+            embed.add_field(name=f"7e Players (Total: {len(sevenUsers)})", value=f"\u200b{sevenStr}", inline=False)
+            embed.add_field(name=f"8e Players (Total: {len(eightUsers)})", value=f"\u200b{eightStr}", inline=False)
+            embed.add_field(name=f"9e Players (Total: {len(nineUsers)})", value=f"\u200b{nineStr}", inline=False)
+            embed.add_field(name=f"Other Players (Total: {len(otherUsers)})", value=f"\u200b{otherStr}", inline=False)
+            await ncoChannel.send(embed=embed)
 
     @tasks.loop(seconds=5)
     async def rgb(self):
