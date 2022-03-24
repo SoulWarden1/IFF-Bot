@@ -30,7 +30,7 @@ intents.members = True
 description = """A bot developed by SoulWarden for the IFF"""
 activity = discord.Activity(type=discord.ActivityType.watching, name="me start up")
 bot = commands.Bot(
-    command_prefix="?",
+    command_prefix="_",
     description=description,
     intents=intents,
     activity=activity,
@@ -132,6 +132,10 @@ async def on_message(message: discord.Message = None):
 
         varStore.botDms[msg.id] = message.author.id
         print(varStore.botDms)
+        
+    elif message.channel.id == 806427204896292864 and message.author.id == 719365173189804043:
+            await message.add_reaction("\N{Police Cars Revolving Light}")
+            
     else:
         # 9e rekt
         if varStore.insult:
@@ -191,6 +195,8 @@ async def on_message(message: discord.Message = None):
                     await channel.send(f"{insults[choice]}")
                     await asyncio.sleep(60)
                     fourCooldown.remove(message.author.id)
+                    
+        
                 
     if message.channel.id == 950245454317236304 and message.reference is not None and message.author.id in varStore.owners:
         repliedId = message.reference.message_id
