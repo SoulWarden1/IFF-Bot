@@ -17,7 +17,7 @@ class iffCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # Rolls the person doing the annoucement
+    # Rolls the person doing the announcement
     @commands.command(aliases=["Roll"])
     # Command, Officer, NCO, Dev
     @commands.has_any_role(
@@ -53,7 +53,7 @@ class iffCog(commands.Cog):
         )
 
         activity = discord.Activity(
-            type=discord.ActivityType.watching, name=f"{user.name}'s annoucement"
+            type=discord.ActivityType.watching, name=f"{user.name}'s announcement"
         )
         await self.bot.change_presence(status=discord.Status.online, activity=activity)
 
@@ -130,6 +130,8 @@ class iffCog(commands.Cog):
     @commands.cooldown(1, 5, commands.BucketType.guild)
     @commands.guild_only()
     async def comWel(self, ctx, rct: discord.User):
+        eightStr = ""
+        nineStr = ""
         try:
             file = discord.File(
                 "IFF Bot/files/8e.png",
@@ -166,7 +168,6 @@ class iffCog(commands.Cog):
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    # @commands.has_role(845007589674188839)
     @commands.command(aliases=["Wargames", "wg", "Wg"])
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
@@ -271,6 +272,7 @@ class iffCog(commands.Cog):
     @commands.command(name = "attendance", aliases=["Attendance","attend"])
     async def attendance(self, ctx:commands.Context):
         vcCatId = 948180967607136306
+        iffGuild = self.bot.get_guild(592559858482544641)
         vcChannelsIds = []
         totalUsers = 0
         channelUsers = []
@@ -280,7 +282,7 @@ class iffCog(commands.Cog):
         fourUsers = []
         otherUsers = []
         
-        for channel in ctx.guild.voice_channels:
+        for channel in iffGuild.voice_channels:
             if channel.category_id == vcCatId:
                 vcChannelsIds.append(channel.id)
                 
@@ -290,7 +292,7 @@ class iffCog(commands.Cog):
             totalUsers += len(channel.members)
         
         role = discord.utils.find(
-            lambda r: r.name == "7e Voltigeurs de la Garde", ctx.message.guild.roles
+            lambda r: r.name == "7e Voltigeurs de la Garde", iffGuild.roles
         )
         
         for user in channelUsers:
@@ -300,7 +302,7 @@ class iffCog(commands.Cog):
                     
         
         role = discord.utils.find(
-            lambda r: r.name == "8e Chasseurs de la Garde", ctx.message.guild.roles
+            lambda r: r.name == "8e Chasseurs de la Garde", iffGuild.roles
         )
         
         for user in channelUsers:
@@ -310,7 +312,7 @@ class iffCog(commands.Cog):
                     
                     
         role = discord.utils.find(
-            lambda r: r.name == "9e Grenadiers de la Garde", ctx.message.guild.roles
+            lambda r: r.name == "9e Grenadiers de la Garde", iffGuild.roles
         )
         
         for user in channelUsers:
@@ -320,7 +322,7 @@ class iffCog(commands.Cog):
                     
                     
         role = discord.utils.find(
-            lambda r: r.name == "4e Batterie d'Artillerie à Pied", ctx.message.guild.roles
+            lambda r: r.name == "4e Batterie d'Artillerie à Pied", iffGuild.roles
         )
         
         for user in channelUsers:
@@ -329,7 +331,7 @@ class iffCog(commands.Cog):
                     fourUsers.append(x.display_name)
                     
         role = discord.utils.find(
-            lambda r: r.name == "La Recrue (Recruit)", ctx.message.guild.roles
+            lambda r: r.name == "La Recrue (Recruit)", iffGuild.roles
         )
         
         for user in channelUsers:
@@ -338,7 +340,7 @@ class iffCog(commands.Cog):
                     otherUsers.append(x.display_name)
                     
         role = discord.utils.find(
-            lambda r: r.name == "Mercenary", ctx.message.guild.roles
+            lambda r: r.name == "Mercenary", iffGuild.roles
         )
         
         for user in channelUsers:
@@ -352,6 +354,8 @@ class iffCog(commands.Cog):
         nineStr = ", ".join(nineUsers)
         otherStr = ", ".join(otherUsers)
         
+        ncoChannel = self.bot.get_channel(954194296809095188)
+        
         embed=discord.Embed(title="IFF Attendance", description="Current IFF attendance", color=0x151798)
         embed.add_field(name=f"Total Players", value=f"{totalUsers}", inline=False)
         embed.add_field(name=f"4e Players (Total: {len(fourUsers)})", value=f"\u200b{fourStr}", inline=False)
@@ -359,7 +363,7 @@ class iffCog(commands.Cog):
         embed.add_field(name=f"8e Players (Total: {len(eightUsers)})", value=f"\u200b{eightStr}", inline=False)
         embed.add_field(name=f"9e Players (Total: {len(nineUsers)})", value=f"\u200b{nineStr}", inline=False)
         embed.add_field(name=f"Other Players (Total: {len(otherUsers)})", value=f"\u200b{otherStr}", inline=False)
-        await ctx.send(embed=embed)
+        await ncoChannel.send(embed=embed)
         
     #Leadership attendance ping
     @commands.guild_only()

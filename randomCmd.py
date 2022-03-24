@@ -12,7 +12,7 @@ class randomCog(commands.Cog):
         
     #Testing ping command with latency
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(aliases=["pong"])
+    @commands.command(aliases=["pong", "Ping", "Pong"])
     async def ping(self,ctx):
         if ctx.invoked_with == "ping":
             await ctx.reply(f"Pong! (Response time: {round(self.bot.latency*1000, 2)}ms)")
@@ -69,11 +69,11 @@ class randomCog(commands.Cog):
         
     #Spams command
     @commands.command()
-    async def spam(self, ctx, user: discord.User, times: int):
+    async def spam(self, ctx, user: discord.User, times: int, *, msg: str):
         if ctx.message.author.id in varStore.admins:
             if len(str(user.id)) == 18:
                 for i in range(times):
-                    await ctx.send(f"{user.mention} get spammed")
+                    await ctx.send(f"{user.mention} {msg}")
         else:
             await ctx.reply("Nope, owner privilege get rekt")
         
