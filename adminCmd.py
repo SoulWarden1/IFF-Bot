@@ -21,8 +21,9 @@ class adminCog(commands.Cog):
         await ctx.send("Shutting Down")
         activity = discord.Activity(type=discord.ActivityType.watching, name=f"myself shutdown")
         await self.bot.change_presence(status=discord.Status.online, activity=activity)
-        await commands.close()
+        await self.bot.close()
         print("Bot Closed")
+        quit()
     
     #Update member list variable
     @admin.command(pass_context=True, aliases=["up"])
