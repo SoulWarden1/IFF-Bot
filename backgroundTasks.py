@@ -66,7 +66,7 @@ class backgroundTasks(commands.Cog):
             cog.statusRotation.start()
 
         # Auto leadership attendance ping
-        elif current_time == "14:00" and datetime.today().weekday() in eventDays and varStore.platform:
+        elif current_time == "16:00" and datetime.today().weekday() in eventDays and varStore.platform:
             leadershipChannel = self.bot.get_channel(907599229629911104)
 
             embed = discord.Embed(title="Leadership Attendance", description="React with :thumbsup: or :thumbsdown: if you're coming tonight", color=0x109319)
