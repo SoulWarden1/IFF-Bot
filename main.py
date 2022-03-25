@@ -30,7 +30,7 @@ intents.members = True
 description = """A bot developed by SoulWarden for the IFF"""
 activity = discord.Activity(type=discord.ActivityType.watching, name="me start up")
 bot = commands.Bot(
-    command_prefix="_",
+    command_prefix=".",
     description=description,
     intents=intents,
     activity=activity,
@@ -102,6 +102,14 @@ async def on_ready():
         f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "r")
     varStore.pastSelectId = f.read()
     print("Past id loaded")
+    
+    #Sets prefix
+    
+    if varStore.platform:
+        bot.command_prefix = "_"
+    else:
+        bot.command_prefix = "?"
+    
 
 
 dmChannelId = 950245454317236304
