@@ -600,11 +600,11 @@ class iffCog(commands.Cog):
             else:
                 await ctx.reply("Please move the mercs/recruits to the appropriate channel") 
     
-    #        
+    #Service medal calculator     
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    #@commands.cooldown(1, 10, commands.BucketType.guild)
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
     @commands.command(aliases=["Service"])
     async def service(self, ctx):
@@ -619,33 +619,7 @@ class iffCog(commands.Cog):
         silverMerit = [] #1 years
         goldMerit = [] #2 years
         platMerit = [] #3 years
-        
-        # for user in ctx.guild.members:
-        #     retired = False
-        #     found = False
-        #     for role in user.roles:    
-        #         if iffRole == role.id:
-        #             found = True
-        #         elif retiredRole == role.id:
-        #             retired = True
-        #         elif retiredLeadership == role.id:
-        #             retired = True
-                    
-        #     if retired == False and found == True:
-        #         duration = int((datetime.datetime.now() - user.joined_at).days)
-        #         if duration >= 183:
-        #             if bronzeMeritId not in user.roles:
-        #                 bronzeMerit.append(user.display_name)
-        #         if duration >= 365:
-        #             if silverMeritId not in user.roles:
-        #                 silverMerit.append(user.display_name)
-        #         if duration >= 730:
-        #             if goldMeritId not in user.roles:
-        #                 goldMerit.append(user.display_name)
-        #         if duration >= 1095:
-        #             if platMeritId not in user.roles:
-        #                 platMerit.append(user.display_name)
-                        
+                      
         for user in ctx.guild.members:
             if iffRole in user.roles and retiredRole not in user.roles and retiredLeadership not in user.roles:
                 duration = int((datetime.datetime.now() - user.joined_at).days)
@@ -668,6 +642,28 @@ class iffCog(commands.Cog):
         embed.add_field(name="Gold Military Merit", value=", ".join(goldMerit) + "\u200b", inline=False)
         embed.add_field(name="Platinum Military Merit", value=", ".join(platMerit) + "\u200b", inline=False)
         await ctx.send(embed=embed)
+        
+    @commands.has_any_role(
+        661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
+    )
+    @commands.cooldown(1, 1, commands.BucketType.guild)
+    @commands.guild_only()
+    @commands.command(aliases=["Rctform", "rctForm", "RctForm"])
+    async def rctform(self, ctx):
+        await ctx.send("""
+        **Copy/Paste and answer the following questions to access the server**
+Please check <#853180535303176213>, <#910247350923059211> and <#853180574957043712> before you answer
+```**What is your new Holdfast ingame name?** IFF | Name
+
+**What region/timezone are you from? (e.g. Australia, South East Asia, NA, etc.)**
+
+**How did you find out about the IFF?**
+
+**Have you joined the in-game IFF regiment registry?**
+
+**Do you agree with our rules and discord ToS?**
+@Commissioned Officer @Non-Commissioned Officer```""")
+        
     #Muster role
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
