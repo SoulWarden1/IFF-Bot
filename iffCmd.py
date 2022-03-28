@@ -662,7 +662,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
 **Have you joined the in-game IFF regiment registry?**
 
 **Do you agree with our rules and discord ToS?**
-@Commissioned Officer @Non-Commissioned Officer```""")
+@Recruiter ```""")
         
     #Muster role
     @commands.has_any_role(
