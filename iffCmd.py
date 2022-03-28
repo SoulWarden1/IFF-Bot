@@ -1,5 +1,7 @@
+from ntpath import join
 import discord
 from discord.ext import commands
+from discord.utils import get
 import varStore
 from random import randint
 import datetime
@@ -550,10 +552,11 @@ class iffCog(commands.Cog):
                 for user in channel.members:
                     await user.move_to(paradeGround)
                 
-    
+    #Spread command
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
     @commands.command(aliases=["Spread","fuckoff"])
     async def spread(self, ctx):
@@ -596,8 +599,75 @@ class iffCog(commands.Cog):
                 await user.move_to(fourChannel)
             else:
                 await ctx.reply("Please move the mercs/recruits to the appropriate channel") 
-                
-                
+    
+    #        
+    @commands.has_any_role(
+        661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
+    )
+    #@commands.cooldown(1, 10, commands.BucketType.guild)
+    @commands.guild_only()
+    @commands.command(aliases=["Service"])
+    async def service(self, ctx):
+        iffRole = get(ctx.guild.roles, id = 611927973838323724)
+        retiredRole = get(ctx.guild.roles, id= 707125172699660288)
+        retiredLeadership = get(ctx.guild.roles, id= 887542975821905970)
+        bronzeMeritRole =  get(ctx.guild.roles, id= 795254224660725771)
+        silverMeritRole = get(ctx.guild.roles, id= 914254355610337341)
+        goldMeritRole = get(ctx.guild.roles, id= 914256745491230720)
+        platMeritRole = get(ctx.guild.roles, id= 914257554723442688)
+        bronzeMerit = [] #6 months
+        silverMerit = [] #1 years
+        goldMerit = [] #2 years
+        platMerit = [] #3 years
+        
+        # for user in ctx.guild.members:
+        #     retired = False
+        #     found = False
+        #     for role in user.roles:    
+        #         if iffRole == role.id:
+        #             found = True
+        #         elif retiredRole == role.id:
+        #             retired = True
+        #         elif retiredLeadership == role.id:
+        #             retired = True
+                    
+        #     if retired == False and found == True:
+        #         duration = int((datetime.datetime.now() - user.joined_at).days)
+        #         if duration >= 183:
+        #             if bronzeMeritId not in user.roles:
+        #                 bronzeMerit.append(user.display_name)
+        #         if duration >= 365:
+        #             if silverMeritId not in user.roles:
+        #                 silverMerit.append(user.display_name)
+        #         if duration >= 730:
+        #             if goldMeritId not in user.roles:
+        #                 goldMerit.append(user.display_name)
+        #         if duration >= 1095:
+        #             if platMeritId not in user.roles:
+        #                 platMerit.append(user.display_name)
+                        
+        for user in ctx.guild.members:
+            if iffRole in user.roles and retiredRole not in user.roles and retiredLeadership not in user.roles:
+                duration = int((datetime.datetime.now() - user.joined_at).days)
+                if duration >= 183:
+                    if bronzeMeritRole not in user.roles:
+                        bronzeMerit.append(user.display_name)
+                if duration >= 365:
+                    if silverMeritRole not in user.roles:
+                        silverMerit.append(user.display_name)
+                if duration >= 730:
+                    if goldMeritRole not in user.roles:
+                        goldMerit.append(user.display_name)
+                if duration >= 1095:
+                    if platMeritRole not in user.roles:
+                        platMerit.append(user.display_name)
+                    
+        embed=discord.Embed(title="Service Medals", description="All the users who need to be awarded service medals", color=0xff0000)
+        embed.add_field(name="Bronze Military Merit", value=", ".join(bronzeMerit) + "\u200b", inline=False)
+        embed.add_field(name="Silver Military Merit", value=", ".join(silverMerit) + "\u200b", inline=False)
+        embed.add_field(name="Gold Military Merit", value=", ".join(goldMerit) + "\u200b", inline=False)
+        embed.add_field(name="Platinum Military Merit", value=", ".join(platMerit) + "\u200b", inline=False)
+        await ctx.send(embed=embed)
     #Muster role
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
