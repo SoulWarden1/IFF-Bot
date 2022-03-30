@@ -110,10 +110,12 @@ class adminCog(commands.Cog):
     @get.command(aliases=["Members", "mem"])
     async def members(self,ctx):
         usernames = []
-        print(varStore.members)
         for user in varStore.members:
-            username = await self.bot.fetch_user(user)
-            usernames.append(username.name)
+            try:
+                username = await self.bot.fetch_user(user)
+                usernames.append(username.name)
+            except:
+                pass
             
         await ctx.send(f"**Member usernames:** {usernames} \n**Member Ids:** {varStore.members}")
         #await ctx.send(varStore.members)
