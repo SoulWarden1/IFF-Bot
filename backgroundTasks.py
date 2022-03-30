@@ -35,7 +35,7 @@ class backgroundTasks(commands.Cog):
                 if varStore.members[randId] != varStore.pastSelectId:
                     break
             logChannel = self.bot.get_channel(varStore.logChannel)
-            announceChannel = self.bot.get_channel(varStore.companyChannel)
+            announceChannel = self.bot.get_channel(907599229629911104)
             await logChannel.send(f"Rolled {roll} times")
 
             try:
@@ -83,7 +83,7 @@ class backgroundTasks(commands.Cog):
 
             varStore.leaderPingMsgId = msg.id
             
-        elif current_time == "20:30" and datetime.today().weekday() in eventDays and varStore.platform:
+        elif current_time == "20:20" and datetime.today().weekday() in eventDays and varStore.platform:
             vcCatId = 948180967607136306
             iffGuild = self.bot.get_guild(592559858482544641)
             vcChannelsIds = []
