@@ -28,7 +28,7 @@ class randomCog(commands.Cog):
             await ctx.reply(f"Username is {username}")
         else:
             await ctx.reply("Invalid Id")
-            
+                
     #Converts user to id
     @commands.command(aliases=["ID","Id"])
     async def id(self, ctx, user: discord.User):
@@ -170,7 +170,14 @@ class randomCog(commands.Cog):
     @commands.command(aliases=["Dice"])
     async def dice(self, ctx, num: int):
         dice = randint(1,num)
-        await ctx.reply(f"You've rolled a {dice} out of {num} sides")\
+        await ctx.reply(f"You've rolled a {dice} out of {num} sides")
+    
+    #Eight ball
+    @commands.command(name = "eightball", aliases=["EightBall"])
+    async def  eightball(self, ctx:commands.Context):
+        msgs = ["It is certain.", "It is decidedly so.","Without a doubt.","Yes definitely.","You may rely on it","As I see it, yes.","Most likely.","Outlook good.","Yes.","Signs point to yes","Reply hazy, try again.","Ask again later.","Better not tell you now.","Cannot predict now.","Concentrate and ask again","Don't count on it.","My reply is no.","My sources say no.","Outlook not so good.", "Very doubtful."]
+        choice = randint(0, len(msgs)-1)
+        await ctx.send(msgs[choice])
 
 def setup(bot):
     bot.add_cog(randomCog(bot))
