@@ -1,3 +1,4 @@
+import json
 import discord
 from discord.ext import commands
 import varStore
@@ -5,6 +6,10 @@ import requests
 from random import randint
 import iffCmd
 import asyncio
+import random
+from dotenv import load_dotenv
+from os import getenv
+import os
 
 class randomCog(commands.Cog):
     def __init__(self, bot):
@@ -69,11 +74,14 @@ class randomCog(commands.Cog):
         
     #Spams command
     @commands.command()
-    async def spam(self, ctx, user: discord.User, times: int, *, msg: str):
+    async def spam(self, ctx, user: discord.User, times: int, *, msg = None):
         if ctx.message.author.id in varStore.admins:
-            if len(str(user.id)) == 18:
+            if msg is not None:
                 for i in range(times):
                     await ctx.send(f"{user.mention} {msg}")
+            else:
+                for i in range(times):
+                    await ctx.send(f"{user.mention} get spammed")
         else:
             await ctx.reply("Nope, owner privilege get rekt")
         
@@ -177,7 +185,17 @@ class randomCog(commands.Cog):
     async def  eightball(self, ctx:commands.Context):
         msgs = ["It is certain.", "It is decidedly so.","Without a doubt.","Yes definitely.","You may rely on it","As I see it, yes.","Most likely.","Outlook good.","Yes.","Signs point to yes","Reply hazy, try again.","Ask again later.","Better not tell you now.","Cannot predict now.","Concentrate and ask again","Don't count on it.","My reply is no.","My sources say no.","Outlook not so good.", "Very doubtful."]
         choice = randint(0, len(msgs)-1)
-        await ctx.send(msgs[choice])
+        await ctx.reply(msgs[choice])
+        
+    @commands.command(name = "gif", aliases=["Gif"])
+    async def gif(self, ctx:commands.Context, *, searchTerm):
+        load_dotenv()
+        tenorToken = os.getenv('TENORTOKEN')
+        response = requests.get("https://g.tenor.com/v1/search?q={}&key={}&limit=25".format(searchTerm, tenorToken))
+        data = response.json()
+        gif = random.choice(data["results"])
+        await ctx.send(gif['media'][0]['gif']['url'])
+                
 
 def setup(bot):
     bot.add_cog(randomCog(bot))
