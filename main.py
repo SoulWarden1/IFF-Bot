@@ -227,8 +227,10 @@ async def on_reaction_add(reaction, user):
         msg = await (reaction.message.channel).fetch_message(reaction.message.id)
         thumbUp = discord.utils.get(msg.reactions, emoji="\N{THUMBS UP SIGN}")
         thumbDown = discord.utils.get(msg.reactions, emoji="\N{THUMBS DOWN SIGN}")
+        shrug = discord.utils.get(msg.reactions, emoji="\N{SHRUG}")
         thumbUpCount = str(thumbUp.count - 1)
         thumbDownCount = str(thumbDown.count - 1)
+        shrugCount = str(shrug.count - 1)
 
         for reactions in msg.reactions:
             if str(reactions) == "\N{THUMBS UP SIGN}":
@@ -251,11 +253,24 @@ async def on_reaction_add(reaction, user):
                 for user in thumbDownIds:
                     thumbDownNames.append(user.name)
                 thumbDownNameStr = ", ".join(thumbDownNames)
+                
+        for reactions in msg.reactions:
+            if str(reactions) == "\N{SHRUG}":
+                shrugIds = [
+                    user async for user in reactions.users() if user != bot.user
+                ]
+                shrugNames = []
+
+                for user in shrugIds:
+                    shrugNames.append(user.name)
+                shrugStr = ", ".join(shrugNames)
 
         if thumbUpNameStr == "":
             thumbUpNameStr = "No one :("
         if thumbDownNameStr == "":
             thumbDownNameStr = "No one :("
+        if shrugStr == "":
+            shrugStr = "No one :("
 
         embed = discord.Embed(
             title="Leadership Attendance",
@@ -264,10 +279,10 @@ async def on_reaction_add(reaction, user):
         )
         embed.add_field(name="Coming: ", value=f"\u200b{thumbUpNameStr}", inline=False)
         embed.add_field(name="Count: ", value=f"\u200b{thumbUpCount}", inline=False)
-        embed.add_field(
-            name="Not coming: ", value=f"\u200b{thumbDownNameStr}", inline=False
-        )
+        embed.add_field(name="Not coming: ", value=f"\u200b{thumbDownNameStr}", inline=False)
         embed.add_field(name="Count: ", value=f"\u200b{thumbDownCount}", inline=False)
+        embed.add_field(name="Maybe coming: ", value=f"\u200b{shrugStr}", inline=False)
+        embed.add_field(name="Count: ", value=f"\u200b{shrugCount}", inline=False)
 
         await msg.edit(embed=embed)
 
@@ -281,8 +296,10 @@ async def on_reaction_remove(reaction, user):
         msg = await (reaction.message.channel).fetch_message(reaction.message.id)
         thumbUp = discord.utils.get(msg.reactions, emoji="\N{THUMBS UP SIGN}")
         thumbDown = discord.utils.get(msg.reactions, emoji="\N{THUMBS DOWN SIGN}")
+        shrug = discord.utils.get(msg.reactions, emoji="\N{SHRUG}")
         thumbUpCount = str(thumbUp.count - 1)
         thumbDownCount = str(thumbDown.count - 1)
+        shrugCount = str(shrug.count - 1)
 
         for reactions in msg.reactions:
             if str(reactions) == "\N{THUMBS UP SIGN}":
@@ -293,7 +310,7 @@ async def on_reaction_remove(reaction, user):
 
                 for user in thumbUpIds:
                     thumbUpNames.append(user.name)
-                thumbUpNameStr = ", ".join(thumbUpNames)
+                thumbUpNameStr = " ,".join(thumbUpNames)
 
         for reactions in msg.reactions:
             if str(reactions) == "\N{THUMBS DOWN SIGN}":
@@ -304,12 +321,25 @@ async def on_reaction_remove(reaction, user):
 
                 for user in thumbDownIds:
                     thumbDownNames.append(user.name)
-                thumbDownNameStr = " ,".join(thumbDownNames)
+                thumbDownNameStr = ", ".join(thumbDownNames)
+                
+        for reactions in msg.reactions:
+            if str(reactions) == "\N{SHRUG}":
+                shrugIds = [
+                    user async for user in reactions.users() if user != bot.user
+                ]
+                shrugNames = []
+
+                for user in shrugIds:
+                    shrugNames.append(user.name)
+                shrugStr = ", ".join(shrugNames)
 
         if thumbUpNameStr == "":
             thumbUpNameStr = "No one :("
         if thumbDownNameStr == "":
             thumbDownNameStr = "No one :("
+        if shrugStr == "":
+            shrugStr = "No one :("
 
         embed = discord.Embed(
             title="Leadership Attendance",
@@ -318,10 +348,10 @@ async def on_reaction_remove(reaction, user):
         )
         embed.add_field(name="Coming: ", value=f"\u200b{thumbUpNameStr}", inline=False)
         embed.add_field(name="Count: ", value=f"\u200b{thumbUpCount}", inline=False)
-        embed.add_field(
-            name="Not coming: ", value=f"\u200b{thumbDownNameStr}", inline=False
-        )
+        embed.add_field(name="Not coming: ", value=f"\u200b{thumbDownNameStr}", inline=False)
         embed.add_field(name="Count: ", value=f"\u200b{thumbDownCount}", inline=False)
+        embed.add_field(name="Maybe coming: ", value=f"\u200b{shrugStr}", inline=False)
+        embed.add_field(name="Count: ", value=f"\u200b{shrugCount}", inline=False)
 
         await msg.edit(embed=embed)
 
