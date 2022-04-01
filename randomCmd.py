@@ -2,6 +2,7 @@ import json
 import discord
 from discord.ext import commands
 import varStore
+import badwords
 import requests
 from random import randint
 import iffCmd
@@ -188,13 +189,17 @@ class randomCog(commands.Cog):
         await ctx.reply(msgs[choice])
         
     @commands.command(name = "gif", aliases=["Gif"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def gif(self, ctx:commands.Context, *, searchTerm):
-        load_dotenv()
-        tenorToken = os.getenv('TENORTOKEN')
-        response = requests.get("https://g.tenor.com/v1/search?q={}&key={}&limit=25".format(searchTerm, tenorToken))
-        data = response.json()
-        gif = random.choice(data["results"])
-        await ctx.send(gif['media'][0]['gif']['url'])
+        if searchTerm not in badwords.words:
+            load_dotenv()
+            tenorToken = os.getenv('TENORTOKEN')
+            response = requests.get("https://g.tenor.com/v1/search?q={}&key={}&limit=25".format(searchTerm, tenorToken))
+            data = response.json()
+            gif = random.choice(data["results"])
+            await ctx.send(gif['media'][0]['gif']['url'])
+        else:
+            await ctx.send("Please don't search that :(")
                 
 
 def setup(bot):
