@@ -80,6 +80,7 @@ class backgroundTasks(commands.Cog):
 
             await msg.add_reaction("\N{THUMBS UP SIGN}")
             await msg.add_reaction("\N{THUMBS DOWN SIGN}")
+            await msg.add_reaction("\N{SHRUG}")
 
             varStore.leaderPingMsgId = msg.id
             

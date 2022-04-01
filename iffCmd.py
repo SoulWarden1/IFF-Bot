@@ -382,11 +382,14 @@ class iffCog(commands.Cog):
         embed.add_field(name="Count: ", value=f"0", inline=False)
         embed.add_field(name="Not coming: ", value=f"No one :(", inline=False)
         embed.add_field(name="Count: ", value=f"0", inline=False)
+        embed.add_field(name="Maybe coming: ", value=f"No one :(", inline=False)
+        embed.add_field(name="Count: ", value=f"0", inline=False)
 
         msg = await leadershipChannel.send(embed=embed)
 
         await msg.add_reaction("\N{THUMBS UP SIGN}")
         await msg.add_reaction("\N{THUMBS DOWN SIGN}")
+        await msg.add_reaction("\N{SHRUG}")
 
         varStore.leaderPingMsgId = msg.id
         
@@ -548,7 +551,7 @@ class iffCog(commands.Cog):
         paradeGround = self.bot.get_channel(757782109275553863)
         
         for channel in ctx.guild.voice_channels:
-            if channel.category_id == vcCatId:
+            if channel.category_id == vcCatId and channel.category_id != 757782109275553863 and channel.category_id != 853615447261446144:
                 for user in channel.members:
                     await user.move_to(paradeGround)
                 
