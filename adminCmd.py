@@ -153,6 +153,10 @@ class adminCog(commands.Cog):
             await ctx.reply("Currently running on windows")
         else:
             await ctx.reply("Currently running on the raspberry pi")
+    
+    @get.command(pass_context = True, aliases = ["Leadpingid"])
+    async def leadpingid(self, ctx):
+        await ctx.reply(varStore.leaderPingMsgId)
         
 def setup(bot):
     bot.add_cog(adminCog(bot))
