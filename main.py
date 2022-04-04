@@ -20,7 +20,7 @@ import os
 
 load_dotenv()
 
-token = os.getenv('TOKEN')
+token = os.getenv("TOKEN")
 
 # intents = discord.Intents.default()
 intents = discord.Intents.all()
@@ -30,7 +30,7 @@ intents.members = True
 description = """A bot developed by SoulWarden for the IFF"""
 activity = discord.Activity(type=discord.ActivityType.watching, name="me start up")
 bot = commands.Bot(
-    command_prefix=".",
+    command_prefix=commands.when_mentioned_or('_'),
     description=description,
     intents=intents,
     activity=activity,
@@ -54,7 +54,7 @@ logger.setLevel(logging.DEBUG)
 try:
     handler = logging.FileHandler(
         filename="IFF Bot/storage/discord.log",
-        encoding="utf-8",   
+        encoding="utf-8",
         mode="w",
     )
 except:
@@ -102,19 +102,19 @@ async def on_ready():
         f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "r")
     varStore.pastSelectId = f.read()
     print("Past id loaded")
-    
-    #Sets prefix
-    
+
+    # Sets prefix
+
     if varStore.platform:
-        bot.command_prefix = "_"
+        bot.command_prefix = commands.when_mentioned_or('_')
     else:
-        bot.command_prefix = "?"
-    
+        bot.command_prefix = commands.when_mentioned_or('?')
 
 
 dmChannelId = 950245454317236304
 nineCooldown = []
 fourCooldown = []
+
 
 @bot.event
 async def on_message(message: discord.Message = None):
@@ -136,15 +136,17 @@ async def on_message(message: discord.Message = None):
         embed.add_field(name=f"Message: ", value=f"{message.content}", inline=False)
         await channel.send("<@499816773122654219>")
         msg = await channel.send(embed=embed)
-        
 
         varStore.botDms[msg.id] = message.author.id
         print(varStore.botDms)
-        
-    elif message.channel.id == 806427204896292864 and message.author.id == 719365173189804043:
-            await message.add_reaction("\N{Police Cars Revolving Light}")
-            
-    else:
+
+    elif (
+        message.channel.id == 806427204896292864
+        and message.author.id == 719365173189804043
+    ):
+        await message.add_reaction("\N{Police Cars Revolving Light}")
+
+    elif message.channel.id == 806427204896292864:
         # 9e rekt
         if varStore.insult:
             global nineCooldown
@@ -155,7 +157,8 @@ async def on_message(message: discord.Message = None):
                 f"Go back to the crap 9e chat where you belong {message.author.mention}",
                 f"Who's this 9e clown",
                 f"9e is too lowly to be talking in a chat as great as this, get outta here {message.author.mention}",
-                f"{message.author.mention}, please keep your skill issue to yourself its embarrassing"
+                f"{message.author.mention}, please keep your skill issue to yourself its embarrassing",
+                f"Of course 9e would want to talk in the superior 8e chat",
             ]
             try:
                 nineCom = discord.utils.get(
@@ -184,7 +187,8 @@ async def on_message(message: discord.Message = None):
                 f"What are you doing here {message.author.mention}, go talk in your dead 4e chat",
                 f"Go back to the crap 4e chat where you belong {message.author.mention}",
                 f"Who's this 4e clown",
-                f"{message.author.mention}, please keep your skill issue to yourself its embarrassing"
+                f"{message.author.mention}, please keep your skill issue to yourself its embarrassing",
+                f"Of course 4e would want to talk in the superior 8e chat",
             ]
             try:
                 fourCom = discord.utils.get(
@@ -203,15 +207,17 @@ async def on_message(message: discord.Message = None):
                     await channel.send(f"{insults[choice]}")
                     await asyncio.sleep(60)
                     fourCooldown.remove(message.author.id)
-                    
-        
-                
-    if message.channel.id == 950245454317236304 and message.reference is not None and message.author.id in varStore.owners:
+
+    if (
+        message.channel.id == 950245454317236304
+        and message.reference is not None
+        and message.author.id in varStore.owners
+    ):
         repliedId = message.reference.message_id
         dmUserId = varStore.botDms[repliedId]
         user = bot.get_user(dmUserId)
         await user.send(message.content)
-        
+
         channel = bot.get_channel(dmChannelId)
         await channel.send("Message sent")
 
@@ -253,7 +259,7 @@ async def on_reaction_add(reaction, user):
                 for user in thumbDownIds:
                     thumbDownNames.append(user.name)
                 thumbDownNameStr = ", ".join(thumbDownNames)
-                
+
         for reactions in msg.reactions:
             if str(reactions) == "\N{SHRUG}":
                 shrugIds = [
@@ -279,7 +285,9 @@ async def on_reaction_add(reaction, user):
         )
         embed.add_field(name="Coming: ", value=f"\u200b{thumbUpNameStr}", inline=False)
         embed.add_field(name="Count: ", value=f"\u200b{thumbUpCount}", inline=False)
-        embed.add_field(name="Not coming: ", value=f"\u200b{thumbDownNameStr}", inline=False)
+        embed.add_field(
+            name="Not coming: ", value=f"\u200b{thumbDownNameStr}", inline=False
+        )
         embed.add_field(name="Count: ", value=f"\u200b{thumbDownCount}", inline=False)
         embed.add_field(name="Maybe coming: ", value=f"\u200b{shrugStr}", inline=False)
         embed.add_field(name="Count: ", value=f"\u200b{shrugCount}", inline=False)
@@ -322,7 +330,7 @@ async def on_reaction_remove(reaction, user):
                 for user in thumbDownIds:
                     thumbDownNames.append(user.name)
                 thumbDownNameStr = ", ".join(thumbDownNames)
-                
+
         for reactions in msg.reactions:
             if str(reactions) == "\N{SHRUG}":
                 shrugIds = [
@@ -348,7 +356,9 @@ async def on_reaction_remove(reaction, user):
         )
         embed.add_field(name="Coming: ", value=f"\u200b{thumbUpNameStr}", inline=False)
         embed.add_field(name="Count: ", value=f"\u200b{thumbUpCount}", inline=False)
-        embed.add_field(name="Not coming: ", value=f"\u200b{thumbDownNameStr}", inline=False)
+        embed.add_field(
+            name="Not coming: ", value=f"\u200b{thumbDownNameStr}", inline=False
+        )
         embed.add_field(name="Count: ", value=f"\u200b{thumbDownCount}", inline=False)
         embed.add_field(name="Maybe coming: ", value=f"\u200b{shrugStr}", inline=False)
         embed.add_field(name="Count: ", value=f"\u200b{shrugCount}", inline=False)
@@ -434,6 +444,7 @@ async def unload(ctx, extension: str = None):
             title="Unload", description=f"{extension} cog unloaded", color=0x109319
         )
         await ctx.reply(embed=embed)
+
 
 # Load cogs command
 @bot.command()
