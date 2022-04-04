@@ -11,6 +11,8 @@ import random
 from dotenv import load_dotenv
 from os import getenv
 import os
+import time
+
 
 class randomCog(commands.Cog):
     def __init__(self, bot):
@@ -21,9 +23,19 @@ class randomCog(commands.Cog):
     @commands.command(aliases=["pong", "Ping", "Pong"])
     async def ping(self,ctx):
         if ctx.invoked_with == "ping":
-            await ctx.reply(f"Pong! (Response time: {round(self.bot.latency*1000, 2)}ms)")
+            start_time = time.time()
+            message = await ctx.send("Testing Ping...")
+            end_time = time.time()
+
+            await message.edit(content=f"Pong!\nResponse Time: {round(self.bot.latency * 1000)}ms\nAPI Latency: {round(((end_time - start_time)-self.bot.latency) * 1000)}ms\nTotal Latency: {round((end_time - start_time) * 1000)}ms")
+            #await ctx.reply(f"Pong! (Response time: {round(self.bot.latency*1000, 2)}ms)")
         elif ctx.invoked_with == "pong":
-            await ctx.reply(f"Ping! (Response time: {round(self.bot.latency*1000, 2)}ms)")
+            start_time = time.time()
+            message = await ctx.send("Testing Ping...")
+            end_time = time.time()
+
+            await message.edit(content=f"Pong!\nResponse Time: {round(self.bot.latency * 1000)}ms\nAPI Latency: {round(((end_time - start_time)-self.bot.latency) * 1000)}ms\nTotal Latency: {round((end_time - start_time) * 1000)}ms")
+            #await ctx.reply(f"Ping! (Response time: {round(self.bot.latency*1000, 2)}ms)")
         
     #Converts id to username
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -131,39 +143,6 @@ class randomCog(commands.Cog):
     async def trello(self, ctx):
         await ctx.reply(f"Here is the link to the trello: https://trello.com/b/WusrL4NA/iff-bot")
 
-    #Maths command
-    @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(aliases=["Math","Maths","maths"])
-    async def math(self, ctx, equation: str):
-        newEquation = equation.replace("^","**")
-        timesCount = 0
-        sqrCount = 0
-        ops = ["+","-","*","/","^"]
-        prev = "a"
-        for x in equation:
-            if x == "*":
-                if prev == "*":
-                    sqrCount += 1
-                else:
-                    timesCount += 1
-            elif x == "^":
-                sqrCount += 1
-            prev = x
-        
-        if ops not in newEquation: 
-            await ctx.reply("No operators given")
-        elif len(newEquation) > 15:
-            await ctx.reply("Too large (or something else oh no)")
-        elif len(newEquation) > 5 and sqrCount >= 2:
-            await ctx.reply("Too large (or something else oh no)")
-        elif len(newEquation) > 5 and sqrCount >= 1:
-            await ctx.reply("Too large (or something else oh no)")
-        elif len(newEquation) >= 11 and timesCount >= 5:
-            await ctx.reply("Too large (or something else oh no)")
-        else:
-            answer = float(eval(newEquation, {}))
-            await ctx.reply(f"The answer is: {answer}")
-
     #Fetch Avatar
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["Avatar","pfp"])
@@ -182,6 +161,7 @@ class randomCog(commands.Cog):
         await ctx.reply(f"You've rolled a {dice} out of {num} sides")
     
     #Eight ball
+    @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name = "eightball", aliases=["EightBall"])
     async def  eightball(self, ctx:commands.Context):
         msgs = ["It is certain.", "It is decidedly so.","Without a doubt.","Yes definitely.","You may rely on it","As I see it, yes.","Most likely.","Outlook good.","Yes.","Signs point to yes","Reply hazy, try again.","Ask again later.","Better not tell you now.","Cannot predict now.","Concentrate and ask again","Don't count on it.","My reply is no.","My sources say no.","Outlook not so good.", "Very doubtful."]
@@ -190,17 +170,19 @@ class randomCog(commands.Cog):
         
     @commands.command(name = "gif", aliases=["Gif"])
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def gif(self, ctx:commands.Context, *, searchTerm):
-        if searchTerm not in badwords.words:
-            load_dotenv()
-            tenorToken = os.getenv('TENORTOKEN')
-            response = requests.get("https://g.tenor.com/v1/search?q={}&key={}&limit=25".format(searchTerm, tenorToken))
-            data = response.json()
-            gif = random.choice(data["results"])
-            await ctx.send(gif['media'][0]['gif']['url'])
-        else:
-            await ctx.send("Please don't search that :(")
-                
+    async def gif(self, ctx:commands.Context, *, searchTerm = None):
+        try:
+            if searchTerm.lower() not in badwords.words:
+                load_dotenv()
+                tenorToken = os.getenv('TENORTOKEN')
+                response = requests.get("https://g.tenor.com/v1/search?q={}&key={}&limit=25".format(searchTerm, tenorToken))
+                data = response.json()
+                gif = random.choice(data["results"])
+                await ctx.send(f"{gif['media'][0]['gif']['url']}\n(Requested by {ctx.author.name}#{ctx.author.discriminator})")
+            else:
+                await ctx.send("Please don't search that :(")
+        except:
+            await ctx.send("Please input a search term")  
 
 def setup(bot):
     bot.add_cog(randomCog(bot))
