@@ -271,6 +271,7 @@ class iffCog(commands.Cog):
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
     @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.command(name = "attendance", aliases=["Attendance","attend"])
     async def attendance(self, ctx:commands.Context):
         vcCatId = 948180967607136306
@@ -369,6 +370,7 @@ class iffCog(commands.Cog):
         
     #Leadership attendance ping
     @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.command(aliases=["leadattend","leadershipAttendnace"])
     async def leadAttend(self, ctx):
         leadershipChannel = self.bot.get_channel(907599229629911104)
@@ -398,6 +400,7 @@ class iffCog(commands.Cog):
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
     @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.command(aliases=["Split"])
     async def split(self,ctx):
         voiceChannelUsers = ctx.author.voice.channel.members
@@ -487,7 +490,8 @@ class iffCog(commands.Cog):
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    @commands.guild_only()                
+    @commands.guild_only() 
+    @commands.cooldown(1, 10, commands.BucketType.guild)               
     @commands.command(aliases=["Merge"])
     async def merge(self, ctx):
         await ctx.reply("Merging")
@@ -530,6 +534,7 @@ class iffCog(commands.Cog):
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
     @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.command(aliases=["Parade"])
     async def parade(self, ctx):
         await ctx.reply("Moving users now")
@@ -544,16 +549,19 @@ class iffCog(commands.Cog):
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
     @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.command(aliases=["Forceparade","unfuck","return"])
     async def forceparade(self, ctx):
-        await ctx.reply("Moving users now")
-        vcCatId = 948180967607136306
-        paradeGround = self.bot.get_channel(757782109275553863)
-        
-        for channel in ctx.guild.voice_channels:
-            if channel.category_id == vcCatId and channel.category_id != 757782109275553863 and channel.category_id != 853615447261446144:
-                for user in channel.members:
-                    await user.move_to(paradeGround)
+        async with ctx.channel.typing():
+            await ctx.reply("Moving users now")
+            vcCatId = 948180967607136306
+            paradeGround = self.bot.get_channel(757782109275553863)
+            
+            for channel in ctx.guild.voice_channels:
+                if channel.category_id == vcCatId and channel.category_id != 757782109275553863 and channel.category_id != 853615447261446144:
+                    for user in channel.members:
+                        await user.move_to(paradeGround)
+        await ctx.reply("Done!")
                 
     #Spread command
     @commands.has_any_role(
@@ -675,647 +683,647 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
     @commands.guild_only()
     @commands.command(aliases=["Muster"])
     async def muster(self, ctx):
-        await ctx.reply("Working", delete_after=10)
-        fourCoList = []
-        sevenCoList = []
-        eightCoList = []
-        nineCoList = []
-        fourNcoList = []
-        sevenNcoList = []
-        eightNcoList = []
-        nineNcoList = []
-        fourCplList = []
-        sevenCplList = []
-        eightCplList = []
-        nineCplList = []
-        fourEnlistedList = []
-        sevenEnlistedList = []
-        eightEnlistedList = []
-        nineEnlistedList = []
+        async with ctx.channel.typing():
+            fourCoList = []
+            sevenCoList = []
+            eightCoList = []
+            nineCoList = []
+            fourNcoList = []
+            sevenNcoList = []
+            eightNcoList = []
+            nineNcoList = []
+            fourCplList = []
+            sevenCplList = []
+            eightCplList = []
+            nineCplList = []
+            fourEnlistedList = []
+            sevenEnlistedList = []
+            eightEnlistedList = []
+            nineEnlistedList = []
 
-        fourEnlistedCount = 0
-        sevenEnlistedCount = 0
-        eightEnlistedCount = 0
-        nineEnlistedCount = 0
-        
-        # 4e -----------------------------------------------
-        role = discord.utils.find(
-            lambda r: r.name == "4e Batterie d'Artillerie à Pied", ctx.message.guild.roles
-        )
-        for user in ctx.guild.members:
-            if role in user.roles:
-                # Co list
-                role = discord.utils.find(
-                    lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
-                )
-                if role in user.roles:
-                    if '"Cpt. ' in user.display_name:
-                        nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
-                        fourCoList.append(nick)
-                    elif '"Lt.' in user.display_name:
-                        nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
-                        fourCoList.append(nick)
-                fourCoList.sort(reverse=True)
-
-                # NCO list
-                role = discord.utils.find(
-                    lambda r: r.name == "Non-Commissioned Officer",
-                    ctx.message.guild.roles,
-                )
-                if role in user.roles:
-                    if "'SMaj." in user.display_name:
-                        nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                        fourNcoList.append(nick)
-                    elif "'Sgt." in user.display_name:
-                        nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                        fourNcoList.append(nick)
-                fourNcoList.sort(reverse=True)
-
-                # Cpl list
-                role = discord.utils.find(
-                    lambda r: r.name == "Corporal", ctx.message.guild.roles
-                )
-                if role in user.roles:
-                    nick = user.display_name
-                    nick = nick.replace(".Cpl. ", "Corporal ")
-                    fourCplList.append(nick)
-                fourCplList.sort()
-
-                # Enlisted list
-                role = discord.utils.find(
-                    lambda r: r.name == "4e Batterie d'Artillerie à Pied",
-                    ctx.message.guild.roles,
-                )
-                if role in user.roles:
-                    if "Sdt." in user.display_name:
-                        fourEnlistedCount += 1
-                    elif "Fus. " in user.display_name:
-                        fourEnlistedCount += 1
-                    elif "Volt. " in user.display_name:
-                        fourEnlistedCount += 1
-                    elif "Chas. " in user.display_name:
-                        nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                        fourEnlistedList.append(nick)
-                    elif "Gda. " in user.display_name:
-                        nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                        fourEnlistedList.append(nick)
-                    elif "Lans. " in user.display_name:
-                        nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                        fourEnlistedList.append(nick)
-                    elif "Gren. " in user.display_name:
-                        nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                        fourEnlistedList.append(nick)
-                    elif "Gde. " in user.display_name:
-                        nick = (user.display_name).replace(
-                            "Gde. ", "Grenadier de Elite "
-                        )
-                        fourEnlistedList.append(nick)
-
-                    fourEnlistedList.sort(reverse=True)
-
-        # 7e -----------------------------------------------
-        role = discord.utils.find(
-            lambda r: r.name == "7e Voltigeurs de la Garde", ctx.message.guild.roles
-        )
-        for user in ctx.guild.members:
-            if role in user.roles:
-                # Co list
-                role = discord.utils.find(
-                    lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
-                )
-                if role in user.roles:
-                    if 'Cpt.' in user.display_name:
-                        nick = (user.display_name).replace('Cpt. ', "Capitaine ")
-                        sevenCoList.append(nick)
-                    elif 'Lt.' in user.display_name:
-                        nick = (user.display_name).replace('Lt. ', "Lieutenant ")
-                        sevenCoList.append(nick)
-                sevenCoList.sort(reverse=True)
-
-                # NCO list
-                role = discord.utils.find(
-                    lambda r: r.name == "Non-Commissioned Officer",
-                    ctx.message.guild.roles,
-                )
-                if role in user.roles:
-                    if "'SMaj." in user.display_name:
-                        nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                        sevenNcoList.append(nick)
-                    elif "'Sgt." in user.display_name:
-                        nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                        sevenNcoList.append(nick)
-                sevenNcoList.sort(reverse=True)
-
-                # Cpl list
-                role = discord.utils.find(
-                    lambda r: r.name == "Corporal", ctx.message.guild.roles
-                )
-                if role in user.roles:
-                    nick = user.display_name
-                    nick = nick.replace(".Cpl. ", "Corporal ")
-                    sevenCplList.append(nick)
-                sevenCplList.sort()
-
-                # Enlisted list
-                role = discord.utils.find(
-                    lambda r: r.name == "7e Voltigeurs de la Garde",
-                    ctx.message.guild.roles,
-                )
-                if role in user.roles:
-                    if "Sdt." in user.display_name and "[" not in user.display_name:
-                        sevenEnlistedCount += 1
-                    elif "Fus. " in user.display_name and "[" not in user.display_name:
-                        sevenEnlistedCount += 1
-                    elif "Volt. " in user.display_name and "[" not in user.display_name:
-                        sevenEnlistedCount += 1
-                    elif "Chas. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                        sevenEnlistedList.append(nick)
-                    elif "Gda. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                        sevenEnlistedList.append(nick)
-                    elif "Lans. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                        sevenEnlistedList.append(nick)
-                    elif "Gren. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                        sevenEnlistedList.append(nick)
-                    elif "Gde. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace(
-                            "Gde. ", "Grenadier de Elite "
-                        )
-                        sevenEnlistedList.append(nick)
-
-                    sevenEnlistedList.sort(reverse=True)
-
-        # 8e -------------------------------------------
-        role = discord.utils.find(
-            lambda r: r.name == "8e Chasseurs de la Garde", ctx.message.guild.roles
-        )
-        for user in ctx.guild.members:
-            if role in user.roles:
-                # Co list
-                role = discord.utils.find(
-                    lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
-                )
-                if role in user.roles:
-                    if '"Cpt. ' in user.display_name:
-                        nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
-                        eightCoList.append(nick)
-                    elif '"Lt.' in user.display_name:
-                        nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
-                        eightCoList.append(nick)
-                eightCoList.sort(reverse=True)
-
-                # NCO list
-                role = discord.utils.find(
-                    lambda r: r.name == "Non-Commissioned Officer",
-                    ctx.message.guild.roles,
-                )
-                if role in user.roles:
-                    if "'SMaj." in user.display_name:
-                        nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                        eightNcoList.append(nick)
-                    elif "'Sgt." in user.display_name:
-                        nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                        eightNcoList.append(nick)
-                eightNcoList.sort(reverse=True)
-
-                # Cpl list
-                role = discord.utils.find(
-                    lambda r: r.name == "Corporal", ctx.message.guild.roles
-                )
-                if role in user.roles:
-                    nick = user.display_name
-                    nick = nick.replace(".Cpl. ", "Corporal ")
-                    eightCplList.append(nick)
-                eightCplList.sort()
-
-                # Enlisted list
-                role = discord.utils.find(
-                    lambda r: r.name == "8e Chasseurs de la Garde",
-                    ctx.message.guild.roles,
-                )
-                if role in user.roles:
-                    if "Sdt." in user.display_name and "[" not in user.display_name:
-                        eightEnlistedCount += 1
-                    elif "Fus. " in user.display_name and "[" not in user.display_name:
-                        eightEnlistedCount += 1
-                    elif "Volt. " in user.display_name and "[" not in user.display_name:
-                        eightEnlistedCount += 1
-                    elif "Chas. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                        eightEnlistedList.append(nick)
-                    elif "Gda. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                        eightEnlistedList.append(nick)
-                    elif "Lans. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                        eightEnlistedList.append(nick)
-                    elif "Gren. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                        eightEnlistedList.append(nick)
-                    elif "Gde. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace(
-                            "Gde. ", "Grenadier de Elite "
-                        )
-                        eightEnlistedList.append(nick)
-
-                    eightEnlistedList.sort(reverse=True)
-
-        # 9e ---------------------------------------------
-        role = discord.utils.find(
-            lambda r: r.name == "9e Grenadiers de la Garde", ctx.message.guild.roles
-        )
-        for user in ctx.guild.members:
-            if role in user.roles:
-                # Co list
-                role = discord.utils.find(
-                    lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
-                )
-                if role in user.roles:
-                    if '"Cpt.' in user.display_name:
-                        nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
-                        nineCoList.append(nick)
-                    elif '"Lt.' in user.display_name:
-                        nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
-                        nineCoList.append(nick)
-                nineCoList.sort(reverse=True)
-
-                # NCO list
-                role = discord.utils.find(
-                    lambda r: r.name == "Non-Commissioned Officer",
-                    ctx.message.guild.roles,
-                )
-                if role in user.roles:
-                    if "'SMaj." in user.display_name:
-                        nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                        nineNcoList.append(nick)
-                    elif "'Sgt." in user.display_name:
-                        nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                        nineNcoList.append(nick)
-                nineNcoList.sort(reverse=True)
-
-                # Cpl list
-                role = discord.utils.find(
-                    lambda r: r.name == "Corporal", ctx.message.guild.roles
-                )
-                if role in user.roles:
-                    nick = user.display_name
-                    nick = nick.replace(".Cpl. ", "Corporal ")
-                    nineCplList.append(nick)
-                nineCplList.sort()
-
-                # Enlisted list
-                role = discord.utils.find(
-                    lambda r: r.name == "9e Grenadiers de la Garde",
-                    ctx.message.guild.roles,
-                )
-                if role in user.roles:
-                    if "Sdt." in user.display_name and "[" not in user.display_name:
-                        nineEnlistedCount += 1
-                    elif "Fus. " in user.display_name and "[" not in user.display_name:
-                        nineEnlistedCount += 1
-                    elif "Volt. " in user.display_name and "[" not in user.display_name:
-                        nineEnlistedCount += 1
-                    elif "Chas. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                        nineEnlistedList.append(nick)
-                    elif "Gda. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                        nineEnlistedList.append(nick)
-                    elif "Lans. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                        nineEnlistedList.append(nick)
-                    elif "Gren. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                        nineEnlistedList.append(nick)
-                    elif "Gde. " in user.display_name and "[" not in user.display_name:
-                        nick = (user.display_name).replace(
-                            "Gde. ", "Grenadier de Elite "
-                        )
-                        nineEnlistedList.append(nick)
-
-                    nineEnlistedList.sort(reverse=True)
-
-        sevenCoStr = "\n".join(sevenCoList)
-        eightCoStr = "\n".join(eightCoList)
-        nineCoStr = "\n".join(nineCoList)
-        fourCoStr = "\n".join(fourCoList)
-        sevenNcoStr = "\n".join(sevenNcoList)
-        eightNcoStr = "\n".join(eightNcoList)
-        nineNcoStr = "\n".join(nineNcoList)
-        fourNcoStr = "\n".join(fourNcoList)
-        sevenCplStr = "\n".join(sevenCplList)
-        eightCplStr = "\n".join(eightCplList)
-        nineCplStr = "\n".join(nineCplList)
-        fourCplStr = "\n".join(fourCplList)
-        sevenEnlistedStr = "\n".join(sevenEnlistedList)
-        eightEnlistedStr = "\n".join(eightEnlistedList)
-        nineEnlistedStr = "\n".join(nineEnlistedList)
-        fourEnlistedStr = "\n".join(fourEnlistedList)
-
-        # Command skin 1 pic
-        try:
-            cmdImg = discord.File(
-                "IFF Bot/files/cmd_skin.png",
-                filename="cmd_skin.png",
+            fourEnlistedCount = 0
+            sevenEnlistedCount = 0
+            eightEnlistedCount = 0
+            nineEnlistedCount = 0
+            
+            # 4e -----------------------------------------------
+            role = discord.utils.find(
+                lambda r: r.name == "4e Batterie d'Artillerie à Pied", ctx.message.guild.roles
             )
-        except:
-            cmdImg = discord.File(
-                "/home/pi/Desktop/iffBot/files/cmd_skin.png", filename="cmd_skin.png"
+            for user in ctx.guild.members:
+                if role in user.roles:
+                    # Co list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
+                    )
+                    if role in user.roles:
+                        if '"Cpt. ' in user.display_name:
+                            nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
+                            fourCoList.append(nick)
+                        elif '"Lt.' in user.display_name:
+                            nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
+                            fourCoList.append(nick)
+                    fourCoList.sort(reverse=True)
+
+                    # NCO list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Non-Commissioned Officer",
+                        ctx.message.guild.roles,
+                    )
+                    if role in user.roles:
+                        if "'SMaj." in user.display_name:
+                            nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
+                            fourNcoList.append(nick)
+                        elif "'Sgt." in user.display_name:
+                            nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
+                            fourNcoList.append(nick)
+                    fourNcoList.sort(reverse=True)
+
+                    # Cpl list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Corporal", ctx.message.guild.roles
+                    )
+                    if role in user.roles:
+                        nick = user.display_name
+                        nick = nick.replace(".Cpl. ", "Corporal ")
+                        fourCplList.append(nick)
+                    fourCplList.sort()
+
+                    # Enlisted list
+                    role = discord.utils.find(
+                        lambda r: r.name == "4e Batterie d'Artillerie à Pied",
+                        ctx.message.guild.roles,
+                    )
+                    if role in user.roles:
+                        if "Sdt." in user.display_name:
+                            fourEnlistedCount += 1
+                        elif "Fus. " in user.display_name:
+                            fourEnlistedCount += 1
+                        elif "Volt. " in user.display_name:
+                            fourEnlistedCount += 1
+                        elif "Chas. " in user.display_name:
+                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
+                            fourEnlistedList.append(nick)
+                        elif "Gda. " in user.display_name:
+                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
+                            fourEnlistedList.append(nick)
+                        elif "Lans. " in user.display_name:
+                            nick = (user.display_name).replace("Lans. ", "Lanspessade ")
+                            fourEnlistedList.append(nick)
+                        elif "Gren. " in user.display_name:
+                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
+                            fourEnlistedList.append(nick)
+                        elif "Gde. " in user.display_name:
+                            nick = (user.display_name).replace(
+                                "Gde. ", "Grenadier de Elite "
+                            )
+                            fourEnlistedList.append(nick)
+
+                        fourEnlistedList.sort(reverse=True)
+
+            # 7e -----------------------------------------------
+            role = discord.utils.find(
+                lambda r: r.name == "7e Voltigeurs de la Garde", ctx.message.guild.roles
+            )
+            for user in ctx.guild.members:
+                if role in user.roles:
+                    # Co list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
+                    )
+                    if role in user.roles:
+                        if 'Cpt.' in user.display_name:
+                            nick = (user.display_name).replace('Cpt. ', "Capitaine ")
+                            sevenCoList.append(nick)
+                        elif 'Lt.' in user.display_name:
+                            nick = (user.display_name).replace('Lt. ', "Lieutenant ")
+                            sevenCoList.append(nick)
+                    sevenCoList.sort(reverse=True)
+
+                    # NCO list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Non-Commissioned Officer",
+                        ctx.message.guild.roles,
+                    )
+                    if role in user.roles:
+                        if "'SMaj." in user.display_name:
+                            nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
+                            sevenNcoList.append(nick)
+                        elif "'Sgt." in user.display_name:
+                            nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
+                            sevenNcoList.append(nick)
+                    sevenNcoList.sort(reverse=True)
+
+                    # Cpl list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Corporal", ctx.message.guild.roles
+                    )
+                    if role in user.roles:
+                        nick = user.display_name
+                        nick = nick.replace(".Cpl. ", "Corporal ")
+                        sevenCplList.append(nick)
+                    sevenCplList.sort()
+
+                    # Enlisted list
+                    role = discord.utils.find(
+                        lambda r: r.name == "7e Voltigeurs de la Garde",
+                        ctx.message.guild.roles,
+                    )
+                    if role in user.roles:
+                        if "Sdt." in user.display_name and "[" not in user.display_name:
+                            sevenEnlistedCount += 1
+                        elif "Fus. " in user.display_name and "[" not in user.display_name:
+                            sevenEnlistedCount += 1
+                        elif "Volt. " in user.display_name and "[" not in user.display_name:
+                            sevenEnlistedCount += 1
+                        elif "Chas. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
+                            sevenEnlistedList.append(nick)
+                        elif "Gda. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
+                            sevenEnlistedList.append(nick)
+                        elif "Lans. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Lans. ", "Lanspessade ")
+                            sevenEnlistedList.append(nick)
+                        elif "Gren. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
+                            sevenEnlistedList.append(nick)
+                        elif "Gde. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace(
+                                "Gde. ", "Grenadier de Elite "
+                            )
+                            sevenEnlistedList.append(nick)
+
+                        sevenEnlistedList.sort(reverse=True)
+
+            # 8e -------------------------------------------
+            role = discord.utils.find(
+                lambda r: r.name == "8e Chasseurs de la Garde", ctx.message.guild.roles
+            )
+            for user in ctx.guild.members:
+                if role in user.roles:
+                    # Co list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
+                    )
+                    if role in user.roles:
+                        if '"Cpt. ' in user.display_name:
+                            nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
+                            eightCoList.append(nick)
+                        elif '"Lt.' in user.display_name:
+                            nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
+                            eightCoList.append(nick)
+                    eightCoList.sort(reverse=True)
+
+                    # NCO list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Non-Commissioned Officer",
+                        ctx.message.guild.roles,
+                    )
+                    if role in user.roles:
+                        if "'SMaj." in user.display_name:
+                            nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
+                            eightNcoList.append(nick)
+                        elif "'Sgt." in user.display_name:
+                            nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
+                            eightNcoList.append(nick)
+                    eightNcoList.sort(reverse=True)
+
+                    # Cpl list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Corporal", ctx.message.guild.roles
+                    )
+                    if role in user.roles:
+                        nick = user.display_name
+                        nick = nick.replace(".Cpl. ", "Corporal ")
+                        eightCplList.append(nick)
+                    eightCplList.sort()
+
+                    # Enlisted list
+                    role = discord.utils.find(
+                        lambda r: r.name == "8e Chasseurs de la Garde",
+                        ctx.message.guild.roles,
+                    )
+                    if role in user.roles:
+                        if "Sdt." in user.display_name and "[" not in user.display_name:
+                            eightEnlistedCount += 1
+                        elif "Fus. " in user.display_name and "[" not in user.display_name:
+                            eightEnlistedCount += 1
+                        elif "Volt. " in user.display_name and "[" not in user.display_name:
+                            eightEnlistedCount += 1
+                        elif "Chas. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
+                            eightEnlistedList.append(nick)
+                        elif "Gda. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
+                            eightEnlistedList.append(nick)
+                        elif "Lans. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Lans. ", "Lanspessade ")
+                            eightEnlistedList.append(nick)
+                        elif "Gren. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
+                            eightEnlistedList.append(nick)
+                        elif "Gde. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace(
+                                "Gde. ", "Grenadier de Elite "
+                            )
+                            eightEnlistedList.append(nick)
+
+                        eightEnlistedList.sort(reverse=True)
+
+            # 9e ---------------------------------------------
+            role = discord.utils.find(
+                lambda r: r.name == "9e Grenadiers de la Garde", ctx.message.guild.roles
+            )
+            for user in ctx.guild.members:
+                if role in user.roles:
+                    # Co list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
+                    )
+                    if role in user.roles:
+                        if '"Cpt.' in user.display_name:
+                            nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
+                            nineCoList.append(nick)
+                        elif '"Lt.' in user.display_name:
+                            nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
+                            nineCoList.append(nick)
+                    nineCoList.sort(reverse=True)
+
+                    # NCO list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Non-Commissioned Officer",
+                        ctx.message.guild.roles,
+                    )
+                    if role in user.roles:
+                        if "'SMaj." in user.display_name:
+                            nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
+                            nineNcoList.append(nick)
+                        elif "'Sgt." in user.display_name:
+                            nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
+                            nineNcoList.append(nick)
+                    nineNcoList.sort(reverse=True)
+
+                    # Cpl list
+                    role = discord.utils.find(
+                        lambda r: r.name == "Corporal", ctx.message.guild.roles
+                    )
+                    if role in user.roles:
+                        nick = user.display_name
+                        nick = nick.replace(".Cpl. ", "Corporal ")
+                        nineCplList.append(nick)
+                    nineCplList.sort()
+
+                    # Enlisted list
+                    role = discord.utils.find(
+                        lambda r: r.name == "9e Grenadiers de la Garde",
+                        ctx.message.guild.roles,
+                    )
+                    if role in user.roles:
+                        if "Sdt." in user.display_name and "[" not in user.display_name:
+                            nineEnlistedCount += 1
+                        elif "Fus. " in user.display_name and "[" not in user.display_name:
+                            nineEnlistedCount += 1
+                        elif "Volt. " in user.display_name and "[" not in user.display_name:
+                            nineEnlistedCount += 1
+                        elif "Chas. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
+                            nineEnlistedList.append(nick)
+                        elif "Gda. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
+                            nineEnlistedList.append(nick)
+                        elif "Lans. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Lans. ", "Lanspessade ")
+                            nineEnlistedList.append(nick)
+                        elif "Gren. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
+                            nineEnlistedList.append(nick)
+                        elif "Gde. " in user.display_name and "[" not in user.display_name:
+                            nick = (user.display_name).replace(
+                                "Gde. ", "Grenadier de Elite "
+                            )
+                            nineEnlistedList.append(nick)
+
+                        nineEnlistedList.sort(reverse=True)
+
+            sevenCoStr = "\n".join(sevenCoList)
+            eightCoStr = "\n".join(eightCoList)
+            nineCoStr = "\n".join(nineCoList)
+            fourCoStr = "\n".join(fourCoList)
+            sevenNcoStr = "\n".join(sevenNcoList)
+            eightNcoStr = "\n".join(eightNcoList)
+            nineNcoStr = "\n".join(nineNcoList)
+            fourNcoStr = "\n".join(fourNcoList)
+            sevenCplStr = "\n".join(sevenCplList)
+            eightCplStr = "\n".join(eightCplList)
+            nineCplStr = "\n".join(nineCplList)
+            fourCplStr = "\n".join(fourCplList)
+            sevenEnlistedStr = "\n".join(sevenEnlistedList)
+            eightEnlistedStr = "\n".join(eightEnlistedList)
+            nineEnlistedStr = "\n".join(nineEnlistedList)
+            fourEnlistedStr = "\n".join(fourEnlistedList)
+
+            # Command skin 1 pic
+            try:
+                cmdImg = discord.File(
+                    "IFF Bot/files/cmd_skin.png",
+                    filename="cmd_skin.png",
+                )
+            except:
+                cmdImg = discord.File(
+                    "/home/pi/Desktop/iffBot/files/cmd_skin.png", filename="cmd_skin.png"
+                )
+                
+            # Command skin 2 pic
+            try:
+                cmd2Img = discord.File(
+                    "IFF Bot/files/cmd_skin2.png",
+                    filename="cmd_skin2.png",
+                )
+            except:
+                cmd2Img = discord.File(
+                    "/home/pi/Desktop/iffBot/files/cmd_skin2.png", filename="cmd_skin2.png"
+                )
+
+            # 4e skin pic
+            try:
+                fourImg = discord.File(
+                    "IFF Bot/files/4e_skin.jpeg",
+                    filename="4e_skin.jpeg",
+                )
+            except:
+                fourImg = discord.File(
+                    "/home/pi/Desktop/iffBot/files/4e_skin.jpeg", filename="4e_skin.jpeg"
+                )
+
+            # 7e skin pic
+            try:
+                sevenImg = discord.File(
+                    "IFF Bot/files/7e_skin.png",
+                    filename="7e_skin.png",
+                )
+            except:
+                sevenImg = discord.File(
+                    "/home/pi/Desktop/iffBot/files/7e_skin.png", filename="7e_skin.png"
+                )
+
+            # 8e skin pic
+            try:
+                eightImg = discord.File(
+                    "IFF Bot/files/8e_skin.png",
+                    filename="8e_skin.png",
+                )
+            except:
+                eightImg = discord.File(
+                    "/home/pi/Desktop/iffBot/files/8e_skin.png", filename="8e_skin.png"
+                )
+
+            # 9e skin pic
+            try:
+                nineImg = discord.File(
+                    "IFF Bot/files/9e_skin.png",
+                    filename="9e_skin.png",
+                )
+            except:
+                nineImg = discord.File(
+                    "/home/pi/Desktop/iffBot/files/9e_skin.png", filename="9e_skin.png"
+                )
+                
+            # Admin skin pic
+            try:
+                adminImg = discord.File(
+                    "IFF Bot/files/admin_skin.png",
+                    filename="admin_skin.png",
+                )
+            except:
+                adminImg = discord.File(
+                    "/home/pi/Desktop/iffBot/files/admin_skin.png", filename="admin_skin.png"
+                )
+                
+            # Cav skin pic
+            try:
+                cavImg = discord.File(
+                    "IFF Bot/files/cav_skin.png",
+                    filename="cav_skin.png",
+                )
+            except:
+                cavImg = discord.File(
+                    "/home/pi/Desktop/iffBot/files/cav_skin.png", filename="cav_skin.png"
+                )
+                
+
+            # ADD FOUR E
+
+            # Command Col----------------------------------------------------
+            cmd1Embed=discord.Embed(title="Imperial Frontier Force 1ic", description="", color=0xffff00)
+            cmd1Embed.set_thumbnail(url="attachment://cmd_skin.png")
+            cmd1Embed.add_field(name="Colonel Joshlols", value="8e Chasseurs de la Garde Commander\nJäger Karabiner Infanterie Commander", inline=False)
+            
+            # Command 2ic----------------------------------------------------
+            cmd2Embed=discord.Embed(title="Imperial Frontier Force 2ic", description="", color=0xffff00)
+            cmd2Embed.set_thumbnail(url="attachment://cmd_skin2.png")
+            cmd2Embed.add_field(name="Aide de Camp Ballistic", value="Head Adjutant\n9e Grenadiers de la Garde's biggest fan", inline=False)
+            
+            # 7e ---------------------------------------------------------------------
+            sevenEmbed = discord.Embed(
+                title="7e Voltigeurs de la Garde",
+                description="Muster roll for 7e",
+                color=0xb12222,
+            )
+            sevenEmbed.set_thumbnail(url="attachment://7e_skin.png")
+            sevenEmbed.add_field(
+                name=f"Commissioned Officers", value=f"\u200b{sevenCoStr}", inline=False
+            )
+            sevenEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            sevenEmbed.add_field(
+                name=f"Non-Commissioned Officers",
+                value=f"\u200b{sevenNcoStr}",
+                inline=False,
+            )
+            sevenEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            sevenEmbed.add_field(
+                name=f"Corporals", value=f"\u200b{sevenCplStr}", inline=False
+            )
+            sevenEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            sevenEmbed.add_field(
+                name=f"Enlisted", value=f"\u200b{sevenEnlistedStr}", inline=False
+            )
+            sevenEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            sevenEmbed.add_field(
+                name=f"Soldats → Voltigeurs",
+                value=f"\u200b{sevenEnlistedCount}",
+                inline=False,
+            )
+
+            # 8e ---------------------------------------------------------------------
+            eightEmbed = discord.Embed(
+                title="8e Chasseurs de la Garde",
+                description="Muster roll for 8e",
+                color=0x1f8b4c,
+            )
+            eightEmbed.set_thumbnail(url="attachment://8e_skin.png")
+            eightEmbed.add_field(
+                name=f"Commissioned Officers", value=f"\u200b{eightCoStr}", inline=False
+            )
+            eightEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            eightEmbed.add_field(
+                name=f"Non-Commissioned Officers",
+                value=f"\u200b{eightNcoStr}",
+                inline=False,
+            )
+            eightEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            eightEmbed.add_field(
+                name=f"Corporals", value=f"\u200b{eightCplStr}", inline=False
+            )
+            eightEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            eightEmbed.add_field(
+                name=f"Enlisted", value=f"\u200b{eightEnlistedStr}", inline=False
+            )
+            eightEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            eightEmbed.add_field(
+                name=f"Soldats → Voltigeurs",
+                value=f"\u200b{eightEnlistedCount}",
+                inline=False,
+            )
+
+            # 9e ---------------------------------------------------------------------
+            nineEmbed = discord.Embed(
+                title="9e Grenadiers de la Garde",
+                description="Muster roll for 9e",
+                color=0x206694,
+            )
+            nineEmbed.set_thumbnail(url="attachment://9e_skin.png")
+            nineEmbed.add_field(
+                name=f"Commissioned Officers", value=f"\u200b{nineCoStr}", inline=False
+            )
+            nineEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            nineEmbed.add_field(
+                name=f"Non-Commissioned Officers", value=f"\u200b{nineNcoStr}", inline=False
+            )
+            nineEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            nineEmbed.add_field(
+                name=f"Corporals", value=f"\u200b{nineCplStr}", inline=False
+            )
+            nineEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            nineEmbed.add_field(
+                name=f"Enlisted", value=f"\u200b{nineEnlistedStr}", inline=False
+            )
+            nineEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
+            )
+            nineEmbed.add_field(
+                name=f"Soldats → Voltigeurs",
+                value=f"\u200b{nineEnlistedCount}",
+                inline=False,
             )
             
-        # Command skin 2 pic
-        try:
-            cmd2Img = discord.File(
-                "IFF Bot/files/cmd_skin2.png",
-                filename="cmd_skin2.png",
+            # 4e ---------------------------------------------------------------------
+            fourEmbed = discord.Embed(
+                title="4e Batterie d'Artillerie à Pied",
+                description="Muster roll for 4e",
+                color=0x87cfeb,
             )
-        except:
-            cmd2Img = discord.File(
-                "/home/pi/Desktop/iffBot/files/cmd_skin2.png", filename="cmd_skin2.png"
+            fourEmbed.set_thumbnail(url="attachment://4e_skin.jpeg")
+            fourEmbed.add_field(
+                name=f"Commissioned Officers", value=f"\u200b{fourCoStr}", inline=False
             )
-
-        # 4e skin pic
-        try:
-            fourImg = discord.File(
-                "IFF Bot/files/4e_skin.jpeg",
-                filename="4e_skin.jpeg",
+            fourEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
             )
-        except:
-            fourImg = discord.File(
-                "/home/pi/Desktop/iffBot/files/4e_skin.jpeg", filename="4e_skin.jpeg"
+            fourEmbed.add_field(
+                name=f"Non-Commissioned Officers", value=f"\u200b{fourNcoStr}", inline=False
             )
-
-        # 7e skin pic
-        try:
-            sevenImg = discord.File(
-                "IFF Bot/files/7e_skin.png",
-                filename="7e_skin.png",
+            fourEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
             )
-        except:
-            sevenImg = discord.File(
-                "/home/pi/Desktop/iffBot/files/7e_skin.png", filename="7e_skin.png"
+            fourEmbed.add_field(
+                name=f"Corporals", value=f"\u200b{fourCplStr}", inline=False
             )
-
-        # 8e skin pic
-        try:
-            eightImg = discord.File(
-                "IFF Bot/files/8e_skin.png",
-                filename="8e_skin.png",
+            fourEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
             )
-        except:
-            eightImg = discord.File(
-                "/home/pi/Desktop/iffBot/files/8e_skin.png", filename="8e_skin.png"
+            fourEmbed.add_field(
+                name=f"Enlisted", value=f"\u200b{fourEnlistedStr}", inline=False
             )
-
-        # 9e skin pic
-        try:
-            nineImg = discord.File(
-                "IFF Bot/files/9e_skin.png",
-                filename="9e_skin.png",
+            fourEmbed.add_field(
+                name=f"\u200b",
+                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
+                inline=False,
             )
-        except:
-            nineImg = discord.File(
-                "/home/pi/Desktop/iffBot/files/9e_skin.png", filename="9e_skin.png"
+            fourEmbed.add_field(
+                name=f"Soldats → Voltigeurs",
+                value=f"\u200b{fourEnlistedCount}",
+                inline=False,
             )
             
-        # Admin skin pic
-        try:
-            adminImg = discord.File(
-                "IFF Bot/files/admin_skin.png",
-                filename="admin_skin.png",
-            )
-        except:
-            adminImg = discord.File(
-                "/home/pi/Desktop/iffBot/files/admin_skin.png", filename="admin_skin.png"
-            )
+            #Could automate admins in future
+            #Admins ------------------------------------------------------
+            adminEmbed=discord.Embed(title="I 'Administration Regimentaire", description="", color=0xe74c25)
+            adminEmbed.set_thumbnail(url="attachment://admin_skin.png")
+            adminEmbed.add_field(name="Commissioned Officer", value="Adjutant Peenoire", inline=False)
+            adminEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
+            adminEmbed.add_field(name="Non-Commissioned Officer", value="Sous-Adjutant Ping\nSous-Adjutant Minz", inline=False)
             
-        # Cav skin pic
-        try:
-            cavImg = discord.File(
-                "IFF Bot/files/cav_skin.png",
-                filename="cav_skin.png",
-            )
-        except:
-            cavImg = discord.File(
-                "/home/pi/Desktop/iffBot/files/cav_skin.png", filename="cav_skin.png"
-            )
-            
-
-        # ADD FOUR E
-
-        # Command Col----------------------------------------------------
-        cmd1Embed=discord.Embed(title="Imperial Frontier Force 1ic", description="", color=0xffff00)
-        cmd1Embed.set_thumbnail(url="attachment://cmd_skin.png")
-        cmd1Embed.add_field(name="Colonel Joshlols", value="8e Chasseurs de la Garde Commander\nJäger Karabiner Infanterie Commander", inline=False)
-        
-        # Command 2ic----------------------------------------------------
-        cmd2Embed=discord.Embed(title="Imperial Frontier Force 2ic", description="", color=0xffff00)
-        cmd2Embed.set_thumbnail(url="attachment://cmd_skin2.png")
-        cmd2Embed.add_field(name="Aide de Camp Ballistic", value="Head Adjutant\n9e Grenadiers de la Garde's biggest fan", inline=False)
-        
-        # 7e ---------------------------------------------------------------------
-        sevenEmbed = discord.Embed(
-            title="7e Voltigeurs de la Garde",
-            description="Muster roll for 7e",
-            color=0xb12222,
-        )
-        sevenEmbed.set_thumbnail(url="attachment://7e_skin.png")
-        sevenEmbed.add_field(
-            name=f"Commissioned Officers", value=f"\u200b{sevenCoStr}", inline=False
-        )
-        sevenEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        sevenEmbed.add_field(
-            name=f"Non-Commissioned Officers",
-            value=f"\u200b{sevenNcoStr}",
-            inline=False,
-        )
-        sevenEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        sevenEmbed.add_field(
-            name=f"Corporals", value=f"\u200b{sevenCplStr}", inline=False
-        )
-        sevenEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        sevenEmbed.add_field(
-            name=f"Enlisted", value=f"\u200b{sevenEnlistedStr}", inline=False
-        )
-        sevenEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        sevenEmbed.add_field(
-            name=f"Soldats → Voltigeurs",
-            value=f"\u200b{sevenEnlistedCount}",
-            inline=False,
-        )
-
-        # 8e ---------------------------------------------------------------------
-        eightEmbed = discord.Embed(
-            title="8e Chasseurs de la Garde",
-            description="Muster roll for 8e",
-            color=0x1f8b4c,
-        )
-        eightEmbed.set_thumbnail(url="attachment://8e_skin.png")
-        eightEmbed.add_field(
-            name=f"Commissioned Officers", value=f"\u200b{eightCoStr}", inline=False
-        )
-        eightEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        eightEmbed.add_field(
-            name=f"Non-Commissioned Officers",
-            value=f"\u200b{eightNcoStr}",
-            inline=False,
-        )
-        eightEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        eightEmbed.add_field(
-            name=f"Corporals", value=f"\u200b{eightCplStr}", inline=False
-        )
-        eightEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        eightEmbed.add_field(
-            name=f"Enlisted", value=f"\u200b{eightEnlistedStr}", inline=False
-        )
-        eightEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        eightEmbed.add_field(
-            name=f"Soldats → Voltigeurs",
-            value=f"\u200b{eightEnlistedCount}",
-            inline=False,
-        )
-
-        # 9e ---------------------------------------------------------------------
-        nineEmbed = discord.Embed(
-            title="9e Grenadiers de la Garde",
-            description="Muster roll for 9e",
-            color=0x206694,
-        )
-        nineEmbed.set_thumbnail(url="attachment://9e_skin.png")
-        nineEmbed.add_field(
-            name=f"Commissioned Officers", value=f"\u200b{nineCoStr}", inline=False
-        )
-        nineEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        nineEmbed.add_field(
-            name=f"Non-Commissioned Officers", value=f"\u200b{nineNcoStr}", inline=False
-        )
-        nineEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        nineEmbed.add_field(
-            name=f"Corporals", value=f"\u200b{nineCplStr}", inline=False
-        )
-        nineEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        nineEmbed.add_field(
-            name=f"Enlisted", value=f"\u200b{nineEnlistedStr}", inline=False
-        )
-        nineEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        nineEmbed.add_field(
-            name=f"Soldats → Voltigeurs",
-            value=f"\u200b{nineEnlistedCount}",
-            inline=False,
-        )
-        
-        # 4e ---------------------------------------------------------------------
-        fourEmbed = discord.Embed(
-            title="4e Batterie d'Artillerie à Pied",
-            description="Muster roll for 4e",
-            color=0x87cfeb,
-        )
-        fourEmbed.set_thumbnail(url="attachment://4e_skin.jpeg")
-        fourEmbed.add_field(
-            name=f"Commissioned Officers", value=f"\u200b{fourCoStr}", inline=False
-        )
-        fourEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        fourEmbed.add_field(
-            name=f"Non-Commissioned Officers", value=f"\u200b{fourNcoStr}", inline=False
-        )
-        fourEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        fourEmbed.add_field(
-            name=f"Corporals", value=f"\u200b{fourCplStr}", inline=False
-        )
-        fourEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        fourEmbed.add_field(
-            name=f"Enlisted", value=f"\u200b{fourEnlistedStr}", inline=False
-        )
-        fourEmbed.add_field(
-            name=f"\u200b",
-            value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-            inline=False,
-        )
-        fourEmbed.add_field(
-            name=f"Soldats → Voltigeurs",
-            value=f"\u200b{fourEnlistedCount}",
-            inline=False,
-        )
-        
-        #Could automate admins in future
-        #Admins ------------------------------------------------------
-        adminEmbed=discord.Embed(title="I 'Administration Regimentaire", description="", color=0xe74c25)
-        adminEmbed.set_thumbnail(url="attachment://admin_skin.png")
-        adminEmbed.add_field(name="Commissioned Officer", value="Adjutant Peenoire", inline=False)
-        adminEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-        adminEmbed.add_field(name="Non-Commissioned Officer", value="Sous-Adjutant Ping\nSous-Adjutant Minz", inline=False)
-        
-        #Specials ------------------------------------------------------
-        specEmbed=discord.Embed(title="Non-Infantry Specialisation Leadership", description="Leadership for the specialisations and Auxiliary you may gain quals for and play as during events.", color=0xf8e61c    )
-        specEmbed.set_thumbnail(url="attachment://cav_skin.png")
-        specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols", inline=False)
-        specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-        specEmbed.add_field(name="Garde Chevau-Léger", value="Capitaine Bronze\nLieutenant Ace", inline=False)
-        specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-        specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Capitaine Tobakshi (Aux)\nGendarme Milk (Sapper)", inline=False)
+            #Specials ------------------------------------------------------
+            specEmbed=discord.Embed(title="Non-Infantry Specialisation Leadership", description="Leadership for the specialisations and Auxiliary you may gain quals for and play as during events.", color=0xf8e61c    )
+            specEmbed.set_thumbnail(url="attachment://cav_skin.png")
+            specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols", inline=False)
+            specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
+            specEmbed.add_field(name="Garde Chevau-Léger", value="Capitaine Bronze\nLieutenant Ace", inline=False)
+            specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
+            specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Capitaine Tobakshi (Aux)\nGendarme Milk (Sapper)", inline=False)
 
         await ctx.send(file=cmdImg,embed=cmd1Embed)
         await ctx.send(file=cmd2Img,embed=cmd2Embed)
