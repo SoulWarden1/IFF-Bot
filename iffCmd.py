@@ -285,70 +285,29 @@ class iffCog(commands.Cog):
         fourUsers = []
         otherUsers = []
         
-        for channel in iffGuild.voice_channels:
-            if channel.category_id == vcCatId:
-                vcChannelsIds.append(channel.id)
-                
+        sevenRole = ctx.guild.get_role(783564469854142464)
+        eightRole = ctx.guild.get_role(845007589674188839)
+        nineRole = ctx.guild.get_role(863756344494260224)
+        fourRole = ctx.guild.get_role(760440084880162838)
+        
+        vcChannelsIds = [channel.id for channel in iffGuild.voice_channels if channel.category_id == vcCatId]
+    
         for channelId in vcChannelsIds:
             channel = self.bot.get_channel(channelId)
             channelUsers.append(channel.members)
             totalUsers += len(channel.members)
-        
-        role = discord.utils.find(
-            lambda r: r.name == "7e Voltigeurs de la Garde", iffGuild.roles
-        )
-        
+    
         for user in channelUsers:
-            for x in user:
-                if role in x.roles:
-                    sevenUsers.append(x.display_name)
-                    
-        
-        role = discord.utils.find(
-            lambda r: r.name == "8e Chasseurs de la Garde", iffGuild.roles
-        )
-        
-        for user in channelUsers:
-            for x in user:
-                if role in x.roles:
-                    eightUsers.append(x.display_name)
-                    
-                    
-        role = discord.utils.find(
-            lambda r: r.name == "9e Grenadiers de la Garde", iffGuild.roles
-        )
-        
-        for user in channelUsers:
-            for x in user:
-                if role in x.roles:
-                    nineUsers.append(x.display_name)
-                    
-                    
-        role = discord.utils.find(
-            lambda r: r.name == "4e Batterie d'Artillerie à Pied", iffGuild.roles
-        )
-        
-        for user in channelUsers:
-            for x in user:
-                if role in x.roles:
+            for x in user: 
+                if sevenRole in x.roles:
+                    sevenUsers.append(x.display_name)  
+                elif eightRole in x.roles:
+                    eightUsers.append(x.display_name)  
+                elif nineRole in x.roles:
+                    nineUsers.append(x.display_name) 
+                elif fourRole in x.roles:
                     fourUsers.append(x.display_name)
-                    
-        role = discord.utils.find(
-            lambda r: r.name == "La Recrue (Recruit)", iffGuild.roles
-        )
-        
-        for user in channelUsers:
-            for x in user:
-                if role in x.roles:
-                    otherUsers.append(x.display_name)
-                    
-        role = discord.utils.find(
-            lambda r: r.name == "Mercenary", iffGuild.roles
-        )
-        
-        for user in channelUsers:
-            for x in user:
-                if role in x.roles:
+                else:
                     otherUsers.append(x.display_name)
                     
         fourStr = ", ".join(fourUsers)
@@ -403,88 +362,80 @@ class iffCog(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.command(aliases=["Split"])
     async def split(self,ctx):
-        voiceChannelUsers = ctx.author.voice.channel.members
-        
-        sevenVcs = [872101027682324540, 872056405052510238]
-        eightVcs = [869519564973703228, 840889769713205248]
-        nineVcs = [872101199028043866, 864013586774491187, 953219379590488134]
-        
-        await ctx.reply("Splitting")
-        
-        #7e
-        role = discord.utils.find(
-                    lambda r: r.name == "7e Voltigeurs de la Garde",
-                    ctx.message.guild.roles,
-                )
-        if role in ctx.author.roles:
-            if ctx.author.voice.channel.id == sevenVcs[0]:
-                otherVc = self.bot.get_channel(sevenVcs[1])
-                i = 0
-                for user in voiceChannelUsers:
-                    if i == 1:
-                        await user.move_to(otherVc)
-                        i = 0
-                    else:
-                        i = 1
-            elif ctx.author.voice.channel.id == (sevenVcs[1]):
-                otherVc = self.bot.get_channel(sevenVcs[0])
-                i = 0
-                for user in voiceChannelUsers:
-                    if i == 1:
-                        await user.move_to(otherVc)
-                        i = 0
-                    else:
-                        i = 1
+        async with ctx.channel.typing():
+            await ctx.reply("Splitting")
+            voiceChannelUsers = ctx.author.voice.channel.members
+            
+            sevenVcs = [872101027682324540, 872056405052510238]
+            eightVcs = [869519564973703228, 840889769713205248]
+            nineVcs = [872101199028043866, 864013586774491187, 953219379590488134]
+            
+            sevenRole = ctx.guild.get_role(783564469854142464)
+            eightRole = ctx.guild.get_role(845007589674188839)
+            nineRole = ctx.guild.get_role(863756344494260224)
+            
+            #7e
+            if sevenRole in ctx.author.roles:
+                if ctx.author.voice.channel.id == sevenVcs[0]:
+                    otherVc = self.bot.get_channel(sevenVcs[1])
+                    i = 0
+                    for user in voiceChannelUsers:
+                        if i == 1:
+                            await user.move_to(otherVc)
+                            i = 0
+                        else:
+                            i = 1
+                elif ctx.author.voice.channel.id == (sevenVcs[1]):
+                    otherVc = self.bot.get_channel(sevenVcs[0])
+                    i = 0
+                    for user in voiceChannelUsers:
+                        if i == 1:
+                            await user.move_to(otherVc)
+                            i = 0
+                        else:
+                            i = 1
 
-        #8e
-        role = discord.utils.find(
-                    lambda r: r.name == "8e Chasseurs de la Garde",
-                    ctx.message.guild.roles,
-                )
-        if role in ctx.author.roles:
-            if ctx.author.voice.channel.id == eightVcs[0]:
-                otherVc = self.bot.get_channel(eightVcs[1])
-                i = 0
-                for user in voiceChannelUsers:
-                    if i == 1:
-                        await user.move_to(otherVc)
-                        i = 0
-                    else:
-                        i = 1
-            elif ctx.author.voice.channel.id == (eightVcs[1]):
-                otherVc = self.bot.get_channel(eightVcs[0])
-                i = 0
-                for user in voiceChannelUsers:
-                    if i == 1:
-                        await user.move_to(otherVc)
-                        i = 0
-                    else:
-                        i = 1
-                
-        #9e
-        role = discord.utils.find(
-                    lambda r: r.name == "9e Grenadiers de la Garde",
-                    ctx.message.guild.roles,
-                )
-        if role in ctx.author.roles:
-            if ctx.author.voice.channel.id == (nineVcs[0]):
-                otherVc = self.bot.get_channel(nineVcs[1])
-                i = 0
-                for user in voiceChannelUsers:
-                    if i == 1:
-                        await user.move_to(otherVc)
-                        i = 0
-                    else:
-                        i = 1
-            elif ctx.author.voice.channel.id == (nineVcs[1]):
-                otherVc = self.bot.get_channel(nineVcs[0])
-                i = 0
-                for user in voiceChannelUsers:
-                    if i == 1:
-                        await user.move_to(otherVc)
-                        i = 0
-                    else:
-                        i = 1
+            #8e
+            if eightRole in ctx.author.roles:
+                if ctx.author.voice.channel.id == eightVcs[0]:
+                    otherVc = self.bot.get_channel(eightVcs[1])
+                    i = 0
+                    for user in voiceChannelUsers:
+                        if i == 1:
+                            await user.move_to(otherVc)
+                            i = 0
+                        else:
+                            i = 1
+                elif ctx.author.voice.channel.id == (eightVcs[1]):
+                    otherVc = self.bot.get_channel(eightVcs[0])
+                    i = 0
+                    for user in voiceChannelUsers:
+                        if i == 1:
+                            await user.move_to(otherVc)
+                            i = 0
+                        else:
+                            i = 1
+                    
+            #9e
+            if nineRole in ctx.author.roles:
+                if ctx.author.voice.channel.id == (nineVcs[0]):
+                    otherVc = self.bot.get_channel(nineVcs[1])
+                    i = 0
+                    for user in voiceChannelUsers:
+                        if i == 1:
+                            await user.move_to(otherVc)
+                            i = 0
+                        else:
+                            i = 1
+                elif ctx.author.voice.channel.id == (nineVcs[1]):
+                    otherVc = self.bot.get_channel(nineVcs[0])
+                    i = 0
+                    for user in voiceChannelUsers:
+                        if i == 1:
+                            await user.move_to(otherVc)
+                            i = 0
+                        else:
+                            i = 1
                         
     #Merge command
     @commands.has_any_role(
@@ -494,39 +445,32 @@ class iffCog(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.guild)               
     @commands.command(aliases=["Merge"])
     async def merge(self, ctx):
-        await ctx.reply("Merging")
-        #7e
-        role = discord.utils.find(
-                    lambda r: r.name == "7e Voltigeurs de la Garde",
-                    ctx.message.guild.roles,
-                )
-        if role in ctx.author.roles:
-            firstVc = self.bot.get_channel(872101027682324540)
-            secondVc = self.bot.get_channel(872056405052510238)
-            for user in secondVc.members:
-                await user.move_to(firstVc)
+        async with ctx.channel.typing():
+            await ctx.reply("Merging")
+            sevenRole = ctx.guild.get_role(783564469854142464)
+            eightRole = ctx.guild.get_role(845007589674188839)
+            nineRole = ctx.guild.get_role(863756344494260224)
+            
+            #7e
+            if sevenRole in ctx.author.roles:
+                firstVc = self.bot.get_channel(872101027682324540)
+                secondVc = self.bot.get_channel(872056405052510238)
+                for user in secondVc.members:
+                    await user.move_to(firstVc)
 
-        #8e
-        role = discord.utils.find(
-                    lambda r: r.name == "8e Chasseurs de la Garde",
-                    ctx.message.guild.roles,
-                )
-        if role in ctx.author.roles:
-            firstVc = self.bot.get_channel(869519564973703228)
-            secondVc = self.bot.get_channel(840889769713205248)
-            for user in secondVc.members:
-                await user.move_to(firstVc)
-                
-        #9e
-        role = discord.utils.find(
-                    lambda r: r.name == "9e Grenadiers de la Garde",
-                    ctx.message.guild.roles,
-                )
-        if role in ctx.author.roles:
-            firstVc = self.bot.get_channel(872101199028043866)
-            secondVc = self.bot.get_channel(864013586774491187)
-            for user in secondVc.members:
-                await user.move_to(firstVc)
+            #8e
+            if eightRole in ctx.author.roles:
+                firstVc = self.bot.get_channel(869519564973703228)
+                secondVc = self.bot.get_channel(840889769713205248)
+                for user in secondVc.members:
+                    await user.move_to(firstVc)
+                    
+            #9e
+            if nineRole in ctx.author.roles:
+                firstVc = self.bot.get_channel(872101199028043866)
+                secondVc = self.bot.get_channel(864013586774491187)
+                for user in secondVc.members:
+                    await user.move_to(firstVc)
         
         
     #Move all users in current vc to parade ground
@@ -537,12 +481,13 @@ class iffCog(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.command(aliases=["Parade"])
     async def parade(self, ctx):
-        await ctx.reply("Moving users now")
-        paradeGround = self.bot.get_channel(757782109275553863)
-        connectedUsers = ctx.author.voice.channel.members
-        
-        for user in connectedUsers:
-            await user.move_to(paradeGround)
+        async with ctx.channel.typing():
+            await ctx.reply("Moving users now")
+            paradeGround = self.bot.get_channel(757782109275553863)
+            connectedUsers = ctx.author.voice.channel.members
+            
+            for user in connectedUsers:
+                await user.move_to(paradeGround)
             
     #Move everyone to parade ground
     @commands.has_any_role(
@@ -571,45 +516,31 @@ class iffCog(commands.Cog):
     @commands.guild_only()
     @commands.command(aliases=["Spread","fuckoff"])
     async def spread(self, ctx):
-        paradeGround = self.bot.get_channel(757782109275553863)
-        sevenChannel = self.bot.get_channel(872101027682324540)
-        eightChannel = self.bot.get_channel(869519564973703228)
-        nineChannel = self.bot.get_channel(872101199028043866)
-        fourChannel = self.bot.get_channel(660358590925897769)
-        
-        await ctx.reply("Spreading users now")
-        
-        for user in paradeGround.members:
-            sevenRole = discord.utils.find(
-                lambda r: r.name == "7e Voltigeurs de la Garde",
-                ctx.message.guild.roles,
-            )
+        async with ctx.channel.typing():
+            paradeGround = self.bot.get_channel(757782109275553863)
+            sevenChannel = self.bot.get_channel(872101027682324540)
+            eightChannel = self.bot.get_channel(869519564973703228)
+            nineChannel = self.bot.get_channel(872101199028043866)
+            fourChannel = self.bot.get_channel(660358590925897769)
             
-            eightRole = discord.utils.find(
-                lambda r: r.name == "8e Chasseurs de la Garde",
-                ctx.message.guild.roles,
-            )
+            sevenRole = ctx.guild.get_role(783564469854142464)
+            eightRole = ctx.guild.get_role(845007589674188839)
+            nineRole = ctx.guild.get_role(863756344494260224)
+            fourRole = ctx.guild.get_role(760440084880162838)
             
-            nineRole = discord.utils.find(
-                lambda r: r.name == "9e Grenadiers de la Garde",
-                ctx.message.guild.roles,
-            )
-            
-            fourRole = discord.utils.find(
-                lambda r: r.name == "4e Batterie d'Artillerie à Pied",
-                ctx.message.guild.roles,
-            )      
-            
-            if sevenRole in user.roles:
-                await user.move_to(sevenChannel)
-            elif eightRole in user.roles:
-                await user.move_to(eightChannel)
-            elif nineRole in user.roles:
-                await user.move_to(nineChannel)
-            elif fourRole in user.roles:
-                await user.move_to(fourChannel)
-            else:
-                await ctx.reply("Please move the mercs/recruits to the appropriate channel") 
+            await ctx.reply("Spreading users now")
+                
+            for user in paradeGround.members:
+                if sevenRole in user.roles:
+                    await user.move_to(sevenChannel)
+                elif eightRole in user.roles:
+                    await user.move_to(eightChannel)
+                elif nineRole in user.roles:
+                    await user.move_to(nineChannel)
+                elif fourRole in user.roles:
+                    await user.move_to(fourChannel)
+                    
+            await ctx.reply("Please move the mercs/recruits to the appropriate channel") 
     
     #Service medal calculator     
     @commands.has_any_role(
