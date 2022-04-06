@@ -106,7 +106,6 @@ class randomCog(commands.Cog):
         await user.send(message)
         await ctx.reply("Message sent")
         
-        
     #Echo command 
     @commands.command(aliases=["mirror","Mirror","Echo"])
     async def echo(self, ctx, *, message):
@@ -162,7 +161,7 @@ class randomCog(commands.Cog):
     
     #Eight ball
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name = "eightball", aliases=["EightBall"])
+    @commands.command(name = "eightball", aliases=["EightBall","8ball"])
     async def  eightball(self, ctx:commands.Context):
         msgs = ["It is certain.", "It is decidedly so.","Without a doubt.","Yes definitely.","You may rely on it","As I see it, yes.","Most likely.","Outlook good.","Yes.","Signs point to yes","Reply hazy, try again.","Ask again later.","Better not tell you now.","Cannot predict now.","Concentrate and ask again","Don't count on it.","My reply is no.","My sources say no.","Outlook not so good.", "Very doubtful."]
         choice = randint(0, len(msgs)-1)
@@ -172,13 +171,15 @@ class randomCog(commands.Cog):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def gif(self, ctx:commands.Context, *, searchTerm = None):
         try:
-            if searchTerm.lower() not in badwords.words:
+            if searchTerm.lower() not in badwords.words and ctx.author.id != 310330681047908363:
                 load_dotenv()
                 tenorToken = os.getenv('TENORTOKEN')
                 response = requests.get("https://g.tenor.com/v1/search?q={}&key={}&limit=25".format(searchTerm, tenorToken))
                 data = response.json()
                 gif = random.choice(data["results"])
                 await ctx.send(f"{gif['media'][0]['gif']['url']}\n(Requested by {ctx.author.name}#{ctx.author.discriminator})")
+            elif ctx.author.id == 310330681047908363:
+                await ctx.send("You're gay")
             else:
                 await ctx.send("Please don't search that :(")
         except:
