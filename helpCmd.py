@@ -291,7 +291,7 @@ class helpCog(commands.Cog):
         embed=discord.Embed(title="IFF Bot - Help - NCO - Muster", description="The muster command",color=0x17169a)
         embed.add_field(name="Command", value="_muster", inline=False)
         embed.add_field(name="Aliases", value="muster, Muster", inline=False)
-        embed.add_field(name="Description", value="Autogenerates the muster roll", inline=True)
+        embed.add_field(name="Description", value="Autogenerates the muster roll and removes the old one", inline=True)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
         

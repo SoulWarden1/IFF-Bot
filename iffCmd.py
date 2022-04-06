@@ -619,7 +619,14 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
     @commands.guild_only()
     @commands.command(aliases=["Muster"])
     async def muster(self, ctx):
+        musterChannelId = 832454366598135808
+                    
         async with ctx.channel.typing():
+            if ctx.channel.id == musterChannelId:
+                async for message in ctx.channel.history(limit = 10):
+                    if message.author.bot:
+                        await message.delete()
+                    
             fourCoList = []
             sevenCoList = []
             eightCoList = []
