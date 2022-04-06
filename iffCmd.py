@@ -105,7 +105,7 @@ class iffCog(commands.Cog):
             "Check you dm's! (Making your own announcement is still prefered, only do this if you have little time)"
         )
         await ctx.message.author.send(
-            f"::8e: :IFF1:   **══════ {day} OCEANIC LINEBATTLE EVENT══════**   :IFF1: :8e: \n8:00pm AEDT :flag_au: | 7:00pm AEST :flag_au: | 5:00pm AWST :flag_au: | 10:00pm NZDT :flag_nz: \n5:00pm PHT/MYT :flag_ph: :flag_my: :flag_sg: :flag_id: :flag_bn: :flag_hk: | 4:00pm WIT :flag_id: :flag_vn: :flag_th: | 2:30pm IST :flag_in: \n6:00pm KST/JST :flag_kr: :flag_jp: | 05:00am EDT :flag_us: | 9:00am BST :flag_gb: \n \n[Inspirational message] \n \nThe event starts at **8:00pm AEDT** today \n\nWe have training at **7:00pm AEDT** or 1 hour before the event so make sure you come! \n\nReact [Emoji]  if you'll be attending \nI hope to see all of you coming! \n(Ask an officer for a ping)"
+            f"::8e: :IFF1:   **══════ {day} OCEANIC LINEBATTLE EVENT══════**   :IFF1: :8e: \n8:00pm AEDT:flag_au: | 8:00pm AEST :flag_au: | 6:00pm AWST :flag_au: | 10:00pm NZDT :flag_nz: \n6:00pm PHT/MYT :flag_ph: :flag_my: :flag_sg: :flag_id: :flag_bn: :flag_hk: | 5:00pm WIT :flag_id: :flag_vn: :flag_th: | 3:30pm IST :flag_in: \n7:00pm KST/JST :flag_kr: :flag_jp: | 06:00am EDT :flag_us: | 10:00am BST :flag_gb: \n \n[Inspirational message] \n \nThe event starts at **8:00pm AEDT** today \n\nWe have training at **7:00pm AEDT** or 1 hour before the event so make sure you come! \n\nReact [Emoji]  if you'll be attending \nI hope to see all of you coming! \n(Ask an officer for a ping)"
         )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -298,18 +298,23 @@ class iffCog(commands.Cog):
             totalUsers += len(channel.members)
     
         for user in channelUsers:
-            for x in user: 
+            for x in user:
                 if sevenRole in x.roles:
-                    sevenUsers.append(x.display_name)  
+                    sevenUsers.append(x.display_name)
+                    continue
                 elif eightRole in x.roles:
-                    eightUsers.append(x.display_name)  
+                    eightUsers.append(x.display_name)
+                    continue 
                 elif nineRole in x.roles:
                     nineUsers.append(x.display_name) 
+                    continue
                 elif fourRole in x.roles:
                     fourUsers.append(x.display_name)
+                    continue
                 else:
                     otherUsers.append(x.display_name)
-                    
+                    continue
+         
         fourStr = ", ".join(fourUsers)
         sevenStr = ", ".join(sevenUsers)
         eightStr = ", ".join(eightUsers)
