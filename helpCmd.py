@@ -15,11 +15,12 @@ class helpCog(commands.Cog):
             helpMsg.add_field(name="mcid", value="Input the username of a minecraft player, outputs their UUID", inline=False)
             helpMsg.add_field(name="mcname", value="Input the uuid of a minecraft player, outputs their username", inline=False)
             helpMsg.add_field(name="id", value="Input the discord id of a user, output their username", inline=False)
-            helpMsg.add_field(name="Math", value="Allows for short maths equations to be done", inline=False)
             helpMsg.add_field(name="Trello", value="Posts the link to the trello", inline=False)
             helpMsg.add_field(name="Avatar", value="Posts the image of a pinged users avatar", inline=False)
             helpMsg.add_field(name="ID", value="Converts a pinged user to their ID", inline=False)
             helpMsg.add_field(name="Usernames", value="Converts an inputted ID to username", inline=False)
+            helpMsg.add_field(name="Eight Ball", value="It's a magic eight ball", inline=False)
+            helpMsg.add_field(name="Gif", value="Posts a gif related to the inputted message", inline=False)
             helpMsg.set_footer(text="Made by SoulWarden#8946")
             helpMsg.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
             
@@ -43,14 +44,14 @@ class helpCog(commands.Cog):
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
         
-    @help.command(pass_context=True, aliases=["Math","Maths","maths"])
-    async def math(self, ctx):
-        embed=discord.Embed(title="IFF Bot - Help - Math", description="The math command",color=0x17169a)
-        embed.add_field(name="Command", value="_math [equation]", inline=False)
-        embed.add_field(name="Aliases", value="math, Math, Maths, maths", inline=False)
-        embed.add_field(name="Description", value="Takes in a short equation and calculates result. Example: _math 2*3-2, _math 3+2/2, _math 5^2/3)", inline=True)
-        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
-        await ctx.send(embed=embed)
+    # @help.command(pass_context=True, aliases=["Math","Maths","maths"])
+    # async def math(self, ctx):
+    #     embed=discord.Embed(title="IFF Bot - Help - Math", description="The math command",color=0x17169a)
+    #     embed.add_field(name="Command", value="_math [equation]", inline=False)
+    #     embed.add_field(name="Aliases", value="math, Math, Maths, maths", inline=False)
+    #     embed.add_field(name="Description", value="Takes in a short equation and calculates result. Example: _math 2*3-2, _math 3+2/2, _math 5^2/3)", inline=True)
+    #     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+    #     await ctx.send(embed=embed)
             
     @help.command(pass_context=True)
     async def mcid(self, ctx):
@@ -134,8 +135,34 @@ class helpCog(commands.Cog):
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
     
-            
-                  
+    @help.command(pass_context=True, aliases=["Eightball", "8ball"])
+    async def eightball(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - Eight Ball", description="The eight ball command",color=0x17169a)
+        embed.add_field(name="Command", value="_eightball", inline=False)
+        embed.add_field(name="Aliases", value="eightball, Eightball, 8ball", inline=False)
+        embed.add_field(name="Description", value="It's a magic eight ball, not much more too it", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    @help.command(pass_context=True, aliases=["Gif"])
+    async def gif(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - Gif", description="The gif command",color=0x17169a)
+        embed.add_field(name="Command", value="_gif [search term]", inline=False)
+        embed.add_field(name="Aliases", value="gif, Gif", inline=False)
+        embed.add_field(name="Description", value="Posts a gif related to the search term", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    #Template  
+    # @help.command(pass_context=True, aliases=[""])
+    # async def service(self, ctx):
+    #     embed=discord.Embed(title="IFF Bot - Help - ", description="The  command",color=0x17169a)
+    #     embed.add_field(name="Command", value="_", inline=False)
+    #     embed.add_field(name="Aliases", value="", inline=False)
+    #     embed.add_field(name="Description", value="", inline=True)
+    #     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+    #     await ctx.send(embed=embed)
+                   
     #NCO HELP --------------------------------------------------------
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
@@ -156,6 +183,8 @@ class helpCog(commands.Cog):
             embed.add_field(name="Force parade", value="Moves **all** users in holdfast channels to parade ground", inline=False)
             embed.add_field(name="Spread", value="Moves all users in parade ground to their respective company channel", inline=False)
             embed.add_field(name="Muster", value="Creates the muster roll", inline=False)
+            embed.add_field(name="Service", value="Automatically displays who requires serivce roles", inline=False)
+            embed.add_field(name="Recruit Form", value="Posts the recruitment form", inline=False)
             embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
             
@@ -265,6 +294,34 @@ class helpCog(commands.Cog):
         embed.add_field(name="Description", value="Autogenerates the muster roll", inline=True)
         embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
+        
+    @nco.command(pass_context=True, aliases=["Service"])
+    async def service(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - Service", description="The service command",color=0x17169a)
+        embed.add_field(name="Command", value="_service", inline=False)
+        embed.add_field(name="Aliases", value="service, Service", inline=False)
+        embed.add_field(name="Description", value="Automatically calculates who requres service medals", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+    
+    @nco.command(pass_context=True, aliases=["Rctform", "rctForm", "RctForm"])
+    async def rctform(self, ctx):
+        embed=discord.Embed(title="IFF Bot - Help - NCO - rctform", description="The recruit form command",color=0x17169a)
+        embed.add_field(name="Command", value="_rctform", inline=False)
+        embed.add_field(name="Aliases", value="rctform, Rctform, rctForm, RctForm", inline=False)
+        embed.add_field(name="Description", value="Posts the recruitment form in the current channel", inline=True)
+        embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+        
+    #Template
+    # @nco.command(pass_context=True, aliases=[""])
+    # async def service(self, ctx):
+    #     embed=discord.Embed(title="IFF Bot - Help - NCO - ", description="The  command",color=0x17169a)
+    #     embed.add_field(name="Command", value="_", inline=False)
+    #     embed.add_field(name="Aliases", value="", inline=False)
+    #     embed.add_field(name="Description", value="", inline=True)
+    #     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)
+    #     await ctx.send(embed=embed)
         
         
 def setup(bot):
