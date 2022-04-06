@@ -96,70 +96,29 @@ class backgroundTasks(commands.Cog):
             fourUsers = []
             otherUsers = []
             
-            for channel in iffGuild.voice_channels:
-                if channel.category_id == vcCatId:
-                    vcChannelsIds.append(channel.id)
-                    
+            sevenRole = iffGuild.get_role(783564469854142464)
+            eightRole = iffGuild.get_role(845007589674188839)
+            nineRole = iffGuild.get_role(863756344494260224)
+            fourRole = iffGuild.get_role(760440084880162838)
+            
+            vcChannelsIds = [channel.id for channel in iffGuild.voice_channels if channel.category_id == vcCatId]
+        
             for channelId in vcChannelsIds:
                 channel = self.bot.get_channel(channelId)
                 channelUsers.append(channel.members)
                 totalUsers += len(channel.members)
-            
-            role = discord.utils.find(
-                lambda r: r.name == "7e Voltigeurs de la Garde", iffGuild.roles
-            )
-            
+        
             for user in channelUsers:
                 for x in user:
-                    if role in x.roles:
-                        sevenUsers.append(x.display_name)
-                        
-            
-            role = discord.utils.find(
-                lambda r: r.name == "8e Chasseurs de la Garde", iffGuild.roles
-            )
-            
-            for user in channelUsers:
-                for x in user:
-                    if role in x.roles:
-                        eightUsers.append(x.display_name)
-                        
-                        
-            role = discord.utils.find(
-                lambda r: r.name == "9e Grenadiers de la Garde", iffGuild.roles
-            )
-            
-            for user in channelUsers:
-                for x in user:
-                    if role in x.roles:
-                        nineUsers.append(x.display_name)
-                        
-                        
-            role = discord.utils.find(
-                lambda r: r.name == "4e Batterie d'Artillerie à Pied", iffGuild.roles
-            )
-            
-            for user in channelUsers:
-                for x in user:
-                    if role in x.roles:
+                    if sevenRole in x.roles:
+                        sevenUsers.append(x.display_name)  
+                    elif eightRole in x.roles:
+                        eightUsers.append(x.display_name)  
+                    elif nineRole in x.roles:
+                        nineUsers.append(x.display_name) 
+                    elif fourRole in x.roles:
                         fourUsers.append(x.display_name)
-                        
-            role = discord.utils.find(
-                lambda r: r.name == "La Recrue (Recruit)", iffGuild.roles
-            )
-            
-            for user in channelUsers:
-                for x in user:
-                    if role in x.roles:
-                        otherUsers.append(x.display_name)
-                        
-            role = discord.utils.find(
-                lambda r: r.name == "Mercenary", iffGuild.roles
-            )
-            
-            for user in channelUsers:
-                for x in user:
-                    if role in x.roles:
+                    else:
                         otherUsers.append(x.display_name)
                         
             fourStr = ", ".join(fourUsers)
