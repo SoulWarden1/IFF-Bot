@@ -651,332 +651,122 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
         eightRole = ctx.guild.get_role(845007589674188839)
         nineRole = ctx.guild.get_role(863756344494260224)
         fourRole = ctx.guild.get_role(760440084880162838)
+        coRole = ctx.guild.get_role(660353960514813952)
+        ncoRole = ctx.guild.get_role(661522627646586893)
+        cplRole = ctx.guild.get_role(863757684674920519)
               
         async with ctx.channel.typing():
             if ctx.channel.id == musterChannelId:
-                async for message in ctx.channel.history(limit = None):
+                async for message in ctx.channel.history(limit = 10):
                     if message is None:
                         break
                     elif message.author.bot:
                         await message.delete()
                 
             workingMsg = await ctx.reply("Generating now")
-        
-            fourCoList = []
-            sevenCoList = []
-            eightCoList = []
-            nineCoList = []
-            fourNcoList = []
-            sevenNcoList = []
-            eightNcoList = []
-            nineNcoList = []
-            fourCplList = []
-            sevenCplList = []
-            eightCplList = []
-            nineCplList = []
-            fourEnlistedList = []
-            sevenEnlistedList = []
-            eightEnlistedList = []
-            nineEnlistedList = []
-
-            fourEnlistedCount = 0
-            sevenEnlistedCount = 0
-            eightEnlistedCount = 0
-            nineEnlistedCount = 0
             
-            # 4e -----------------------------------------------
-            for user in ctx.guild.members:
-                if fourRole in user.roles:
-                    # Co list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
-                    )
-                    if role in user.roles:
-                        if '"Cpt. ' in user.display_name:
-                            nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
-                            fourCoList.append(nick)
-                        elif '"Lt.' in user.display_name:
-                            nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
-                            fourCoList.append(nick)
-                    fourCoList.sort(reverse=True)
-
-                    # NCO list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Non-Commissioned Officer",
-                        ctx.message.guild.roles,
-                    )
-                    if role in user.roles:
-                        if "'SMaj." in user.display_name:
-                            nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                            fourNcoList.append(nick)
-                        elif "'Sgt." in user.display_name:
-                            nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                            fourNcoList.append(nick)
-                    fourNcoList.sort(reverse=True)
-
-                    # Cpl list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Corporal", ctx.message.guild.roles
-                    )
-                    if role in user.roles:
-                        nick = user.display_name
-                        nick = nick.replace(".Cpl. ", "Corporal ")
-                        fourCplList.append(nick)
-                    fourCplList.sort()
-
-                    # Enlisted list
-                    if fourRole in user.roles:
-                        if "Sdt." in user.display_name:
-                            fourEnlistedCount += 1
-                        elif "Fus. " in user.display_name:
-                            fourEnlistedCount += 1
-                        elif "Volt. " in user.display_name:
-                            fourEnlistedCount += 1
-                        elif "Chas. " in user.display_name:
+            def coCalc(companyRole):
+                coList = []
+                for user in ctx.guild.members:    
+                    if companyRole in user.roles:
+                        if coRole in user.roles:
+                            if '"Cpt. ' in user.display_name:
+                                nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
+                                coList.append(nick)
+                            elif '"Lt.' in user.display_name:
+                                nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
+                                coList.append(nick)
+                        coList.sort(reverse = True)
+                return coList
+            
+            def ncoCalc(companyRole):
+                ncoList = []
+                for user in ctx.guild.members:
+                        if companyRole in user.roles:
+                            if ncoRole in user.roles:
+                                if "'SMaj." in user.display_name:
+                                    nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
+                                    ncoList.append(nick)
+                                elif "'Sgt." in user.display_name:
+                                    nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
+                                    ncoList.append(nick)
+                            ncoList.sort(reverse = True)
+                return ncoList
+            
+            def cplCalc(companyRole):
+                cplList = []
+                for user in ctx.guild.members:
+                        if companyRole in user.roles:
+                            if cplRole in user.roles:
+                                nick = user.display_name
+                                nick = nick.replace(".Cpl. ", "Corporal ")
+                                cplList.append(nick)
+                            cplList.sort(reverse = True)
+                return cplList
+                        
+            def enlistedCalc(companyRole):
+                enlistedList = []
+                for user in ctx.guild.members:
+                    if companyRole in user.roles and "[" not in user.display_name:
+                        if "Chas. " in user.display_name:
                             nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                            fourEnlistedList.append(nick)
+                            enlistedList.append(nick)
                         elif "Gda. " in user.display_name:
                             nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                            fourEnlistedList.append(nick)
+                            enlistedList.append(nick)
                         elif "Lans. " in user.display_name:
                             nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                            fourEnlistedList.append(nick)
+                            enlistedList.append(nick)
                         elif "Gren. " in user.display_name:
                             nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                            fourEnlistedList.append(nick)
+                            enlistedList.append(nick)
                         elif "Gde. " in user.display_name:
-                            nick = (user.display_name).replace(
-                                "Gde. ", "Grenadier de Elite "
-                            )
-                            fourEnlistedList.append(nick)
+                            nick = (user.display_name).replace("Gde. ", "Grenadier de Elite ")
+                            enlistedList.append(nick)
+                        enlistedList.sort(reverse = True)
+                return enlistedList()
+                        
+            def enlistedCountCalc(companyRole):
+                enlistedCount = 0
+                for user in ctx.guild.members:
+                    if companyRole in user.roles and "[" not in user.display_name:
+                        if "Sdt." in user.display_name:
+                            enlistedCount += 1
+                        elif "Fus. " in user.display_name:
+                            enlistedCount += 1
+                        elif "Volt. " in user.display_name:
+                            enlistedCount += 1
+                return enlistedCount
+                                 
+            #4e stuff                               
+            fourCoList = coCalc(fourRole)
+            fourNcoList = ncoCalc(fourRole)
+            fourCplList = cplCalc(fourRole)
+            fourEnlistedList = enlistedCalc(fourRole)
+            fourEnlistedCount = enlistedCountCalc(fourRole)
+            
+            #7e stuff 
+            sevenCoList = coCalc(sevenRole)
+            sevenNcoList = ncoCalc(sevenRole)
+            sevenCplList = cplCalc(sevenRole)
+            sevenEnlistedList = enlistedCalc(sevenRole)
+            sevenEnlistedCount = enlistedCountCalc(sevenRole)
+            
+            #8e stuff 
+            eightCoList = coCalc(eightRole)
+            eightNcoList = ncoCalc(eightRole)
+            eightCplList = cplCalc(eightRole)
+            eightEnlistedList = enlistedCalc(eightRole)
+            eightEnlistedCount = enlistedCountCalc(eightRole)
+            
+            #9e stuff 
+            nineCoList = coCalc(nineRole)
+            nineNcoList = ncoCalc(nineRole)
+            nineCplList = cplCalc(nineRole)
+            nineEnlistedList = enlistedCalc(nineRole)
+            nineEnlistedCount = enlistedCountCalc(nineRole)
 
-                        fourEnlistedList.sort(reverse=True)
-
-            # 7e -----------------------------------------------
-            role = discord.utils.find(
-                lambda r: r.name == "7e Voltigeurs de la Garde", ctx.message.guild.roles
-            )
-            for user in ctx.guild.members:
-                if role in user.roles:
-                    # Co list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
-                    )
-                    if role in user.roles:
-                        if 'Cpt.' in user.display_name:
-                            nick = (user.display_name).replace('Cpt. ', "Capitaine ")
-                            sevenCoList.append(nick)
-                        elif 'Lt.' in user.display_name:
-                            nick = (user.display_name).replace('Lt. ', "Lieutenant ")
-                            sevenCoList.append(nick)
-                    sevenCoList.sort(reverse=True)
-
-                    # NCO list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Non-Commissioned Officer",
-                        ctx.message.guild.roles,
-                    )
-                    if role in user.roles:
-                        if "'SMaj." in user.display_name:
-                            nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                            sevenNcoList.append(nick)
-                        elif "'Sgt." in user.display_name:
-                            nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                            sevenNcoList.append(nick)
-                    sevenNcoList.sort(reverse=True)
-
-                    # Cpl list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Corporal", ctx.message.guild.roles
-                    )
-                    if role in user.roles:
-                        nick = user.display_name
-                        nick = nick.replace(".Cpl. ", "Corporal ")
-                        sevenCplList.append(nick)
-                    sevenCplList.sort()
-
-                    # Enlisted list
-                    role = discord.utils.find(
-                        lambda r: r.name == "7e Voltigeurs de la Garde",
-                        ctx.message.guild.roles,
-                    )
-                    if role in user.roles:
-                        if "Sdt." in user.display_name and "[" not in user.display_name:
-                            sevenEnlistedCount += 1
-                        elif "Fus. " in user.display_name and "[" not in user.display_name:
-                            sevenEnlistedCount += 1
-                        elif "Volt. " in user.display_name and "[" not in user.display_name:
-                            sevenEnlistedCount += 1
-                        elif "Chas. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                            sevenEnlistedList.append(nick)
-                        elif "Gda. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                            sevenEnlistedList.append(nick)
-                        elif "Lans. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                            sevenEnlistedList.append(nick)
-                        elif "Gren. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                            sevenEnlistedList.append(nick)
-                        elif "Gde. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace(
-                                "Gde. ", "Grenadier de Elite "
-                            )
-                            sevenEnlistedList.append(nick)
-
-                        sevenEnlistedList.sort(reverse=True)
-
-            # 8e -------------------------------------------
-            role = discord.utils.find(
-                lambda r: r.name == "8e Chasseurs de la Garde", ctx.message.guild.roles
-            )
-            for user in ctx.guild.members:
-                if role in user.roles:
-                    # Co list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
-                    )
-                    if role in user.roles:
-                        if '"Cpt. ' in user.display_name:
-                            nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
-                            eightCoList.append(nick)
-                        elif '"Lt.' in user.display_name:
-                            nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
-                            eightCoList.append(nick)
-                    eightCoList.sort(reverse=True)
-
-                    # NCO list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Non-Commissioned Officer",
-                        ctx.message.guild.roles,
-                    )
-                    if role in user.roles:
-                        if "'SMaj." in user.display_name:
-                            nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                            eightNcoList.append(nick)
-                        elif "'Sgt." in user.display_name:
-                            nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                            eightNcoList.append(nick)
-                    eightNcoList.sort(reverse=True)
-
-                    # Cpl list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Corporal", ctx.message.guild.roles
-                    )
-                    if role in user.roles:
-                        nick = user.display_name
-                        nick = nick.replace(".Cpl. ", "Corporal ")
-                        eightCplList.append(nick)
-                    eightCplList.sort()
-
-                    # Enlisted list
-                    role = discord.utils.find(
-                        lambda r: r.name == "8e Chasseurs de la Garde",
-                        ctx.message.guild.roles,
-                    )
-                    if role in user.roles:
-                        if "Sdt." in user.display_name and "[" not in user.display_name:
-                            eightEnlistedCount += 1
-                        elif "Fus. " in user.display_name and "[" not in user.display_name:
-                            eightEnlistedCount += 1
-                        elif "Volt. " in user.display_name and "[" not in user.display_name:
-                            eightEnlistedCount += 1
-                        elif "Chas. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                            eightEnlistedList.append(nick)
-                        elif "Gda. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                            eightEnlistedList.append(nick)
-                        elif "Lans. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                            eightEnlistedList.append(nick)
-                        elif "Gren. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                            eightEnlistedList.append(nick)
-                        elif "Gde. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace(
-                                "Gde. ", "Grenadier de Elite "
-                            )
-                            eightEnlistedList.append(nick)
-
-                        eightEnlistedList.sort(reverse=True)
-
-            # 9e ---------------------------------------------
-            role = discord.utils.find(
-                lambda r: r.name == "9e Grenadiers de la Garde", ctx.message.guild.roles
-            )
-            for user in ctx.guild.members:
-                if role in user.roles:
-                    # Co list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
-                    )
-                    if role in user.roles:
-                        if '"Cpt.' in user.display_name:
-                            nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
-                            nineCoList.append(nick)
-                        elif '"Lt.' in user.display_name:
-                            nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
-                            nineCoList.append(nick)
-                    nineCoList.sort(reverse=True)
-
-                    # NCO list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Non-Commissioned Officer",
-                        ctx.message.guild.roles,
-                    )
-                    if role in user.roles:
-                        if "'SMaj." in user.display_name:
-                            nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                            nineNcoList.append(nick)
-                        elif "'Sgt." in user.display_name:
-                            nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                            nineNcoList.append(nick)
-                    nineNcoList.sort(reverse=True)
-
-                    # Cpl list
-                    role = discord.utils.find(
-                        lambda r: r.name == "Corporal", ctx.message.guild.roles
-                    )
-                    if role in user.roles:
-                        nick = user.display_name
-                        nick = nick.replace(".Cpl. ", "Corporal ")
-                        nineCplList.append(nick)
-                    nineCplList.sort()
-
-                    # Enlisted list
-                    role = discord.utils.find(
-                        lambda r: r.name == "9e Grenadiers de la Garde",
-                        ctx.message.guild.roles,
-                    )
-                    if role in user.roles:
-                        if "Sdt." in user.display_name and "[" not in user.display_name:
-                            nineEnlistedCount += 1
-                        elif "Fus. " in user.display_name and "[" not in user.display_name:
-                            nineEnlistedCount += 1
-                        elif "Volt. " in user.display_name and "[" not in user.display_name:
-                            nineEnlistedCount += 1
-                        elif "Chas. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                            nineEnlistedList.append(nick)
-                        elif "Gda. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                            nineEnlistedList.append(nick)
-                        elif "Lans. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                            nineEnlistedList.append(nick)
-                        elif "Gren. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                            nineEnlistedList.append(nick)
-                        elif "Gde. " in user.display_name and "[" not in user.display_name:
-                            nick = (user.display_name).replace(
-                                "Gde. ", "Grenadier de Elite "
-                            )
-                            nineEnlistedList.append(nick)
-
-                        nineEnlistedList.sort(reverse=True)
-
+            
             sevenCoStr = "\n".join(sevenCoList)
             eightCoStr = "\n".join(eightCoList)
             nineCoStr = "\n".join(nineCoList)
@@ -1082,8 +872,6 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                     "/home/pi/Desktop/iffBot/files/cav_skin.png", filename="cav_skin.png"
                 )
                 
-
-            # ADD FOUR E
 
             # Command Col----------------------------------------------------
             cmd1Embed=discord.Embed(title="Imperial Frontier Force 1ic", description="", color=0xffff00)
@@ -1294,7 +1082,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
             specEmbed.add_field(name="Garde Chevau-Léger", value="Capitaine Bronze\nLieutenant Ace", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Capitaine Tobakshi (Aux)\nGendarme Milk (Sapper)", inline=False)
+            specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Capitaine Tobakshi (Aux)\nLanspessade Milk (Sapper)", inline=False)
 
             await workingMsg.delete()
             
