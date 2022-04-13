@@ -19,7 +19,7 @@ class helpCog(commands.Cog):
             helpMsg.add_field(name="Avatar", value="Posts the image of a pinged users avatar", inline=False)
             helpMsg.add_field(name="ID", value="Converts a pinged user to their ID", inline=False)
             helpMsg.add_field(name="Usernames", value="Converts an inputted ID to username", inline=False)
-            helpMsg.add_field(name="Eight Ball", value="It's a magic eight ball", inline=False)
+            helpMsg.add_field(name="8ball", value="It's a magic eight ball", inline=False)
             helpMsg.add_field(name="Gif", value="Posts a gif related to the inputted message", inline=False)
             helpMsg.set_footer(text="Made by SoulWarden#8946")
             helpMsg.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar_url)

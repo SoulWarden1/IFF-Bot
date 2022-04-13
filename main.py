@@ -104,12 +104,10 @@ async def on_ready():
     print("Past id loaded")
 
     # Sets prefix
-
     if varStore.platform:
         bot.command_prefix = commands.when_mentioned_or('_')
     else:
         bot.command_prefix = commands.when_mentioned_or('?')
-
 
 dmChannelId = 950245454317236304
 nineCooldown = []

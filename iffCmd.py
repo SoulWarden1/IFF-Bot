@@ -117,7 +117,6 @@ class iffCog(commands.Cog):
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    @commands.has_role(845007589674188839)
     @commands.command(
         aliases=[
             "comWelcome",
@@ -127,44 +126,59 @@ class iffCog(commands.Cog):
             "companywelcome",
             "Companywelcome", 
         ],
-        manage_roles=True,
     )
     @commands.cooldown(1, 5, commands.BucketType.guild)
     @commands.guild_only()
     async def comWel(self, ctx, rct: discord.User):
-        eightStr = ""
-        nineStr = ""
+        sevenRole = ctx.guild.get_role(783564469854142464)
+        eightRole = ctx.guild.get_role(845007589674188839)
+        nineRole = ctx.guild.get_role(863756344494260224)
+        
+        if sevenRole in ctx.author.roles:
+            company = "7e"
+            leadership = "Cpt. Tobakshi, SMaj. Muddy Shoes and Sgt. Kerrahn"
+        elif eightRole in ctx.author.roles:
+            company = "8e"
+            leadership = "Col. Joshlols, Cpt. Bronze, Lt. Ace, SMaj. SoulWarden, SMaj. Rabbi and Sgt. Quack"
+        elif nineRole in ctx.author.roles:
+            company = "9e"
+            leadership = "AdC. Ballistic, Cpt. Ghost and SMaj. Redundant"
+        else:
+            await ctx.reply("Invalid roles")
+            return
+            
         try:
-            file = discord.File(
+            img = discord.File(
                 "IFF Bot/files/8e.png",
                 filename="8e.png",
             )
         except:
-            file = discord.File(
+            img = discord.File(
                 "/home/pi/Desktop/iffBot/files/8e.png", filename="8e.png"
             )
 
-        channel = self.bot.get_channel(varStore.companyChannel)
+        # channel = self.bot.get_channel(varStore.companyChannel)
+        channel = self.bot.get_channel(954194296809095188)
         embed = discord.Embed(
-            title=f"Welcome to the 8e Infantry Company {rct.name}!",
+            title=f"Welcome to the {company} Infantry Company {rct.name}!",
             url="",
-            description="The 8e is one of the IFF's 3 infantry companies",
+            description=f"The {company} is one of the IFF's 3 infantry companies",
             color=0x109319,
         )
         embed.set_thumbnail(url="attachment://8e.png")
         embed.add_field(
             name="Our Leadership",
-            value="Our leadership is made up of Col. Joshlols, Cpt. Bronze, Lt. Ace, SMaj. SoulWarden, SMaj. Rabbi and Sgt. Quack",
+            value=f"Our leadership is made up of {leadership}",
             inline=False,
         )
         embed.add_field(
             name="\u200b",
-            value="Feel free to ask any of them any questions or concerns you have about the IFF, the 8e company or holdfast in general ",
+            value=f"Feel free to ask any of them any questions or concerns you have about the IFF, the {company} company or holdfast in general ",
             inline=False,
         )
         embed.add_field(name="\u200b", value="Enjoy your stay here!", inline=True)
         embed.set_author(name=rct.display_name, icon_url=rct.avatar_url)
-        await channel.send(file=file, embed=embed)
+        await channel.send(file=img, embed=embed)
 
     # Wargames rotation
     @commands.has_any_role(
@@ -517,7 +531,7 @@ class iffCog(commands.Cog):
             paradeGround = self.bot.get_channel(757782109275553863)
             
             for channel in ctx.guild.voice_channels:
-                if channel.category_id == vcCatId and channel.category_id != 757782109275553863 and channel.category_id != 853615447261446144 and channel.id != 757782109275553863:
+                if channel.category_id == vcCatId and channel.category_id != 757782109275553863 and channel.category_id != 853615447261446144:
                     for user in channel.members:
                         await user.move_to(paradeGround)
                         
@@ -633,14 +647,21 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
     @commands.command(aliases=["Muster"])
     async def muster(self, ctx):
         musterChannelId = 832454366598135808
-        workingMsg = await ctx.reply("Generating now")
+        sevenRole = ctx.guild.get_role(783564469854142464)
+        eightRole = ctx.guild.get_role(845007589674188839)
+        nineRole = ctx.guild.get_role(863756344494260224)
+        fourRole = ctx.guild.get_role(760440084880162838)
               
         async with ctx.channel.typing():
             if ctx.channel.id == musterChannelId:
-                async for message in ctx.channel.history(limit = 10):
-                    if message.author.bot:
+                async for message in ctx.channel.history(limit = None):
+                    if message is None:
+                        break
+                    elif message.author.bot:
                         await message.delete()
-                    
+                
+            workingMsg = await ctx.reply("Generating now")
+        
             fourCoList = []
             sevenCoList = []
             eightCoList = []
@@ -664,11 +685,8 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             nineEnlistedCount = 0
             
             # 4e -----------------------------------------------
-            role = discord.utils.find(
-                lambda r: r.name == "4e Batterie d'Artillerie à Pied", ctx.message.guild.roles
-            )
             for user in ctx.guild.members:
-                if role in user.roles:
+                if fourRole in user.roles:
                     # Co list
                     role = discord.utils.find(
                         lambda r: r.name == "Commissioned Officer", ctx.message.guild.roles
@@ -707,11 +725,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                     fourCplList.sort()
 
                     # Enlisted list
-                    role = discord.utils.find(
-                        lambda r: r.name == "4e Batterie d'Artillerie à Pied",
-                        ctx.message.guild.roles,
-                    )
-                    if role in user.roles:
+                    if fourRole in user.roles:
                         if "Sdt." in user.display_name:
                             fourEnlistedCount += 1
                         elif "Fus. " in user.display_name:
@@ -1282,16 +1296,16 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
             specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Capitaine Tobakshi (Aux)\nGendarme Milk (Sapper)", inline=False)
 
-        await workingMsg.delete()
-        
-        await ctx.send(file=cmdImg,embed=cmd1Embed)
-        await ctx.send(file=cmd2Img,embed=cmd2Embed)
-        await ctx.send(file=sevenImg, embed=sevenEmbed)
-        await ctx.send(file=eightImg, embed=eightEmbed)
-        await ctx.send(file=nineImg, embed=nineEmbed)
-        await ctx.send(file=fourImg, embed=fourEmbed)
-        await ctx.send(file=adminImg, embed=adminEmbed)
-        await ctx.send(file=cavImg, embed=specEmbed)
+            await workingMsg.delete()
+            
+            await ctx.send(file=cmdImg,embed=cmd1Embed)
+            await ctx.send(file=cmd2Img,embed=cmd2Embed)
+            await ctx.send(file=sevenImg, embed=sevenEmbed)
+            await ctx.send(file=eightImg, embed=eightEmbed)
+            await ctx.send(file=nineImg, embed=nineEmbed)
+            await ctx.send(file=fourImg, embed=fourEmbed)
+            await ctx.send(file=adminImg, embed=adminEmbed)
+            await ctx.send(file=cavImg, embed=specEmbed)
 
 def setup(bot):
     bot.add_cog(iffCog(bot))
