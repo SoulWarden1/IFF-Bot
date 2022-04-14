@@ -665,6 +665,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 
             workingMsg = await ctx.reply("Generating now")
             
+            #Creates functions for calculating muster roll
             def coCalc(companyRole):
                 coList = []
                 for user in ctx.guild.members:    
@@ -724,7 +725,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                             nick = (user.display_name).replace("Gde. ", "Grenadier de Elite ")
                             enlistedList.append(nick)
                         enlistedList.sort(reverse = True)
-                return enlistedList()
+                return enlistedList
                         
             def enlistedCountCalc(companyRole):
                 enlistedCount = 0
@@ -738,52 +739,32 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                             enlistedCount += 1
                 return enlistedCount
                                  
-            #4e stuff                               
-            fourCoList = coCalc(fourRole)
-            fourNcoList = ncoCalc(fourRole)
-            fourCplList = cplCalc(fourRole)
-            fourEnlistedList = enlistedCalc(fourRole)
+            #Stuff for creating muster roll
+            companies = ["four", "seven", "eight", "nine"]
+            lists = ["Co", "Nco", "Cpl", "Enlisted"]
+            muster = {}
+            
+            #Creates muster roll information
+            for company in companies:
+                if company == "four": role = fourRole
+                elif company == "seven": role = sevenRole
+                elif company == "eight": role = eightRole
+                elif company == "nine": role = nineRole
+                
+                for list in lists:
+                    if list == "Co": func = coCalc
+                    elif list == "Nco": func = ncoCalc
+                    elif list == "Cpl": func = cplCalc
+                    elif list == "Enlisted": func = enlistedCalc
+                        
+                    muster[f"{company}{list}"] = func(role)
+                    muster[f"{company}{list}"] = "\n".join(muster[f"{company}{list}"])
+ 
             fourEnlistedCount = enlistedCountCalc(fourRole)
-            
-            #7e stuff 
-            sevenCoList = coCalc(sevenRole)
-            sevenNcoList = ncoCalc(sevenRole)
-            sevenCplList = cplCalc(sevenRole)
-            sevenEnlistedList = enlistedCalc(sevenRole)
             sevenEnlistedCount = enlistedCountCalc(sevenRole)
-            
-            #8e stuff 
-            eightCoList = coCalc(eightRole)
-            eightNcoList = ncoCalc(eightRole)
-            eightCplList = cplCalc(eightRole)
-            eightEnlistedList = enlistedCalc(eightRole)
             eightEnlistedCount = enlistedCountCalc(eightRole)
-            
-            #9e stuff 
-            nineCoList = coCalc(nineRole)
-            nineNcoList = ncoCalc(nineRole)
-            nineCplList = cplCalc(nineRole)
-            nineEnlistedList = enlistedCalc(nineRole)
             nineEnlistedCount = enlistedCountCalc(nineRole)
-
             
-            sevenCoStr = "\n".join(sevenCoList)
-            eightCoStr = "\n".join(eightCoList)
-            nineCoStr = "\n".join(nineCoList)
-            fourCoStr = "\n".join(fourCoList)
-            sevenNcoStr = "\n".join(sevenNcoList)
-            eightNcoStr = "\n".join(eightNcoList)
-            nineNcoStr = "\n".join(nineNcoList)
-            fourNcoStr = "\n".join(fourNcoList)
-            sevenCplStr = "\n".join(sevenCplList)
-            eightCplStr = "\n".join(eightCplList)
-            nineCplStr = "\n".join(nineCplList)
-            fourCplStr = "\n".join(fourCplList)
-            sevenEnlistedStr = "\n".join(sevenEnlistedList)
-            eightEnlistedStr = "\n".join(eightEnlistedList)
-            nineEnlistedStr = "\n".join(nineEnlistedList)
-            fourEnlistedStr = "\n".join(fourEnlistedList)
-
             # Command skin 1 pic
             try:
                 cmdImg = discord.File(
@@ -871,7 +852,6 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 cavImg = discord.File(
                     "/home/pi/Desktop/iffBot/files/cav_skin.png", filename="cav_skin.png"
                 )
-                
 
             # Command Col----------------------------------------------------
             cmd1Embed=discord.Embed(title="Imperial Frontier Force 1ic", description="", color=0xffff00)
@@ -891,7 +871,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             )
             sevenEmbed.set_thumbnail(url="attachment://7e_skin.png")
             sevenEmbed.add_field(
-                name=f"Commissioned Officers", value=f"\u200b{sevenCoStr}", inline=False
+                name=f"Commissioned Officers", value=f"\u200b{muster['sevenCo']}", inline=False
             )
             sevenEmbed.add_field(
                 name=f"\u200b",
@@ -900,7 +880,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             )
             sevenEmbed.add_field(
                 name=f"Non-Commissioned Officers",
-                value=f"\u200b{sevenNcoStr}",
+                value=f"\u200b{muster['sevenNco']}",
                 inline=False,
             )
             sevenEmbed.add_field(
@@ -909,7 +889,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             sevenEmbed.add_field(
-                name=f"Corporals", value=f"\u200b{sevenCplStr}", inline=False
+                name=f"Corporals", value=f"\u200b{muster['sevenCpl']}", inline=False
             )
             sevenEmbed.add_field(
                 name=f"\u200b",
@@ -917,7 +897,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             sevenEmbed.add_field(
-                name=f"Enlisted", value=f"\u200b{sevenEnlistedStr}", inline=False
+                name=f"Enlisted", value=f"\u200b{muster['sevenEnlisted']}", inline=False
             )
             sevenEmbed.add_field(
                 name=f"\u200b",
@@ -938,7 +918,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             )
             eightEmbed.set_thumbnail(url="attachment://8e_skin.png")
             eightEmbed.add_field(
-                name=f"Commissioned Officers", value=f"\u200b{eightCoStr}", inline=False
+                name=f"Commissioned Officers", value=f"\u200b{muster['eightCo']}", inline=False
             )
             eightEmbed.add_field(
                 name=f"\u200b",
@@ -947,7 +927,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             )
             eightEmbed.add_field(
                 name=f"Non-Commissioned Officers",
-                value=f"\u200b{eightNcoStr}",
+                value=f"\u200b{muster['eightNco']}",
                 inline=False,
             )
             eightEmbed.add_field(
@@ -956,7 +936,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             eightEmbed.add_field(
-                name=f"Corporals", value=f"\u200b{eightCplStr}", inline=False
+                name=f"Corporals", value=f"\u200b{muster['eightCpl']}", inline=False
             )
             eightEmbed.add_field(
                 name=f"\u200b",
@@ -964,7 +944,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             eightEmbed.add_field(
-                name=f"Enlisted", value=f"\u200b{eightEnlistedStr}", inline=False
+                name=f"Enlisted", value=f"\u200b{muster['eightEnlisted']}", inline=False
             )
             eightEmbed.add_field(
                 name=f"\u200b",
@@ -985,7 +965,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             )
             nineEmbed.set_thumbnail(url="attachment://9e_skin.png")
             nineEmbed.add_field(
-                name=f"Commissioned Officers", value=f"\u200b{nineCoStr}", inline=False
+                name=f"Commissioned Officers", value=f"\u200b{muster['nineCo']}", inline=False
             )
             nineEmbed.add_field(
                 name=f"\u200b",
@@ -993,7 +973,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             nineEmbed.add_field(
-                name=f"Non-Commissioned Officers", value=f"\u200b{nineNcoStr}", inline=False
+                name=f"Non-Commissioned Officers", value=f"\u200b{muster['nineNco']}", inline=False
             )
             nineEmbed.add_field(
                 name=f"\u200b",
@@ -1001,7 +981,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             nineEmbed.add_field(
-                name=f"Corporals", value=f"\u200b{nineCplStr}", inline=False
+                name=f"Corporals", value=f"\u200b{muster['nineCpl']}", inline=False
             )
             nineEmbed.add_field(
                 name=f"\u200b",
@@ -1009,7 +989,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             nineEmbed.add_field(
-                name=f"Enlisted", value=f"\u200b{nineEnlistedStr}", inline=False
+                name=f"Enlisted", value=f"\u200b{muster['nineEnlisted']}", inline=False
             )
             nineEmbed.add_field(
                 name=f"\u200b",
@@ -1030,7 +1010,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             )
             fourEmbed.set_thumbnail(url="attachment://4e_skin.jpeg")
             fourEmbed.add_field(
-                name=f"Commissioned Officers", value=f"\u200b{fourCoStr}", inline=False
+                name=f"Commissioned Officers", value=f"\u200b{muster['fourCo']}", inline=False
             )
             fourEmbed.add_field(
                 name=f"\u200b",
@@ -1038,7 +1018,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             fourEmbed.add_field(
-                name=f"Non-Commissioned Officers", value=f"\u200b{fourNcoStr}", inline=False
+                name=f"Non-Commissioned Officers", value=f"\u200b{muster['fourNco']}", inline=False
             )
             fourEmbed.add_field(
                 name=f"\u200b",
@@ -1046,7 +1026,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             fourEmbed.add_field(
-                name=f"Corporals", value=f"\u200b{fourCplStr}", inline=False
+                name=f"Corporals", value=f"\u200b{muster['fourCpl']}", inline=False
             )
             fourEmbed.add_field(
                 name=f"\u200b",
@@ -1054,7 +1034,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             fourEmbed.add_field(
-                name=f"Enlisted", value=f"\u200b{fourEnlistedStr}", inline=False
+                name=f"Enlisted", value=f"\u200b{muster['fourEnlisted']}", inline=False
             )
             fourEmbed.add_field(
                 name=f"\u200b",
