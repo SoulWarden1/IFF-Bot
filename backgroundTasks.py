@@ -72,8 +72,9 @@ class backgroundTasks(commands.Cog):
             embed = discord.Embed(title="Leadership Attendance", description="React with :thumbsup: or :thumbsdown: if you're coming tonight", color=0x109319)
             embed.add_field(name="Coming: ", value=f"No one :(", inline=False)
             embed.add_field(name="Count: ", value=f"0", inline=False)
-            embed.add_field(name="Not coming: ",
-                            value=f"No one :(", inline=False)
+            embed.add_field(name="Not coming: ", value=f"No one :)", inline=False)
+            embed.add_field(name="Count: ", value=f"0", inline=False)
+            embed.add_field(name="Maybe coming: ", value=f"No one :(", inline=False)
             embed.add_field(name="Count: ", value=f"0", inline=False)
 
             msg = await leadershipChannel.send(embed=embed)
