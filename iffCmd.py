@@ -1064,6 +1064,14 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
             specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Capitaine Tobakshi (Aux)\nLanspessade Milk (Sapper)", inline=False)
 
+            #Info embed
+            infoEmbed=discord.Embed(title="Muster Roll Information", description="This muster roll is automatically generated, therefore there are a few matters that need to be explained", color=0xd0142a)
+            infoEmbed.add_field(name="Naming", value="If you do not appear on the muster roll, firstly make sure you rank is spelled correctly with the correct prefix and suffix. For most enlisted, this will be a '.' at the end of your rank. Eg Fus. [Name]. For leadership, make sure you have the correct prefix and correct capitalisation.", inline=False)
+            infoEmbed.add_field(name="Roles", value="If you do not have the correct company role, you will not appear on the muster roll where you belong", inline=True)
+            infoEmbed.add_field(name="Ranks", value="If you're within the ranks of Rct to Volt, you will not be display on the muster roll to save space", inline=True)
+            infoEmbed.add_field(name="LOA and Retired", value="If you are on LOA or are retired, you will not be displayed on the muster roll (unless you're a member of leadership)", inline=True)
+            infoEmbed.add_field(name="Other issues", value="Please dm SoulWarden#8946 or the bot directly if there are any problems", inline=True)
+            
             await workingMsg.delete()
             
             await ctx.send(file=cmdImg,embed=cmd1Embed)
@@ -1074,6 +1082,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             await ctx.send(file=fourImg, embed=fourEmbed)
             await ctx.send(file=adminImg, embed=adminEmbed)
             await ctx.send(file=cavImg, embed=specEmbed)
+            await ctx.send(embed = infoEmbed)
 
 def setup(bot):
     bot.add_cog(iffCog(bot))
