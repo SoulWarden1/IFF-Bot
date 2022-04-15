@@ -668,7 +668,6 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             #Creates functions for calculating muster roll
             def coCalc(companyRole):
                 coList = []
-                tempList = []
                 for user in ctx.guild.members:    
                     if companyRole in user.roles:
                         if coRole in user.roles:
