@@ -668,16 +668,16 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             #Creates functions for calculating muster roll
             def coCalc(companyRole):
                 coList = []
+                tempList = []
                 for user in ctx.guild.members:    
                     if companyRole in user.roles:
                         if coRole in user.roles:
                             if '"Cpt. ' in user.display_name:
                                 nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
-                                coList.append(nick)
+                                coList.insert(0, nick)
                             elif '"Lt.' in user.display_name:
                                 nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
                                 coList.append(nick)
-                        coList.sort(reverse = True)
                 return coList
             
             def ncoCalc(companyRole):
@@ -687,11 +687,10 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                             if ncoRole in user.roles:
                                 if "'SMaj." in user.display_name:
                                     nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                                    ncoList.append(nick)
+                                    ncoList.insert(0, nick)
                                 elif "'Sgt." in user.display_name:
                                     nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
                                     ncoList.append(nick)
-                            ncoList.sort(reverse = True)
                 return ncoList
             
             def cplCalc(companyRole):
@@ -702,30 +701,42 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                                 nick = user.display_name
                                 nick = nick.replace(".Cpl. ", "Corporal ")
                                 cplList.append(nick)
-                            cplList.sort(reverse = True)
+                            cplList.sort()
                 return cplList
                         
             def enlistedCalc(companyRole):
-                enlistedList = []
+                chasList = []
+                gdaList = []
+                lansList = []
+                grenList = []
+                gdeList = []
                 for user in ctx.guild.members:
                     if companyRole in user.roles and "[" not in user.display_name:
                         if "Chas. " in user.display_name:
                             nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                            enlistedList.append(nick)
+                            chasList.append(nick)
                         elif "Gda. " in user.display_name:
                             nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                            enlistedList.append(nick)
+                            gdaList.append(nick)
                         elif "Lans. " in user.display_name:
                             nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                            enlistedList.append(nick)
+                            lansList.append(nick)
                         elif "Gren. " in user.display_name:
                             nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                            enlistedList.append(nick)
+                            grenList.append(nick)
                         elif "Gde. " in user.display_name:
                             nick = (user.display_name).replace("Gde. ", "Grenadier de Elite ")
-                            enlistedList.append(nick)
-                        enlistedList.sort(reverse = True)
-                return enlistedList
+                            gdeList.append(nick)
+                chasList.sort()
+                gdaList.sort()
+                lansList.sort()
+                grenList.sort()
+                gdeList.sort()
+                
+                enlistedList = [lansList, gdeList, gdaList, grenList, chasList]
+                flatEnlistedList = [name for list in enlistedList for name in list]
+                
+                return flatEnlistedList
                         
             def enlistedCountCalc(companyRole):
                 enlistedCount = 0
