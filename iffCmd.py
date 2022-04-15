@@ -700,7 +700,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                                 nick = user.display_name
                                 nick = nick.replace(".Cpl. ", "Corporal ")
                                 cplList.append(nick)
-                            cplList.sort()
+                cplList.sort()
                 return cplList
                         
             def enlistedCalc(companyRole):
@@ -711,26 +711,26 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 gdeList = []
                 for user in ctx.guild.members:
                     if companyRole in user.roles and "[" not in user.display_name:
-                        if "Chas. " in user.display_name:
-                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                            chasList.append(nick)
-                        elif "Gda. " in user.display_name:
-                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                            gdaList.append(nick)
-                        elif "Lans. " in user.display_name:
+                        if "Lans. " in user.display_name:
                             nick = (user.display_name).replace("Lans. ", "Lanspessade ")
                             lansList.append(nick)
-                        elif "Gren. " in user.display_name:
-                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                            grenList.append(nick)
                         elif "Gde. " in user.display_name:
                             nick = (user.display_name).replace("Gde. ", "Grenadier de Elite ")
                             gdeList.append(nick)
-                chasList.sort()
-                gdaList.sort()
+                        elif "Gda. " in user.display_name:
+                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
+                            gdaList.append(nick)
+                        elif "Gren. " in user.display_name:
+                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
+                            grenList.append(nick)
+                        elif "Chas. " in user.display_name:
+                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
+                            chasList.append(nick)
                 lansList.sort()
-                grenList.sort()
                 gdeList.sort()
+                grenList.sort()
+                gdaList.sort()
+                chasList.sort()
                 
                 enlistedList = [lansList, gdeList, gdaList, grenList, chasList]
                 flatEnlistedList = [name for list in enlistedList for name in list]
