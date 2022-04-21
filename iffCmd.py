@@ -19,51 +19,51 @@ class iffCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # Rolls the person doing the announcement
-    @commands.command(aliases=["Roll"])
-    # Command, Officer, NCO, Dev
-    @commands.has_any_role(
-        661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
-    )
-    @commands.has_role(845007589674188839)
-    @commands.cooldown(1, 10, commands.BucketType.guild)
-    @commands.guild_only()
-    async def roll(self, ctx):
-        roll = 0
-        while True:
-            randId = randint(0, len(varStore.members) - 1)
-            roll += 1
-            if varStore.members[randId] != varStore.pastSelectId:
-                break
-        channel = self.bot.get_channel(varStore.logChannel)
-        await channel.send(f"Rolled {roll} times in {ctx.guild.name}")
+    # # Rolls the person doing the announcement
+    # @commands.command(aliases=["Roll"])
+    # # Command, Officer, NCO, Dev
+    # @commands.has_any_role(
+    #     661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
+    # )
+    # @commands.has_role(845007589674188839)
+    # @commands.cooldown(1, 10, commands.BucketType.guild)
+    # @commands.guild_only()
+    # async def roll(self, ctx):
+    #     roll = 0
+    #     while True:
+    #         randId = randint(0, len(varStore.members) - 1)
+    #         roll += 1
+    #         if varStore.members[randId] != varStore.pastSelectId:
+    #             break
+    #     channel = self.bot.get_channel(varStore.logChannel)
+    #     await channel.send(f"Rolled {roll} times in {ctx.guild.name}")
 
-        try:
-            f = open(
-                "IFF Bot/storage/pastSelectId.txt",
-                "w",
-            )
-        except:
-            f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
-        f.write(str(varStore.members[randId]))
-        f.close()
-        varStore.pastSelectId = varStore.members[randId]
-        selectMemberId = varStore.members[randId]
-        user = await self.bot.fetch_user(selectMemberId)
-        await ctx.send(
-            f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '_template' (Although this isn't recommended)"
-        )
+    #     try:
+    #         f = open(
+    #             "IFF Bot/storage/pastSelectId.txt",
+    #             "w",
+    #         )
+    #     except:
+    #         f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
+    #     f.write(str(varStore.members[randId]))
+    #     f.close()
+    #     varStore.pastSelectId = varStore.members[randId]
+    #     selectMemberId = varStore.members[randId]
+    #     user = await self.bot.fetch_user(selectMemberId)
+    #     await ctx.send(
+    #         f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '_template' (Although this isn't recommended)"
+    #     )
 
-        activity = discord.Activity(
-            type=discord.ActivityType.watching, name=f"{user.name}'s announcement"
-        )
-        await self.bot.change_presence(status=discord.Status.online, activity=activity)
+    #     activity = discord.Activity(
+    #         type=discord.ActivityType.watching, name=f"{user.name}'s announcement"
+    #     )
+    #     await self.bot.change_presence(status=discord.Status.online, activity=activity)
 
-        cog = self.bot.get_cog("backgroundTasks")
-        cog.statusRotation.cancel()
-        await asyncio.sleep(600)
-        cog = self.bot.get_cog("backgroundTasks")
-        cog.statusRotation.start()
+    #     cog = self.bot.get_cog("backgroundTasks")
+    #     cog.statusRotation.cancel()
+    #     await asyncio.sleep(600)
+    #     cog = self.bot.get_cog("backgroundTasks")
+    #     cog.statusRotation.start()
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["Schedule", "timetable", "Timetable"])
@@ -286,8 +286,8 @@ class iffCog(commands.Cog):
     )
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    @commands.command(name = "attendance", aliases=["Attendance","attend"])
-    async def attendance(self, ctx:commands.Context):
+    @commands.command(name = "rollcall", aliases=["roll"])
+    async def rollcall(self, ctx:commands.Context):
         vcCatId = 948180967607136306
         iffGuild = self.bot.get_guild(592559858482544641)
         vcChannelsIds = []

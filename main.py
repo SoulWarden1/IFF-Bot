@@ -41,7 +41,7 @@ bot = commands.Bot(
     help_command=None,
 )
 
-bot.cogList = ["adminCmd", "helpCmd", "iffCmd", "randomCmd", "backgroundTasks"]
+bot.cogList = ["adminCmd", "helpCmd", "iffCmd", "randomCmd", "backgroundTasks", "attendance"]
 # bot.statuses = ["Avyn", "Alvyn", "Arvin", "Alvym"]
 
 # Loads all cogs
@@ -50,6 +50,7 @@ bot.load_extension("adminCmd")
 bot.load_extension("iffCmd")
 bot.load_extension("randomCmd")
 bot.load_extension("backgroundTasks")
+bot.load_extension("attendance")
 
 logger = logging.getLogger("discord")
 logger.setLevel(logging.DEBUG)
