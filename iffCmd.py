@@ -328,7 +328,7 @@ class iffCog(commands.Cog):
                 else:
                     otherUsers.append(x.display_name)
                     continue
-         
+        
         fourStr = ", ".join(fourUsers)
         sevenStr = ", ".join(sevenUsers)
         eightStr = ", ".join(eightUsers)
@@ -637,6 +637,22 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
 
 **Do you agree with our rules and discord ToS?**
 @Recruiter ```""")
+        
+    @commands.has_any_role(
+        661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
+    )
+    @commands.cooldown(1, 1, commands.BucketType.guild)
+    @commands.guild_only()
+    @commands.command(aliases=["Rctrole", "rctRole", "RctRole"])
+    async def rctrole(self, ctx, user: discord.Member):
+        rctRole = ctx.guild.get_role(845563588324098058)
+        iffRole = ctx.guild.get_role(611927973838323724)
+        nickRole = ctx.guild.get_role(893824145299746816)
+        newcomerRole = ctx.guild.get_role(627801587351289856)
+        
+        await user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
+        await user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
+        await ctx.reply(f"Recruit roles added for {user.display_name}")
         
     #Muster role
     @commands.has_any_role(
