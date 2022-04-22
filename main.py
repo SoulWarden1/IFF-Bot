@@ -248,7 +248,7 @@ async def on_reaction_add(reaction, user):
 
                 for user in thumbUpIds:
                     thumbUpNames.append(user.name)
-                thumbUpNameStr = ",".join(thumbUpNames)
+                thumbUpNameStr = ", ".join(thumbUpNames)
 
         for reactions in msg.reactions:
             if str(reactions) == "\N{THUMBS DOWN SIGN}":
@@ -259,7 +259,7 @@ async def on_reaction_add(reaction, user):
 
                 for user in thumbDownIds:
                     thumbDownNames.append(user.name)
-                thumbDownNameStr = ",".join(thumbDownNames)
+                thumbDownNameStr = ", ".join(thumbDownNames)
 
         for reactions in msg.reactions:
             if str(reactions) == "\N{SHRUG}":
@@ -270,7 +270,7 @@ async def on_reaction_add(reaction, user):
 
                 for user in shrugIds:
                     shrugNames.append(user.name)
-                shrugStr = ",".join(shrugNames)
+                shrugStr = ", ".join(shrugNames)
 
         if thumbUpNameStr == "":
             thumbUpNameStr = "No one :("
@@ -319,7 +319,7 @@ async def on_reaction_remove(reaction, user):
 
                 for user in thumbUpIds:
                     thumbUpNames.append(user.name)
-                thumbUpNameStr = ",".join(thumbUpNames)
+                thumbUpNameStr = ", ".join(thumbUpNames)
 
         for reactions in msg.reactions:
             if str(reactions) == "\N{THUMBS DOWN SIGN}":
@@ -330,7 +330,7 @@ async def on_reaction_remove(reaction, user):
 
                 for user in thumbDownIds:
                     thumbDownNames.append(user.name)
-                thumbDownNameStr = ",".join(thumbDownNames)
+                thumbDownNameStr = ", ".join(thumbDownNames)
 
         for reactions in msg.reactions:
             if str(reactions) == "\N{SHRUG}":
@@ -341,7 +341,7 @@ async def on_reaction_remove(reaction, user):
 
                 for user in shrugIds:
                     shrugNames.append(user.name)
-                shrugStr = ",".join(shrugNames)
+                shrugStr = ", ".join(shrugNames)
 
         if thumbUpNameStr == "":
             thumbUpNameStr = "No one :("
