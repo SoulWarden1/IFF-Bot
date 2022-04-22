@@ -156,3 +156,5 @@ cython_debug/
 badwords.py
 
 workspace.code-workspace
+iffAttendanceCreds.json
+workspace.code-workspace
