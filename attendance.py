@@ -14,7 +14,6 @@ except:
 client = gspread.authorize(creds)
 spreadsheet = client.open("IFF Attendance")
 
-
 class attendanceCog(commands.Cog):
     def __init__(self, bot:commands.Bot):
         self.bot = bot
