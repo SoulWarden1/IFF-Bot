@@ -384,7 +384,7 @@ class iffCog(commands.Cog):
     @commands.command(aliases=["Split"])
     async def split(self,ctx):
         async with ctx.channel.typing():
-            msg = await ctx.reply("Splitting")
+            msg = await ctx.reply("Splitting line now...")
             voiceChannelUsers = ctx.author.voice.channel.members
             
             sevenVcs = [872101027682324540, 872056405052510238]
@@ -458,8 +458,7 @@ class iffCog(commands.Cog):
                         else:
                             i = 1
              
-        await msg.delete()               
-        await ctx.reply("Done!", delete_after = 5)
+        await msg.edit(content="Done!")
                         
     #Merge command
     @commands.has_any_role(
@@ -470,7 +469,7 @@ class iffCog(commands.Cog):
     @commands.command(aliases=["Merge"])
     async def merge(self, ctx):
         async with ctx.channel.typing():
-            msg = await ctx.reply("Merging")
+            msg = await ctx.reply("Merging lines now...")
             sevenRole = ctx.guild.get_role(783564469854142464)
             eightRole = ctx.guild.get_role(845007589674188839)
             nineRole = ctx.guild.get_role(863756344494260224)
@@ -496,8 +495,7 @@ class iffCog(commands.Cog):
                 for user in secondVc.members:
                     await user.move_to(firstVc)
                     
-        await msg.delete()
-        await ctx.reply("Done!", delete_after = 5)
+        await msg.edit(content="Done!")
         
         
     #Move all users in current vc to parade ground
@@ -509,15 +507,14 @@ class iffCog(commands.Cog):
     @commands.command(aliases=["Parade"])
     async def parade(self, ctx):
         async with ctx.channel.typing():
-            msg = await ctx.reply("Moving users now")
+            msg = await ctx.reply("Moving users now...")
             paradeGround = self.bot.get_channel(757782109275553863)
             connectedUsers = ctx.author.voice.channel.members
             
             for user in connectedUsers:
                 await user.move_to(paradeGround)
-                
-        await msg.delete()
-        await ctx.reply("Done!", delete_after = 5)
+        
+        await msg.edit(content="Done!")
             
     #Move everyone to parade ground
     @commands.has_any_role(
@@ -528,7 +525,7 @@ class iffCog(commands.Cog):
     @commands.command(aliases=["Forceparade","unfuck","return"])
     async def forceparade(self, ctx):
         async with ctx.channel.typing():
-            msg = await ctx.reply("Moving users now")
+            msg = await ctx.reply("Moving users now...")
             vcCatId = 948180967607136306
             paradeGround = self.bot.get_channel(757782109275553863)
             
@@ -537,8 +534,7 @@ class iffCog(commands.Cog):
                     for user in channel.members:
                         await user.move_to(paradeGround)
                         
-        await msg.delete()
-        await ctx.reply("Done!", delete_after = 5)
+        await msg.edit(content="Done!")
                 
     #Spread command
     @commands.has_any_role(
@@ -550,7 +546,7 @@ class iffCog(commands.Cog):
     async def spread(self, ctx):
         async with ctx.channel.typing():
             
-            msg = await ctx.reply("Spreading users now")
+            msg = await ctx.reply("Spreading users now...")
             
             paradeGround = self.bot.get_channel(757782109275553863)
             sevenChannel = self.bot.get_channel(872101027682324540)
@@ -573,8 +569,7 @@ class iffCog(commands.Cog):
                 elif fourRole in user.roles:
                     await user.move_to(fourChannel)
                     
-            await msg.delete()
-            await ctx.reply("Spreading complete. Please move the mercs/recruits to the appropriate channel", delete_after = 8) 
+            await msg.edit(content="Spreading complete. Please move the mercs/recruits to the appropriate channel")
     
     #Service medal calculator     
     @commands.has_any_role(

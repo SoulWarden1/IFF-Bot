@@ -50,7 +50,7 @@ class attendanceCog(commands.Cog):
     
     @attend.command(name = "fill", aliases=["Fill"])
     async def fill(self, ctx):
-        await ctx.reply("Filling out attendance now...")
+        msg = await ctx.reply("Filling out attendance now...")
         start = datetime.now()
         vcCatId = 948180967607136306
         iffGuild = self.bot.get_guild(592559858482544641)
@@ -99,7 +99,7 @@ class attendanceCog(commands.Cog):
         print("4e done")
 
         end = datetime.now()
-        await ctx.reply(f"Done! This took: {end-start}")
+        await msg.edit(content=f"Done! This took: {end-start}")
 
 def setup(bot:commands.Bot):
     bot.add_cog(attendanceCog(bot))
