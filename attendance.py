@@ -14,7 +14,6 @@ except:
 client = gspread.authorize(creds)
 spreadsheet = client.open("IFF Attendance")
 
-
 class attendanceCog(commands.Cog):
     def __init__(self, bot:commands.Bot):
         self.bot = bot
@@ -75,8 +74,7 @@ class attendanceCog(commands.Cog):
         fourUsers = [item for sublist in rawFourUsers for item in sublist]
         
         now = datetime.now()
-        currentDate = now.strftime("%d/%m/%y")
-        specialCurrentDate = now.strftime("%m/%d/%y")
+        currentDate = now.strftime("%d/%m/%Y")
         
         def calc(date, sheet, users):
             dateColumn = sheet.find(date, in_row = 1)
@@ -88,13 +86,17 @@ class attendanceCog(commands.Cog):
                     print(f"Failed id: {id}")
         
         #7e
-        calc(specialCurrentDate, sevenSheet, sevenUsers)
+        calc(currentDate, sevenSheet, sevenUsers)
+        print("7e done")
         #8
         calc(currentDate, eightSheet, eightUsers)
+        print("8e done")
         #9
         calc(currentDate, nineSheet, nineUsers)
+        print("9e done")
         #4e
         calc(currentDate, fourSheet, fourUsers)
+        print("4e done")
 
         end = datetime.now()
         await ctx.reply(f"Done! This took: {end-start}")

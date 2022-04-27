@@ -105,7 +105,7 @@ class iffCog(commands.Cog):
             "Check you dm's! (Making your own announcement is still prefered, only do this if you have little time)"
         )
         await ctx.message.author.send(
-            f"::8e: :IFF1:   **══════ {day} OCEANIC LINEBATTLE EVENT══════**   :IFF1: :8e: \n8:00pm AEDT:flag_au: | 8:00pm AEST :flag_au: | 6:00pm AWST :flag_au: | 10:00pm NZDT :flag_nz: \n6:00pm PHT/MYT :flag_ph: :flag_my: :flag_sg: :flag_id: :flag_bn: :flag_hk: | 5:00pm WIT :flag_id: :flag_vn: :flag_th: | 3:30pm IST :flag_in: \n7:00pm KST/JST :flag_kr: :flag_jp: | 06:00am EDT :flag_us: | 10:00am BST :flag_gb: \n \n[Inspirational message] \n \nThe event starts at **8:00pm AEDT** today \n\nWe have training at **7:00pm AEDT** or 1 hour before the event so make sure you come! \n\nReact [Emoji]  if you'll be attending \nI hope to see all of you coming! \n(Ask an officer for a ping)"
+            f":8e: :IFF1:   **══════ {day} OCEANIC LINEBATTLE EVENT ══════**   :IFF1: :8e: \n8:00pm AEDT:flag_au: | 8:00pm AEST :flag_au: | 6:00pm AWST :flag_au: | 10:00pm NZDT :flag_nz: \n6:00pm PHT/MYT :flag_ph: :flag_my: :flag_sg: :flag_id: :flag_bn: :flag_hk: | 5:00pm WIT :flag_id: :flag_vn: :flag_th: | 3:30pm IST :flag_in: \n7:00pm KST/JST :flag_kr: :flag_jp: | 06:00am EDT :flag_us: | 10:00am BST :flag_gb: \n \n[Inspirational message] \n \nThe event starts at **8:00pm AEDT** today \n\nWe have training at **7:00pm AEDT** or 1 hour before the event so make sure you come! \n\nReact [Emoji]  if you'll be attending \nI hope to see all of you coming! \n(Ask an officer for a ping)"
         )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -130,9 +130,10 @@ class iffCog(commands.Cog):
     @commands.cooldown(1, 5, commands.BucketType.guild)
     @commands.guild_only()
     async def comWel(self, ctx, rct: discord.User):
-        sevenRole = ctx.guild.get_role(783564469854142464)
-        eightRole = ctx.guild.get_role(845007589674188839)
-        nineRole = ctx.guild.get_role(863756344494260224)
+        iffGuild = self.bot.get_guild(592559858482544641)
+        sevenRole = iffGuild.get_role(783564469854142464)
+        eightRole = iffGuild.get_role(845007589674188839)
+        nineRole = iffGuild.get_role(863756344494260224)
         
         if sevenRole in ctx.author.roles:
             company = "7e"
@@ -158,7 +159,8 @@ class iffCog(commands.Cog):
             )
 
         # channel = self.bot.get_channel(varStore.companyChannel)
-        channel = self.bot.get_channel(954194296809095188)
+        channel = self.bot.get_channel(806427204896292864)
+        
         embed = discord.Embed(
             title=f"Welcome to the {company} Infantry Company {rct.name}!",
             url="",
@@ -625,18 +627,20 @@ class iffCog(commands.Cog):
     @commands.command(aliases=["Rctform", "rctForm", "RctForm"])
     async def rctform(self, ctx):
         await ctx.send("""
-        **Copy/Paste and answer the following questions to access the server**
+**Copy/Paste and answer the following questions to access the server**
 Please check <#853180535303176213>, <#910247350923059211> and <#853180574957043712> before you answer
 ```**What is your new Holdfast ingame name?** IFF | Name
 
 **What region/timezone are you from? (e.g. Australia, South East Asia, NA, etc.)**
+*(If from South East Asia, state your country)*
 
 **How did you find out about the IFF?**
 
 **Have you joined the in-game IFF regiment registry?**
 
 **Do you agree with our rules and discord ToS?**
-@Recruiter ```""")
+
+@Recruiter```""")
         
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
@@ -644,7 +648,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
     @commands.cooldown(1, 1, commands.BucketType.guild)
     @commands.guild_only()
     @commands.command(aliases=["Rctrole", "rctRole", "RctRole"])
-    async def rctrole(self, ctx, user: discord.Member):
+    async def rctrole(self, ctx, *, user: discord.Member):
         rctRole = ctx.guild.get_role(845563588324098058)
         iffRole = ctx.guild.get_role(611927973838323724)
         nickRole = ctx.guild.get_role(893824145299746816)
