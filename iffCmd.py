@@ -6,6 +6,7 @@ import varStore
 from random import randint
 import datetime
 import asyncio
+from datetime import datetime
 
 officers = [
     661521548061966357,
@@ -545,10 +546,9 @@ class iffCog(commands.Cog):
     @commands.command(aliases=["Spread","fuckoff"])
     async def spread(self, ctx):
         async with ctx.channel.typing():
-            
             msg = await ctx.reply("Spreading users now...")
             
-            paradeGround = self.bot.get_channel(757782109275553863)
+            vcCatId = 948180967607136306
             sevenChannel = self.bot.get_channel(872101027682324540)
             eightChannel = self.bot.get_channel(869519564973703228)
             nineChannel = self.bot.get_channel(872101199028043866)
@@ -559,15 +559,16 @@ class iffCog(commands.Cog):
             nineRole = ctx.guild.get_role(863756344494260224)
             fourRole = ctx.guild.get_role(760440084880162838)
             
-            for user in paradeGround.members:
-                if sevenRole in user.roles:
-                    await user.move_to(sevenChannel)
-                elif eightRole in user.roles:
-                    await user.move_to(eightChannel)
-                elif nineRole in user.roles:
-                    await user.move_to(nineChannel)
-                elif fourRole in user.roles:
-                    await user.move_to(fourChannel)
+            if ctx.author.voice.channel.category_id == vcCatId:
+                for user in ctx.author.voice.channel.members:
+                    if sevenRole in user.roles:
+                        await user.move_to(sevenChannel)
+                    elif eightRole in user.roles:
+                        await user.move_to(eightChannel)
+                    elif nineRole in user.roles:
+                        await user.move_to(nineChannel)
+                    elif fourRole in user.roles:
+                        await user.move_to(fourChannel)
                     
             await msg.edit(content="Spreading complete. Please move the mercs/recruits to the appropriate channel")
     
@@ -640,7 +641,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    @commands.cooldown(1, 1, commands.BucketType.guild)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.guild_only()
     @commands.command(aliases=["Rctrole", "rctRole", "RctRole"])
     async def rctrole(self, ctx, *, user: discord.Member):
@@ -659,7 +660,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
     )
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
-    @commands.command(aliases=["Muster"])
+    @commands.command(name = "muster", aliases=["Muster"])
     async def muster(self, ctx):
         start = datetime.now()
         musterChannelId = 832454366598135808
@@ -1114,4 +1115,3 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
 
 def setup(bot):
     bot.add_cog(iffCog(bot))
-                                                      
