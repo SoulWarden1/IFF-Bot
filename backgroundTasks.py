@@ -15,7 +15,7 @@ class backgroundTasks(commands.Cog):
     @tasks.loop(seconds=30.0)
     async def statusRotation(self):
         statuses = ["_help", "your shotcalls", "your lack of skill", "your right clicking", "Joshlols", "your teamkills",
-                    "your terrible aim", "you get straight stabbed", "Quack's line leading", "you get cannon wiped", "Deedee's stream", "Avyn", "8e"]
+                    "your terrible aim", "you getting straight stabbed", "Quack's line leading", "you getting cannon wipped", "Deedee's stream", "the IFF", "7e", "8e", "9e", "4e"]
         choice = randint(0, len(statuses)-1)
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{statuses[choice]}"))
 
@@ -27,26 +27,28 @@ class backgroundTasks(commands.Cog):
         current_time = now.strftime("%H:%M")
 
         # Auto role
+        #Update this to make it so that it takes 3 selections to be picked again
         if current_time == "14:30" and datetime.today().weekday() in eventDays and varStore.platform:
             roll = 0
             while True:
                 randId = randint(0, len(varStore.members)-1)
                 roll += 1
-                if varStore.members[randId] != varStore.pastSelectId:
+                if varStore.members[randId] not in varStore.pastSelectId:
                     break
             logChannel = self.bot.get_channel(varStore.logChannel)
             announceChannel = self.bot.get_channel(907599229629911104)
             await logChannel.send(f"Rolled {roll} times")
 
+            varStore.pastSelectIds.pop(0)
+            varStore.pastSelectIds.append(str(varStore.members[randId]))
             try:
                 f = open(
                     "IFF Bot/storage/pastSelectId.txt", "w")
             except:
                 f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
 
-            f.write(str(varStore.members[randId]))
+            f.write(varStore.pastSelectIds)
             f.close()
-            varStore.pastSelectId = varStore.members[randId]
 
             selectMemberId = varStore.members[randId]
             user = await self.bot.fetch_user(selectMemberId)

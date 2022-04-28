@@ -8,7 +8,7 @@ admins = [
 ]
 #           Me              Bronze              Josh                    Ace                 Rabbi
 members = []
-pastSelectId = 0
+pastSelectIds = []
 logChannel = 948702866414112818
 companyChannel = 806427204896292864
 platform = False

@@ -123,7 +123,7 @@ class adminCog(commands.Cog):
     #Gets the last chosen person for the announcement
     @get.command(pass_context=True, aliases=["Pastid"])
     async def pastid(self, ctx):
-        await ctx.reply(f"Last chosen id was: {varStore.pastSelectId}")
+        await ctx.reply(f"Previously chosen people: {varStore.pastSelectIds}")
     
     #Gets a list of guilds the bot is in
     @get.command(pass_context=True, aliases=["guild","Guild","Guilds","server","servers","Server","Servers"])

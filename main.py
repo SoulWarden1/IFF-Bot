@@ -93,8 +93,11 @@ async def on_ready():
 
     file_lines = f.read()
     varStore.members = file_lines.split("\n")
-    varStore.members.remove("")
-    print("Member list updated")
+    try:
+        varStore.members.remove("")
+    finally:
+        f.close()
+        print("Member list updated")
 
     try:
         f = open(
@@ -103,8 +106,14 @@ async def on_ready():
         )
     except:
         f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "r")
-    varStore.pastSelectId = f.read()
-    print("Past id loaded")
+        
+    file_lines = f.read()
+    varStore.pastSelectIds = file_lines.split("\n")
+    try:
+        varStore.pastSelectIds.remove("")
+    finally:
+        f.close()
+        print("Past id loaded")
 
     # Sets prefix
     if varStore.platform:
@@ -115,7 +124,6 @@ async def on_ready():
 dmChannelId = 950245454317236304
 nineCooldown = []
 fourCooldown = []
-
 
 @bot.event
 async def on_message(message: discord.Message = None):
