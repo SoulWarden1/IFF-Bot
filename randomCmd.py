@@ -2,7 +2,6 @@ import json
 import discord
 from discord.ext import commands
 import varStore
-import badwords
 import requests
 from random import randint
 import iffCmd
@@ -12,6 +11,7 @@ from dotenv import load_dotenv
 from os import getenv
 import os
 import time
+import badwords
 
 
 class randomCog(commands.Cog):
@@ -184,6 +184,11 @@ class randomCog(commands.Cog):
                 await ctx.send("Please don't search that :(")
         except:
             await ctx.send("Please input a search term")  
+            
+    @commands.command(name = "github", aliases=["git","Git"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def github(self, ctx:commands.Context):
+        await ctx.reply("The link to the github page is: https://github.com/SoulWarden1/IFF-Bot")
 
 def setup(bot):
     bot.add_cog(randomCog(bot))
