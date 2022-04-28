@@ -2,10 +2,10 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 from discord.ext import tasks
-from random import randint
+from random import randint, choice
 import asyncio
 import varStore
-
+import iffCmd
 
 class backgroundTasks(commands.Cog):
     def __init__(self, bot):
@@ -14,10 +14,23 @@ class backgroundTasks(commands.Cog):
     # Rotates the status
     @tasks.loop(seconds=30.0)
     async def statusRotation(self):
-        statuses = ["_help", "your shotcalls", "your lack of skill", "your right clicking", "Joshlols", "your teamkills",
-                    "your terrible aim", "you getting straight stabbed", "Quack's line leading", "you getting cannon wipped", "Deedee's stream", "the IFF", "7e", "8e", "9e", "4e"]
-        choice = randint(0, len(statuses)-1)
-        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{statuses[choice]}"))
+        statuses = ["_help", 
+                    "your shotcalls", 
+                    "your lack of skill", 
+                    "your right clicking", 
+                    "Joshlols", 
+                    "your teamkills",
+                    "your terrible aim", 
+                    "you getting straight stabbed", 
+                    "Quack's line leading", 
+                    "you getting cannon wipped", 
+                    "Deedee's stream", 
+                    "the IFF", 
+                    "7e", 
+                    "8e", 
+                    "9e", 
+                    "4e"]
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{choice(statuses)}"))
 
     # Automatically rolls the announcement picker
     @tasks.loop(seconds=59.0)
@@ -27,7 +40,6 @@ class backgroundTasks(commands.Cog):
         current_time = now.strftime("%H:%M")
 
         # Auto role
-        #Update this to make it so that it takes 3 selections to be picked again
         if current_time == "14:30" and datetime.today().weekday() in eventDays and varStore.platform:
             roll = 0
             while True:
@@ -87,60 +99,18 @@ class backgroundTasks(commands.Cog):
 
             varStore.leaderPingMsgId = msg.id
             
+        #Auto roll call
         elif current_time == "20:20" and datetime.today().weekday() in eventDays and varStore.platform:
-            vcCatId = 948180967607136306
-            iffGuild = self.bot.get_guild(592559858482544641)
-            vcChannelsIds = []
-            totalUsers = 0
-            channelUsers = []
-            sevenUsers = []
-            eightUsers = []
-            nineUsers = []
-            fourUsers = []
-            otherUsers = []
+            channel = self.bot.get_channel(954194296809095188)
+            rollcall = self.bot.get_command("rollcall")
+            await channel.invoke(rollcall)
             
-            sevenRole = iffGuild.get_role(783564469854142464)
-            eightRole = iffGuild.get_role(845007589674188839)
-            nineRole = iffGuild.get_role(863756344494260224)
-            fourRole = iffGuild.get_role(760440084880162838)
+        #Auto muster roll
+        elif current_time == "22:00" and datetime.today().weekday() == 5 and varStore.platform:
+            channel = self.bot.get_channel(832454366598135808)
+            muster = self.bot.get_command("muster")
+            await channel.invoke(muster)
             
-            vcChannelsIds = [channel.id for channel in iffGuild.voice_channels if channel.category_id == vcCatId]
-        
-            for channelId in vcChannelsIds:
-                channel = self.bot.get_channel(channelId)
-                channelUsers.append(channel.members)
-                totalUsers += len(channel.members)
-        
-            for user in channelUsers:
-                for x in user:
-                    if sevenRole in x.roles:
-                        sevenUsers.append(x.display_name)  
-                    elif eightRole in x.roles:
-                        eightUsers.append(x.display_name)  
-                    elif nineRole in x.roles:
-                        nineUsers.append(x.display_name) 
-                    elif fourRole in x.roles:
-                        fourUsers.append(x.display_name)
-                    else:
-                        otherUsers.append(x.display_name)
-                        
-            fourStr = ", ".join(fourUsers)
-            sevenStr = ", ".join(sevenUsers)
-            eightStr = ", ".join(eightUsers)
-            nineStr = ", ".join(nineUsers)
-            otherStr = ", ".join(otherUsers)
-            
-            ncoChannel = self.bot.get_channel(954194296809095188)
-            
-            embed=discord.Embed(title="IFF Attendance", description="Current IFF attendance", color=0x151798)
-            embed.add_field(name=f"Total Players", value=f"{totalUsers}", inline=False)
-            embed.add_field(name=f"4e Players (Total: {len(fourUsers)})", value=f"\u200b{fourStr}", inline=False)
-            embed.add_field(name=f"7e Players (Total: {len(sevenUsers)})", value=f"\u200b{sevenStr}", inline=False)
-            embed.add_field(name=f"8e Players (Total: {len(eightUsers)})", value=f"\u200b{eightStr}", inline=False)
-            embed.add_field(name=f"9e Players (Total: {len(nineUsers)})", value=f"\u200b{nineStr}", inline=False)
-            embed.add_field(name=f"Other Players (Total: {len(otherUsers)})", value=f"\u200b{otherStr}", inline=False)
-            await ncoChannel.send(embed=embed)
-
     @tasks.loop(seconds=5)
     async def rgb(self):
         while True:
