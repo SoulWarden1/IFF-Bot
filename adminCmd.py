@@ -98,7 +98,17 @@ class adminCog(commands.Cog):
         elif varStore.insult == False:
             varStore.insult == True
             await ctx.reply("Insults enabled")
-        
+            
+    @admin.command()
+    async def loop(self,ctx):
+        cog = self.bot.get_cog("backgroundTasks")
+        if cog.autoRoll.is_running:
+            cog.autoRoll.start()
+            await ctx.reply("Starting loop")
+        else:
+            cog.autoRoll.stop()
+            await ctx.reply("Stopping loop")
+            
     #Get variable group
     @admin.group(pass_context=True, aliases=["Get"])
     async def get(self,ctx):
@@ -157,6 +167,14 @@ class adminCog(commands.Cog):
     @get.command(pass_context = True, aliases = ["Leadpingid"])
     async def leadpingid(self, ctx):
         await ctx.reply(varStore.leaderPingMsgId)
+        
+    @get.command(pass_context = True, aliases = ["loopstatus"])
+    async def loopStatus(self, ctx):
+        cog = self.bot.get_cog("backgroundTasks")
+        if cog.autoRoll.is_running():
+            await ctx.reply("Loop is running.")
+        else:
+            await ctx.reply("Loop is not running")
         
 def setup(bot):
     bot.add_cog(adminCog(bot))
