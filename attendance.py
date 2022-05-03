@@ -77,29 +77,42 @@ class attendanceCog(commands.Cog):
         currentDate = now.strftime("%d/%m/%Y")
         
         def calc(date, sheet, users):
+            countTickedUsers = 0
+            countFailedUsers = 0
             dateColumn = sheet.find(date, in_row = 1)
             for id in users:
                 try:
                     cell = sheet.find(str(id), in_column = 3)
                     sheet.update_cell(cell.row, dateColumn.col, True)
+                    countTickedUsers += 1
                 except:
+                    countFailedUsers += 1
                     print(f"Failed id: {id}")
+            return countTickedUsers, countFailedUsers
         
         #7e
-        calc(currentDate, sevenSheet, sevenUsers)
+        seven = calc(currentDate, sevenSheet, sevenUsers)
         print("7e done")
         #8
-        calc(currentDate, eightSheet, eightUsers)
+        eight = calc(currentDate, eightSheet, eightUsers)
         print("8e done")
         #9
-        calc(currentDate, nineSheet, nineUsers)
+        nine = calc(currentDate, nineSheet, nineUsers)
         print("9e done")
         #4e
-        calc(currentDate, fourSheet, fourUsers)
+        four = calc(currentDate, fourSheet, fourUsers)
         print("4e done")
 
         end = datetime.now()
-        await msg.edit(content=f"Done! This took: {end-start}")
+        await msg.delete()
+        
+        embed=discord.Embed(title="Auto Attendance", description=f"Done! This took: {end-start}", color=0xff0000)
+        embed.add_field(name="7e", value=f"Ticked Count = {seven[0]}, Failed Count = {seven[1]}", inline=True)
+        embed.add_field(name="8e", value=f"Ticked Count = {eight[0]}, Failed Count = {eight[1]}", inline=True)
+        embed.add_field(name="9e", value=f"Ticked Count = {nine[0]}, Failed Count = {nine[1]}", inline=True)
+        embed.add_field(name="4e", value=f"Ticked Count = {four[0]}, Failed Count = {four[1]}", inline=True)
+        await ctx.send(embed=embed)
+        
 
 def setup(bot:commands.Bot):
     bot.add_cog(attendanceCog(bot))
