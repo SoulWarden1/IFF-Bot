@@ -3,10 +3,8 @@ import discord
 from discord.ext import commands
 import varStore
 import requests
-from random import randint
-import iffCmd
+from random import randint, choice
 import asyncio
-import random
 from dotenv import load_dotenv
 from os import getenv
 import os
@@ -176,7 +174,7 @@ class randomCog(commands.Cog):
                 tenorToken = os.getenv('TENORTOKEN')
                 response = requests.get("https://g.tenor.com/v1/search?q={}&key={}&limit=25".format(searchTerm, tenorToken))
                 data = response.json()
-                gif = random.choice(data["results"])
+                gif = choice(data["results"])
                 await ctx.send(f"{gif['media'][0]['gif']['url']}\n(Requested by {ctx.author.name}#{ctx.author.discriminator})")
             elif ctx.author.id == 310330681047908363:
                 await ctx.send("You're gay")
@@ -189,6 +187,12 @@ class randomCog(commands.Cog):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def github(self, ctx:commands.Context):
         await ctx.reply("The link to the github page is: https://github.com/SoulWarden1/IFF-Bot")
+
+    # @commands.command()
+    # @commands.cooldown(1, 1, commands.BucketType.user)
+    # async def test(self, ctx:commands.Context):
+    #     muster = self.bot.get_command("muster")
+    #     await ctx.invoke(muster)
 
 def setup(bot):
     bot.add_cog(randomCog(bot))

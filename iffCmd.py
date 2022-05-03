@@ -6,7 +6,6 @@ import varStore
 from random import randint
 import datetime
 import asyncio
-from datetime import datetime
 
 officers = [
     661521548061966357,
@@ -466,7 +465,7 @@ class iffCog(commands.Cog):
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
     @commands.guild_only() 
-    @commands.cooldown(1, 10, commands.BucketType.guild)               
+    @commands.cooldown(1, 5, commands.BucketType.user)               
     @commands.command(aliases=["Merge"])
     async def merge(self, ctx):
         async with ctx.channel.typing():
@@ -504,7 +503,7 @@ class iffCog(commands.Cog):
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
     @commands.guild_only()
-    @commands.cooldown(1, 10, commands.BucketType.guild)
+    @commands.cooldown(1, 5, commands.BucketType.user) 
     @commands.command(aliases=["Parade"])
     async def parade(self, ctx):
         async with ctx.channel.typing():
@@ -522,7 +521,7 @@ class iffCog(commands.Cog):
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
     @commands.guild_only()
-    @commands.cooldown(1, 10, commands.BucketType.guild)
+    @commands.cooldown(1, 5, commands.BucketType.user) 
     @commands.command(aliases=["Forceparade","unfuck","return"])
     async def forceparade(self, ctx):
         async with ctx.channel.typing():
@@ -541,7 +540,7 @@ class iffCog(commands.Cog):
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    @commands.cooldown(1, 10, commands.BucketType.guild)
+    @commands.cooldown(1, 5, commands.BucketType.user) 
     @commands.guild_only()
     @commands.command(aliases=["Spread","fuckoff"])
     async def spread(self, ctx):
@@ -618,7 +617,7 @@ class iffCog(commands.Cog):
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    @commands.cooldown(1, 1, commands.BucketType.guild)
+    @commands.cooldown(1, 1, commands.BucketType.user) 
     @commands.guild_only()
     @commands.command(aliases=["Rctform", "rctForm", "RctForm"])
     async def rctform(self, ctx):
@@ -641,7 +640,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
-    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.cooldown(1, 1, commands.BucketType.user) 
     @commands.guild_only()
     @commands.command(aliases=["Rctrole", "rctRole", "RctRole"])
     async def rctrole(self, ctx, *, user: discord.Member):

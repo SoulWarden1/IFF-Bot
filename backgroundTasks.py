@@ -45,7 +45,7 @@ class backgroundTasks(commands.Cog):
             while True:
                 randId = randint(0, len(varStore.members)-1)
                 roll += 1
-                if varStore.members[randId] not in varStore.pastSelectId:
+                if varStore.members[randId] not in varStore.pastSelectIds:
                     break
             logChannel = self.bot.get_channel(varStore.logChannel)
             announceChannel = self.bot.get_channel(907599229629911104)
@@ -59,7 +59,8 @@ class backgroundTasks(commands.Cog):
             except:
                 f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
 
-            f.write(varStore.pastSelectIds)
+            for id in varStore.pastSelectIds:
+                f.write(id + "\n")
             f.close()
 
             selectMemberId = varStore.members[randId]
