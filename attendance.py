@@ -47,7 +47,65 @@ class attendanceCog(commands.Cog):
             await ctx.reply(f"{cell.value} has {attendance} attendances")
         except:
             await ctx.reply("User not found")
-    
+      
+    @attend.command(name = "leaderboard", aliases=["lead","leader"])
+    async def leaderboard(self, ctx, minAttend = 100):
+        if minAttend < 50:
+            await ctx.reply("This will show too many users, please choose a higher cap")
+            return
+        
+        msg = await ctx.reply("Working...")  
+        sevenSheet = spreadsheet.worksheet("7e Attendance")
+        eightSheet = spreadsheet.worksheet("8e Attendance")
+        nineSheet = spreadsheet.worksheet("9e Attendance")
+        fourSheet = spreadsheet.worksheet("4e Attendance")
+        
+        def calc(sheet):
+            nameColumn = sheet.col_values(4)
+            attendanceColumn = sheet.col_values(6)
+            
+            zip_iterator = zip(nameColumn, attendanceColumn)
+            users = dict(zip_iterator)
+            users.pop("Name")
+            return users
+            
+        sevenUsers = calc(sevenSheet)
+        eightUsers = calc(eightSheet)
+        nineUsers = calc(nineSheet)
+        fourUsers = calc(fourSheet)
+        
+        users = {}
+        users.update(sevenUsers)
+        users.update(eightUsers)
+        users.update(nineUsers)
+        users.update(fourUsers)
+        
+        cleanedUsers = {}
+        
+        for user in users.items():
+            if user[0] != "" and user[1] != "":
+                try:
+                    attendances = int(user[1])
+                except:
+                    pass     
+                else:
+                    if attendances > minAttend:
+                            cleanedUsers[user[0]] = attendances
+                            
+        sortedList = {k: v for k, v in sorted(cleanedUsers.items(), reverse = True, key=lambda item: item[1])}
+        userStr = ""
+        count = 1
+        for item in sortedList.items():
+            userStr = userStr + f"{count}. {item[0]}: {item[1]}\n"
+            count += 1
+            
+        embed=discord.Embed(title="Attendance Leaderboard", description=f"Lists all players with over {minAttend} attendances", color=0xc392ff)
+        embed.add_field(name="Players: ", value=f"{userStr}", inline=True)
+        
+        await msg.delete()
+        await ctx.send(embed=embed)
+                
+                
     @attend.command(name = "fill", aliases=["Fill"])
     async def fill(self, ctx):
         msg = await ctx.reply("Filling out attendance now...")
@@ -80,14 +138,20 @@ class attendanceCog(commands.Cog):
             countTickedUsers = 0
             countFailedUsers = 0
             dateColumn = sheet.find(date, in_row = 1)
+            print("Date found")
             for id in users:
                 try:
-                    cell = sheet.find(str(id), in_column = 3)
-                    sheet.update_cell(cell.row, dateColumn.col, True)
-                    countTickedUsers += 1
+                    try:
+                        cell = sheet.find(str(id), in_column = 3)
+                    except:
+                        cell = sheet.find(str(id), in_column = 2)
+                    finally:
+                        sheet.update_cell(cell.row, dateColumn.col, True)
                 except:
                     countFailedUsers += 1
                     print(f"Failed id: {id}")
+                else:
+                    countTickedUsers += 1
             return countTickedUsers, countFailedUsers
         
         #7e
@@ -104,15 +168,15 @@ class attendanceCog(commands.Cog):
         print("4e done")
 
         end = datetime.now()
-        await msg.delete()
         
         embed=discord.Embed(title="Auto Attendance", description=f"Done! This took: {end-start}", color=0xff0000)
         embed.add_field(name="7e", value=f"Ticked Count = {seven[0]}, Failed Count = {seven[1]}", inline=True)
         embed.add_field(name="8e", value=f"Ticked Count = {eight[0]}, Failed Count = {eight[1]}", inline=True)
         embed.add_field(name="9e", value=f"Ticked Count = {nine[0]}, Failed Count = {nine[1]}", inline=True)
         embed.add_field(name="4e", value=f"Ticked Count = {four[0]}, Failed Count = {four[1]}", inline=True)
-        await ctx.send(embed=embed)
         
+        await msg.delete()
+        await ctx.send(embed=embed)
 
 def setup(bot:commands.Bot):
     bot.add_cog(attendanceCog(bot))
