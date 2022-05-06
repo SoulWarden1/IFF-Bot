@@ -50,10 +50,11 @@ class attendanceCog(commands.Cog):
       
     @attend.command(name = "leaderboard", aliases=["lead","leader"])
     async def leaderboard(self, ctx, minAttend = 100):
-        if minAttend < 50:
+        if minAttend < 70:
             await ctx.reply("This will show too many users, please choose a higher cap")
             return
         
+        start = datetime.now()
         msg = await ctx.reply("Working...")  
         sevenSheet = spreadsheet.worksheet("7e Attendance")
         eightSheet = spreadsheet.worksheet("8e Attendance")
@@ -63,22 +64,16 @@ class attendanceCog(commands.Cog):
         def calc(sheet):
             nameColumn = sheet.col_values(4)
             attendanceColumn = sheet.col_values(6)
-            
             zip_iterator = zip(nameColumn, attendanceColumn)
             users = dict(zip_iterator)
             users.pop("Name")
             return users
-            
-        sevenUsers = calc(sevenSheet)
-        eightUsers = calc(eightSheet)
-        nineUsers = calc(nineSheet)
-        fourUsers = calc(fourSheet)
         
         users = {}
-        users.update(sevenUsers)
-        users.update(eightUsers)
-        users.update(nineUsers)
-        users.update(fourUsers)
+        users.update(calc(sevenSheet))
+        users.update(calc(eightSheet))
+        users.update(calc(nineSheet))
+        users.update(calc(fourSheet))
         
         cleanedUsers = {}
         
@@ -98,9 +93,11 @@ class attendanceCog(commands.Cog):
         for item in sortedList.items():
             userStr = userStr + f"{count}. {item[0]}: {item[1]}\n"
             count += 1
-            
+        
+        end = datetime.now()
         embed=discord.Embed(title="Attendance Leaderboard", description=f"Lists all players with over {minAttend} attendances", color=0xc392ff)
         embed.add_field(name="Players: ", value=f"{userStr}", inline=True)
+        embed.set_footer(text = f"Calculation time: {end-start}")
         
         await msg.delete()
         await ctx.send(embed=embed)
@@ -168,7 +165,6 @@ class attendanceCog(commands.Cog):
         print("4e done")
 
         end = datetime.now()
-        
         embed=discord.Embed(title="Auto Attendance", description=f"Done! This took: {end-start}", color=0xff0000)
         embed.add_field(name="7e", value=f"Ticked Count = {seven[0]}, Failed Count = {seven[1]}", inline=True)
         embed.add_field(name="8e", value=f"Ticked Count = {eight[0]}, Failed Count = {eight[1]}", inline=True)
