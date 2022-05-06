@@ -4,7 +4,7 @@ from discord.ext import commands
 from discord.utils import get
 import varStore
 from random import randint
-import datetime
+from datetime import datetime
 import asyncio
 
 officers = [
@@ -19,51 +19,57 @@ class iffCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # # Rolls the person doing the announcement
-    # @commands.command(aliases=["Roll"])
-    # # Command, Officer, NCO, Dev
-    # @commands.has_any_role(
-    #     661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
-    # )
-    # @commands.has_role(845007589674188839)
-    # @commands.cooldown(1, 10, commands.BucketType.guild)
-    # @commands.guild_only()
-    # async def roll(self, ctx):
-    #     roll = 0
-    #     while True:
-    #         randId = randint(0, len(varStore.members) - 1)
-    #         roll += 1
-    #         if varStore.members[randId] != varStore.pastSelectId:
-    #             break
-    #     channel = self.bot.get_channel(varStore.logChannel)
-    #     await channel.send(f"Rolled {roll} times in {ctx.guild.name}")
+    # Rolls the person doing the announcement
+    @commands.has_any_role(
+        661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
+    )
+    @commands.cooldown(1, 10, commands.BucketType.guild)
+    @commands.guild_only()
+    @commands.command(aliases=["Roll"])
+    async def roll(self, ctx):
+        eventDays = [1, 2, 3, 4, 5]
+        now = datetime.now()
+        current_time = now.strftime("%H:%M")
 
-    #     try:
-    #         f = open(
-    #             "IFF Bot/storage/pastSelectId.txt",
-    #             "w",
-    #         )
-    #     except:
-    #         f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
-    #     f.write(str(varStore.members[randId]))
-    #     f.close()
-    #     varStore.pastSelectId = varStore.members[randId]
-    #     selectMemberId = varStore.members[randId]
-    #     user = await self.bot.fetch_user(selectMemberId)
-    #     await ctx.send(
-    #         f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '_template' (Although this isn't recommended)"
-    #     )
+        # Auto role
+        roll = 0
+        while True:
+            randId = randint(0, len(varStore.members)-1)
+            roll += 1
+            if varStore.members[randId] not in varStore.pastSelectIds:
+                break
+        logChannel = self.bot.get_channel(varStore.logChannel)
+        announceChannel = self.bot.get_channel(907599229629911104)
+        await logChannel.send(f"Rolled {roll} times")
 
-    #     activity = discord.Activity(
-    #         type=discord.ActivityType.watching, name=f"{user.name}'s announcement"
-    #     )
-    #     await self.bot.change_presence(status=discord.Status.online, activity=activity)
+        varStore.pastSelectIds.pop(0)
+        varStore.pastSelectIds.append(str(varStore.members[randId]))
+        try:
+            f = open(
+                "IFF Bot/storage/pastSelectId.txt", "w")
+        except:
+            f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
 
-    #     cog = self.bot.get_cog("backgroundTasks")
-    #     cog.statusRotation.cancel()
-    #     await asyncio.sleep(600)
-    #     cog = self.bot.get_cog("backgroundTasks")
-    #     cog.statusRotation.start()
+        for id in varStore.pastSelectIds:
+            f.write(id + "\n")
+        f.close()
+
+        selectMemberId = varStore.members[randId]
+        user = await self.bot.fetch_user(selectMemberId)
+        await announceChannel.send(f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '_template' (Although this isn't recommended)")
+
+        activity = discord.Activity(
+            type=discord.ActivityType.watching, name=f"{user.name}'s announcement")
+        await self.bot.change_presence(status=discord.Status.online, activity=activity)
+
+        print(f"Announcement rolled at {current_time}")
+
+        # Stops the auto rotation of status for 10 minues
+        cog = self.bot.get_cog("backgroundTasks")
+        cog.statusRotation.cancel()
+        await asyncio.sleep(600)
+        cog = self.bot.get_cog("backgroundTasks")
+        cog.statusRotation.start()
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["Schedule", "timetable", "Timetable"])
@@ -281,14 +287,14 @@ class iffCog(commands.Cog):
             )
             round += 1
         await ctx.send(file=file, embed=embed)
-
+         
     #Total IFF attendance cmd
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
     )
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    @commands.command(name = "rollcall", aliases=["roll"])
+    @commands.command(name = "rollcall", aliases=["Rollcall"])
     async def rollcall(self, ctx:commands.Context):
         vcCatId = 948180967607136306
         iffGuild = self.bot.get_guild(592559858482544641)
@@ -643,15 +649,33 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
     @commands.cooldown(1, 1, commands.BucketType.user) 
     @commands.guild_only()
     @commands.command(aliases=["Rctrole", "rctRole", "RctRole"])
-    async def rctrole(self, ctx, *, user: discord.Member):
+    async def rctrole(self, ctx, *, rct: discord.Member = None):
         rctRole = ctx.guild.get_role(845563588324098058)
         iffRole = ctx.guild.get_role(611927973838323724)
         nickRole = ctx.guild.get_role(893824145299746816)
         newcomerRole = ctx.guild.get_role(627801587351289856)
         
-        await user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
-        await user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
-        await ctx.reply(f"Recruit roles added for {user.display_name}")
+        if (ctx.channel.id == 592560417394393098 and ctx.message.reference is not None and rct is None):
+            repliedMsgId = ctx.message.reference.message_id
+            repliedMsg = await ctx.fetch_message(repliedMsgId)
+            user = ctx.guild.get_member(repliedMsg.author.id)
+            try:
+                await user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
+                await user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
+            except:
+                await ctx.reply("Failed to add recruit roles")
+            else:
+                await ctx.reply(f"Recruit roles added for {user.display_name}")
+        elif rct is not None:
+            try:
+                await rct.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
+                await rct.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
+            except:
+                await ctx.reply("Failed to add recruit roles (Check the spacing in the command)")
+            else:
+                await ctx.reply(f"Recruit roles added for {rct.display_name}")
+        else:
+            await ctx.reply("Please reply to a form or input an id/username")
         
     #Muster role
     @commands.has_any_role(
