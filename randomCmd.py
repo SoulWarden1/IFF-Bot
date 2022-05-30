@@ -191,8 +191,9 @@ class randomCog(commands.Cog):
     # @commands.command()
     # @commands.cooldown(1, 1, commands.BucketType.user)
     # async def test(self, ctx:commands.Context):
-    #     muster = self.bot.get_command("muster")
-    #     await ctx.invoke(muster)
+    #     channel = await self.bot.get_context(907599229629911104)
+    #     rollcall = self.bot.get_command("rollcall")
+    #     await channel.invoke(rollcall)
 
 def setup(bot):
     bot.add_cog(randomCog(bot))

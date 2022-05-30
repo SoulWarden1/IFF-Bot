@@ -14,14 +14,13 @@ officers = [
     948862889815597079,
 ]
 
-
 class iffCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     # Rolls the person doing the announcement
     @commands.has_any_role(
-        661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
+        907603010438459402, 907603359048040488
     )
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
@@ -599,7 +598,7 @@ class iffCog(commands.Cog):
                       
         for user in ctx.guild.members:
             if iffRole in user.roles and retiredRole not in user.roles and retiredLeadership not in user.roles:
-                duration = int((datetime.datetime.now() - user.joined_at).days)
+                duration = int((datetime.now() - user.joined_at).days)
                 if duration >= 183:
                     if bronzeMeritRole not in user.roles:
                         bronzeMerit.append(user.display_name)

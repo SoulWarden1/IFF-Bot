@@ -101,8 +101,52 @@ class attendanceCog(commands.Cog):
         
         await msg.delete()
         await ctx.send(embed=embed)
-                
-                
+    
+    @attend.command(name = "companyTotal", aliases=["comTot","comtotal","comtot","companytotal"])
+    async def companyTotal(self, ctx, minAttend = 100):
+        start = datetime.now()
+        msg = await ctx.reply("Working...")  
+        sevenSheet = spreadsheet.worksheet("7e Attendance")
+        eightSheet = spreadsheet.worksheet("8e Attendance")
+        nineSheet = spreadsheet.worksheet("9e Attendance")
+        fourSheet = spreadsheet.worksheet("4e Attendance")
+        
+        def calc(sheet):
+            totalAttendance = []
+            totalAttendanceRaw = sheet.col_values(6)
+            try: 
+                index = totalAttendanceRaw.index("Date Joined")
+            except:
+                pass
+            else:
+                totalAttendanceRaw = totalAttendanceRaw[:index]
+
+            for item in totalAttendanceRaw:
+                try:
+                    int(item)
+                except:
+                    continue
+                else:
+                    totalAttendance.append(int(item))
+            print(totalAttendance)
+            return sum(totalAttendance)
+        
+        sevenAttendTotal = calc(sevenSheet)
+        eightAttendTotal = calc(eightSheet)
+        nineAttendTotal = calc(nineSheet)
+        fourAttendTotal = calc(fourSheet)
+        
+        end = datetime.now()
+        embed=discord.Embed(title="Company Total Attendance", description=f"The individual attendances of each member of each company totaled", color=0xff0000)
+        embed.add_field(name="7e", value=f"{sevenAttendTotal}", inline=True)
+        embed.add_field(name="8e", value=f"{eightAttendTotal}", inline=True)
+        embed.add_field(name="9e", value=f"{nineAttendTotal}", inline=True)
+        embed.add_field(name="4e", value=f"{fourAttendTotal}", inline=True)
+        embed.set_footer(text = f"Calculation time: {end-start}")
+        
+        await msg.delete()
+        await ctx.send(embed=embed)
+        
     @attend.command(name = "fill", aliases=["Fill"])
     async def fill(self, ctx):
         msg = await ctx.reply("Filling out attendance now...")
@@ -133,6 +177,7 @@ class attendanceCog(commands.Cog):
         
         def calc(date, sheet, users):
             countTickedUsers = 0
+            countAlreadyTickedUsers = 0
             countFailedUsers = 0
             dateColumn = sheet.find(date, in_row = 1)
             print("Date found")
@@ -149,7 +194,7 @@ class attendanceCog(commands.Cog):
                     print(f"Failed id: {id}")
                 else:
                     countTickedUsers += 1
-            return countTickedUsers, countFailedUsers
+            return countTickedUsers, countFailedUsers, countAlreadyTickedUsers
         
         #7e
         seven = calc(currentDate, sevenSheet, sevenUsers)
@@ -166,10 +211,10 @@ class attendanceCog(commands.Cog):
 
         end = datetime.now()
         embed=discord.Embed(title="Auto Attendance", description=f"Done! This took: {end-start}", color=0xff0000)
-        embed.add_field(name="7e", value=f"Ticked Count = {seven[0]}, Failed Count = {seven[1]}", inline=True)
-        embed.add_field(name="8e", value=f"Ticked Count = {eight[0]}, Failed Count = {eight[1]}", inline=True)
-        embed.add_field(name="9e", value=f"Ticked Count = {nine[0]}, Failed Count = {nine[1]}", inline=True)
-        embed.add_field(name="4e", value=f"Ticked Count = {four[0]}, Failed Count = {four[1]}", inline=True)
+        embed.add_field(name="7e", value=f"Ticked Count = {seven[0]}, Failed Count = {seven[1]}, Already Ticked Count = {seven[2]}", inline=True)
+        embed.add_field(name="8e", value=f"Ticked Count = {eight[0]}, Failed Count = {eight[1]}, Already Ticked Count = {eight[2]}", inline=True)
+        embed.add_field(name="9e", value=f"Ticked Count = {nine[0]}, Failed Count = {nine[1]}, Already Ticked Count = {nine[2]}", inline=True)
+        embed.add_field(name="4e", value=f"Ticked Count = {four[0]}, Failed Count = {four[1]}, Already Ticked Count = {four[2]}", inline=True)
         
         await msg.delete()
         await ctx.send(embed=embed)

@@ -106,7 +106,6 @@ async def on_ready():
         )
     except:
         f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "r")
-        
     file_lines = f.read()
     varStore.pastSelectIds = file_lines.split("\n")
     try:
