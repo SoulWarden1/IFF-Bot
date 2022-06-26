@@ -86,7 +86,7 @@ class iffCog(commands.Cog):
     async def announcement(self, ctx, *, message: str):
         channel = self.bot.get_channel(varStore.companyChannel)
 
-        now = datetime.datetime.now()
+        now = datetime.now()
         day = (now.strftime("%A")).upper()
         
         #embed=discord.Embed(title=f"{day} OCEANIC LINEBATTLE EVENT", description="description", color=0xff0000)
@@ -104,7 +104,7 @@ class iffCog(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(aliases=["Template", "temp", "Temp"])
     async def template(self, ctx):
-        now = datetime.datetime.now()
+        now = datetime.now()
         day = (now.strftime("%A")).upper()
         await ctx.reply(
             "Check you dm's! (Making your own announcement is still prefered, only do this if you have little time)"
@@ -696,7 +696,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
               
         async with ctx.channel.typing():
             if ctx.channel.id == musterChannelId:
-                async for message in ctx.channel.history(limit = 10):
+                async for message in ctx.channel.history(limit = 12):
                     if message is None:
                         break
                     elif message.author.bot:
@@ -711,11 +711,14 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                     if companyRole in user.roles:
                         if coRole in user.roles:
                             if '"Cpt. ' in user.display_name:
-                                nick = (user.display_name).replace('"Cpt. ', "Capitaine ")
-                                coList.insert(0, nick)
+                                nick = (user.display_name).replace('"Cpt. ', "Capitaine ").split("|",1)
+                                cleanNick = nick[0]
+                                coList.insert(0, cleanNick)
                             elif '"Lt.' in user.display_name:
-                                nick = (user.display_name).replace('"Lt. ', "Lieutenant ")
-                                coList.append(nick)
+                                nick = (user.display_name).replace('"Lt. ', "Lieutenant ").split("|",1)
+                                cleanNick = nick[0]
+                                coList.append(cleanNick)
+                if coList == []: coList = ["Currently vacant"]
                 return coList
             
             def ncoCalc(companyRole):
@@ -724,11 +727,14 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                         if companyRole in user.roles:
                             if ncoRole in user.roles:
                                 if "'SMaj." in user.display_name:
-                                    nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ")
-                                    ncoList.insert(0, nick)
+                                    nick = (user.display_name).replace("'SMaj. ", "Sergeant Major ").split("|",1)
+                                    cleanNick = nick[0]
+                                    ncoList.insert(0, cleanNick)
                                 elif "'Sgt." in user.display_name:
-                                    nick = (user.display_name).replace("'Sgt. ", "Sergeant ")
-                                    ncoList.append(nick)
+                                    nick = (user.display_name).replace("'Sgt. ", "Sergeant ").split("|",1)
+                                    cleanNick = nick[0]
+                                    ncoList.append(cleanNick)
+                if ncoList == []: ncoList = ["Currently vacant"]
                 return ncoList
             
             def cplCalc(companyRole):
@@ -737,8 +743,10 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                         if companyRole in user.roles:
                             if cplRole in user.roles:
                                 nick = user.display_name
-                                nick = nick.replace(".Cpl. ", "Corporal ")
-                                cplList.append(nick)
+                                nick = nick.replace(".Cpl. ", "Corporal ").split("|",1)
+                                cleanNick = nick[0]
+                                cplList.append(cleanNick)
+                if cplList == []: cplList = ["Currently vacant"]
                 cplList.sort()
                 return cplList
                         
@@ -751,20 +759,25 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 for user in ctx.guild.members:
                     if companyRole in user.roles and "[" not in user.display_name:
                         if "Lans. " in user.display_name:
-                            nick = (user.display_name).replace("Lans. ", "Lanspessade ")
-                            lansList.append(nick)
+                            nick = (user.display_name).replace("Lans. ", "Lanspessade ").split("|",1)
+                            cleanNick = nick[0]
+                            lansList.append(cleanNick)
                         elif "Gde. " in user.display_name:
-                            nick = (user.display_name).replace("Gde. ", "Grenadier de Elite ")
-                            gdeList.append(nick)
+                            nick = (user.display_name).replace("Gde. ", "Grenadier de Elite ").split("|",1)
+                            cleanNick = nick[0]
+                            gdeList.append(cleanNick)
                         elif "Gda. " in user.display_name:
-                            nick = (user.display_name).replace("Gda. ", "Gendarme ")
-                            gdaList.append(nick)
+                            nick = (user.display_name).replace("Gda. ", "Gendarme ").split("|",1)
+                            cleanNick = nick[0]
+                            gdaList.append(cleanNick)
                         elif "Gren. " in user.display_name:
-                            nick = (user.display_name).replace("Gren. ", "Grenadier ")
-                            grenList.append(nick)
+                            nick = (user.display_name).replace("Gren. ", "Grenadier ").split("|",1)
+                            cleanNick = nick[0]
+                            grenList.append(cleanNick)
                         elif "Chas. " in user.display_name:
-                            nick = (user.display_name).replace("Chas. ", "Chasseur ")
-                            chasList.append(nick)
+                            nick = (user.display_name).replace("Chas. ", "Chasseur ").split("|",1)
+                            cleanNick = nick[0]
+                            chasList.append(cleanNick)
                 lansList.sort()
                 gdeList.sort()
                 grenList.sort()
@@ -790,7 +803,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                                  
             #Stuff for creating muster roll
             companies = ["four", "seven", "eight", "nine"]
-            lists = ["Co", "Nco", "Cpl", "Enlisted"]
+            rankGroups = ["Co", "Nco", "Cpl", "Enlisted"]
             muster = {}
             
             #Creates muster roll information
@@ -800,14 +813,14 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 elif company == "eight": role = eightRole
                 elif company == "nine": role = nineRole
                 
-                for list in lists:
-                    if list == "Co": func = coCalc
-                    elif list == "Nco": func = ncoCalc
-                    elif list == "Cpl": func = cplCalc
-                    elif list == "Enlisted": func = enlistedCalc
+                for rank in rankGroups:
+                    if rank == "Co": func = coCalc
+                    elif rank == "Nco": func = ncoCalc
+                    elif rank == "Cpl": func = cplCalc
+                    elif rank == "Enlisted": func = enlistedCalc
                         
-                    muster[f"{company}{list}"] = func(role)
-                    muster[f"{company}{list}"] = "\n".join(muster[f"{company}{list}"])
+                    muster[f"{company}{rank}"] = func(role)
+                    muster[f"{company}{rank}"] = "\n".join(muster[f"{company}{rank}"])
  
             fourEnlistedCount = enlistedCountCalc(fourRole)
             sevenEnlistedCount = enlistedCountCalc(sevenRole)
@@ -903,14 +916,30 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 )
 
             # Command Col----------------------------------------------------
-            cmd1Embed=discord.Embed(title="Imperial Frontier Force 1ic", description="", color=0xffff00)
+            cmd1Embed=discord.Embed(title="Imperial Frontier Force - 1ic", description="", color=0xffff00)
             cmd1Embed.set_thumbnail(url="attachment://cmd_skin.png")
             cmd1Embed.add_field(name="Colonel Joshlols", value="8e Chasseurs de la Garde Commander\nJäger Karabiner Infanterie Commander", inline=False)
             
             # Command 2ic----------------------------------------------------
-            cmd2Embed=discord.Embed(title="Imperial Frontier Force 2ic", description="", color=0xffff00)
+            cmd2Embed=discord.Embed(title="Imperial Frontier Force - 2ic", description="", color=0xffff00)
             cmd2Embed.set_thumbnail(url="attachment://cmd_skin2.png")
-            cmd2Embed.add_field(name="Aide de Camp Ballistic", value="Head Adjutant\n9e Grenadiers de la Garde's biggest fan", inline=False)
+            cmd2Embed.add_field(name="Lieutenant Colonel Ballistic", value="Head Adjutant\n9e Grenadiers de la Garde's biggest fan", inline=False)
+            
+            # Maj 7e ----------------------------------------------------
+            maj7eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 7e", description="", color=0xffff00)
+            maj7eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/224567016671936512/a1652bca7807f02b9d3fbbfc648de545.webp?size=80")
+            maj7eEmbed.add_field(name="Major Tobakshi", value="Major for 7e Voltigeurs de la Garde", inline=False)
+            
+            # Maj 8e ----------------------------------------------------
+            maj8eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 8e", description="", color=0xffff00)
+            maj8eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/292613296148709377/88be4d0db7f1d221f4f624474ac6de60.webp?size=80")
+            maj8eEmbed.add_field(name="Major Bronze", value="Major for 8e Chasseurs de la Garde", inline=False)
+            
+            # Maj 9e ----------------------------------------------------
+            maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9e", description="", color=0xffff00)
+            maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/358445969399873557/84dc63cc65efcb210bd7859314a3f1d2.webp?size=80")
+            maj9eEmbed.add_field(name="Major Ghost", value="Major for 9e Grenadiers de la Garde", inline=False)
+            
             
             # 7e ---------------------------------------------------------------------
             sevenEmbed = discord.Embed(
@@ -1102,16 +1131,18 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             adminEmbed.set_thumbnail(url="attachment://admin_skin.png")
             adminEmbed.add_field(name="Commissioned Officer", value="Adjutant Peenoire", inline=False)
             adminEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            adminEmbed.add_field(name="Non-Commissioned Officer", value="Sous-Adjutant Ping\nSous-Adjutant Minz", inline=False)
+            adminEmbed.add_field(name="Non-Commissioned Officer", value="Sous-Adjutant Ping\nSous-Adjutant Minz\nSous-Adjutant Donke", inline=False)
             
             #Specials ------------------------------------------------------
             specEmbed=discord.Embed(title="Non-Infantry Specialisation Leadership", description="Leadership for the specialisations and Auxiliary you may gain quals for and play as during events.", color=0xf8e61c    )
             specEmbed.set_thumbnail(url="attachment://cav_skin.png")
-            specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols", inline=False)
+            specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols\nSergeant Kiwi", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Garde Chevau-Léger", value="Capitaine Bronze\nLieutenant Ace", inline=False)
+            specEmbed.add_field(name="Garde Chevau-Léger", value="Major Bronze\nLieutenant Ace", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Capitaine Tobakshi (Aux)\nLanspessade Milk (Sapper)", inline=False)
+            specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Major Tobakshi (Aux)\nLanspessade Milk (Sapper)", inline=False)
+            specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
+            specEmbed.add_field(name="Asian Volunteer Expeditionary Force", value="Major Tobakshi\nCorporal King (Sapper)", inline=False)
 
             #Info embed
             end = datetime.now()
@@ -1126,7 +1157,10 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             await workingMsg.delete()
             
             await ctx.send(file=cmdImg,embed=cmd1Embed)
-            await ctx.send(file=cmd2Img,embed=cmd2Embed)
+            await ctx.send(file=cmd2Img, embed=cmd2Embed)
+            await ctx.send(embed=maj7eEmbed)
+            await ctx.send(embed=maj8eEmbed)
+            await ctx.send(embed=maj9eEmbed)
             await ctx.send(file=sevenImg, embed=sevenEmbed)
             await ctx.send(file=eightImg, embed=eightEmbed)
             await ctx.send(file=nineImg, embed=nineEmbed)
