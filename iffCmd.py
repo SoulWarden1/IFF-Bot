@@ -696,7 +696,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
               
         async with ctx.channel.typing():
             if ctx.channel.id == musterChannelId:
-                async for message in ctx.channel.history(limit = 12):
+                async for message in ctx.channel.history(limit = 14):
                     if message is None:
                         break
                     elif message.author.bot:
@@ -918,12 +918,12 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             # Command Col----------------------------------------------------
             cmd1Embed=discord.Embed(title="Imperial Frontier Force - 1ic", description="", color=0xffff00)
             cmd1Embed.set_thumbnail(url="attachment://cmd_skin.png")
-            cmd1Embed.add_field(name="Colonel Joshlols", value="8e Chasseurs de la Garde Commander\nJäger Karabiner Infanterie Commander", inline=False)
+            cmd1Embed.add_field(name="Colonel Joshlols", value='"Shutup when he\'s talking"', inline=False)
             
             # Command 2ic----------------------------------------------------
             cmd2Embed=discord.Embed(title="Imperial Frontier Force - 2ic", description="", color=0xffff00)
             cmd2Embed.set_thumbnail(url="attachment://cmd_skin2.png")
-            cmd2Embed.add_field(name="Lieutenant Colonel Ballistic", value="Head Adjutant\n9e Grenadiers de la Garde's biggest fan", inline=False)
+            cmd2Embed.add_field(name="Lieutenant Colonel Ballistic", value='"But I\'m not a rapper"', inline=False)
             
             # Maj 7e ----------------------------------------------------
             maj7eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 7e", description="", color=0xffff00)
@@ -1142,7 +1142,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
             specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Major Tobakshi (Aux)\nLanspessade Milk (Sapper)", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Asian Volunteer Expeditionary Force", value="Major Tobakshi\nCorporal King (Sapper)", inline=False)
+            specEmbed.add_field(name="Asian Volunteer Expeditionary Force", value="Major Tobakshi\nCorporal King", inline=False)
 
             #Info embed
             end = datetime.now()
