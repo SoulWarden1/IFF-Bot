@@ -165,7 +165,7 @@ async def on_message(message: discord.Message = None):
                 f"Go back to the crap 9e chat where you belong {message.author.mention}",
                 f"Who's this 9e clown",
                 f"9e is too lowly to be talking in a chat as great as this, get outta here {message.author.mention}",
-                f"{message.author.mention}, please keep your skill issue to yourself its embarrassing",
+                f"{message.author.mention}, please keep your skill issue to yourself it's embarrassing",
                 f"Of course 9e would want to talk in the superior 8e chat",
             ]
             try:
