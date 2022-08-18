@@ -29,10 +29,10 @@ class randomCog(commands.Cog):
             #await ctx.reply(f"Pong! (Response time: {round(self.bot.latency*1000, 2)}ms)")
         elif ctx.invoked_with == "pong":
             start_time = time.time()
-            message = await ctx.send("Testing Ping...")
+            message = await ctx.send("Testing Pong...")
             end_time = time.time()
 
-            await message.edit(content=f"Pong!\nResponse Time: {round(self.bot.latency * 1000)}ms\nAPI Latency: {round(((end_time - start_time)-self.bot.latency) * 1000)}ms\nTotal Latency: {round((end_time - start_time) * 1000)}ms")
+            await message.edit(content=f"Ping!\nResponse Time: {round(self.bot.latency * 1000)}ms\nAPI Latency: {round(((end_time - start_time)-self.bot.latency) * 1000)}ms\nTotal Latency: {round((end_time - start_time) * 1000)}ms")
             #await ctx.reply(f"Ping! (Response time: {round(self.bot.latency*1000, 2)}ms)")
         
     #Converts id to username
@@ -60,26 +60,26 @@ class randomCog(commands.Cog):
             messages = ["Get spammed","Get rekt","Get destroyed"]
             message = messages[randint(len(messages)-1)]
             
-        for i in range(times): 
-            await user.send(message)
-            if i > times*0.1:
-                await info.edit(content="Spamming now (10%)")
-            elif i > times*0.2:
-                await info.edit(content="Spamming now (20%)")
-            elif i > times*0.3:
-                await info.edit(content="Spamming now (30%)")
-            elif i > times*0.4:
-                await info.edit(content="Spamming now (40%)")
-            elif i > times*0.5:
-                await info.edit(content="Spamming now (50%)")
-            elif i > times*0.6:
-                await info.edit(content="Spamming now (60%)")
-            elif i > times*0.7:
-                await info.edit(content="Spamming now (70%)")
-            elif i > times*0.8:
-                await info.edit(content="Spamming now (80%)")
-            elif i > times*0.9:
-                await info.edit(content="Spamming now (90%)")
+        # for i in range(times): 
+        #     await user.send(message)
+        #     if i > times*0.1:
+        #         await info.edit(content="Spamming now (10%)")
+        #     elif i > times*0.2:
+        #         await info.edit(content="Spamming now (20%)")
+        #     elif i > times*0.3:
+        #         await info.edit(content="Spamming now (30%)")
+        #     elif i > times*0.4:
+        #         await info.edit(content="Spamming now (40%)")
+        #     elif i > times*0.5:
+        #         await info.edit(content="Spamming now (50%)")
+        #     elif i > times*0.6:
+        #         await info.edit(content="Spamming now (60%)")
+        #     elif i > times*0.7:
+        #         await info.edit(content="Spamming now (70%)")
+        #     elif i > times*0.8:
+        #         await info.edit(content="Spamming now (80%)")
+        #     elif i > times*0.9:
+        #         await info.edit(content="Spamming now (90%)")
                 
         await ctx.reply("Spam complete (100%)")
         
