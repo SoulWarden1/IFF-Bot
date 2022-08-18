@@ -295,7 +295,7 @@ class iffCog(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.command(name = "rollcall", aliases=["Rollcall"])
     async def rollcall(self, ctx:commands.Context):
-        vcCatId = 948180967607136306
+        vcCatIds = [948180967607136306, 995586698006233219]
         iffGuild = self.bot.get_guild(592559858482544641)
         vcChannelsIds = []
         totalUsers = 0
@@ -311,7 +311,7 @@ class iffCog(commands.Cog):
         nineRole = ctx.guild.get_role(863756344494260224)
         fourRole = ctx.guild.get_role(760440084880162838)
         
-        vcChannelsIds = [channel.id for channel in iffGuild.voice_channels if channel.category_id == vcCatId]
+        vcChannelsIds = [channel.id for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
     
         for channelId in vcChannelsIds:
             channel = self.bot.get_channel(channelId)
@@ -665,6 +665,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 await ctx.reply("Failed to add recruit roles")
             else:
                 await ctx.reply(f"Recruit roles added for {user.display_name}")
+                
         elif rct is not None:
             try:
                 await rct.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
@@ -927,19 +928,18 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             
             # Maj 7e ----------------------------------------------------
             maj7eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 7e", description="", color=0xffff00)
-            maj7eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/224567016671936512/a1652bca7807f02b9d3fbbfc648de545.webp?size=80")
+            maj7eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/224567016671936512/a1652bca7807f02b9d3fbbfc648de545.webp?size=1024")
             maj7eEmbed.add_field(name="Major Tobakshi", value="Major for 7e Voltigeurs de la Garde", inline=False)
             
             # Maj 8e ----------------------------------------------------
             maj8eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 8e", description="", color=0xffff00)
-            maj8eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/292613296148709377/88be4d0db7f1d221f4f624474ac6de60.webp?size=80")
+            maj8eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/292613296148709377/88be4d0db7f1d221f4f624474ac6de60.webp?size=1024")
             maj8eEmbed.add_field(name="Major Bronze", value="Major for 8e Chasseurs de la Garde", inline=False)
             
             # Maj 9e ----------------------------------------------------
             maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9e", description="", color=0xffff00)
-            maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/358445969399873557/84dc63cc65efcb210bd7859314a3f1d2.webp?size=80")
+            maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/358445969399873557/4d93e7f0f552c91e5e2dc213b899a0d7.webp?size=1024")
             maj9eEmbed.add_field(name="Major Ghost", value="Major for 9e Grenadiers de la Garde", inline=False)
-            
             
             # 7e ---------------------------------------------------------------------
             sevenEmbed = discord.Embed(
