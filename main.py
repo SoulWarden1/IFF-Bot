@@ -124,12 +124,18 @@ dmChannelId = 950245454317236304
 nineCooldown = []
 fourCooldown = []
 
+
 @bot.event
 async def on_message(message: discord.Message = None):
     if message.author == bot.user:
         return
     if message.author.bot:
         return
+    
+    # sevenRole = message.guild.get_role(783564469854142464)
+    # eightRole = message.guild.get_role(845007589674188839)
+    nineRole = message.guild.get_role(863756344494260224)
+    fourRole = message.guild.get_role(760440084880162838)
 
     if message.guild is None and not message.author.bot:
         now = datetime.now()
@@ -150,71 +156,71 @@ async def on_message(message: discord.Message = None):
 
     elif (
         message.channel.id == 806427204896292864
-        and message.author.id == 719365173189804043
+        and nineRole in message.author.roles or fourRole in message.author.roles
     ):
         await message.add_reaction("\N{Police Cars Revolving Light}")
 
-    elif message.channel.id == 806427204896292864:
-        # 9e rekt
-        if varStore.insult:
-            global nineCooldown
-            channel = bot.get_channel(varStore.companyChannel)
-            insults = [
-                f"{message.author.mention}, get out of our chat 9e scum",
-                f"What are you doing here {message.author.mention}, this is 8e turf",
-                f"Go back to the crap 9e chat where you belong {message.author.mention}",
-                f"Who's this 9e clown",
-                f"9e is too lowly to be talking in a chat as great as this, get outta here {message.author.mention}",
-                f"{message.author.mention}, please keep your skill issue to yourself it's embarrassing",
-                f"Of course 9e would want to talk in the superior 8e chat",
-            ]
-            try:
-                nineCom = discord.utils.get(
-                    message.guild.roles, name="9e Grenadiers de la Garde"
-                )
-            except:
-                if message.author.id != bot.id:
-                    print("User dm sent, so no role was found")
-            else:
-                if (
-                    message.channel.id == varStore.companyChannel
-                    and nineCom in message.author.roles
-                    and nineCooldown.count(message.author.id) == 0
-                ):
-                    choice = randint(0, len(insults) - 1)
-                    nineCooldown.append(message.author.id)
-                    await channel.send(f"{insults[choice]}")
-                    await asyncio.sleep(60)
-                    nineCooldown.remove(message.author.id)
+    # elif message.channel.id == 806427204896292864:
+    #     # 9e rekt
+    #     if varStore.insult:
+    #         global nineCooldown
+    #         channel = bot.get_channel(varStore.companyChannel)
+    #         insults = [
+    #             f"{message.author.mention}, get out of our chat 9e scum",
+    #             f"What are you doing here {message.author.mention}, this is 8e turf",
+    #             f"Go back to the crap 9e chat where you belong {message.author.mention}",
+    #             f"Who's this 9e clown",
+    #             f"9e is too lowly to be talking in a chat as great as this, get outta here {message.author.mention}",
+    #             f"{message.author.mention}, please keep your skill issue to yourself it's embarrassing",
+    #             f"Of course 9e would want to talk in the superior 8e chat",
+    #         ]
+    #         try:
+    #             nineCom = discord.utils.get(
+    #                 message.guild.roles, name="9e Grenadiers de la Garde"
+    #             )
+    #         except:
+    #             if message.author.id != bot.id:
+    #                 print("User dm sent, so no role was found")
+    #         else:
+    #             if (
+    #                 message.channel.id == varStore.companyChannel
+    #                 and nineCom in message.author.roles
+    #                 and nineCooldown.count(message.author.id) == 0
+    #             ):
+    #                 choice = randint(0, len(insults) - 1)
+    #                 nineCooldown.append(message.author.id)
+    #                 await channel.send(f"{insults[choice]}")
+    #                 await asyncio.sleep(60)
+    #                 nineCooldown.remove(message.author.id)
 
-            # 4e rekt
-            global fourCooldown
-            channel = bot.get_channel(varStore.companyChannel)
-            insults = [
-                f"{message.author.mention}, get out of our chat 4e, come back when you hit something",
-                f"What are you doing here {message.author.mention}, go talk in your dead 4e chat",
-                f"Go back to the crap 4e chat where you belong {message.author.mention}",
-                f"Who's this 4e clown",
-                f"{message.author.mention}, please keep your skill issue to yourself its embarrassing",
-                f"Of course 4e would want to talk in the superior 8e chat",
-            ]
-            try:
-                fourCom = discord.utils.get(
-                    message.guild.roles, name="4e Batterie d'Artillerie à Pied"
-                )
-            except:
-                print("User dm sent, so no role was found")
-            else:
-                if (
-                    message.channel.id == varStore.companyChannel
-                    and fourCom in message.author.roles
-                    and fourCooldown.count(message.author.id) == 0
-                ):
-                    choice = randint(0, len(insults) - 1)
-                    fourCooldown.append(message.author.id)
-                    await channel.send(f"{insults[choice]}")
-                    await asyncio.sleep(60)
-                    fourCooldown.remove(message.author.id)
+    #         # 4e rekt
+    #         global fourCooldown
+    #         channel = bot.get_channel(varStore.companyChannel)
+    #         insults = [
+    #             f"{message.author.mention}, get out of our chat 4e, come back when you hit something",
+    #             f"What are you doing here {message.author.mention}, go talk in your dead 4e chat",
+    #             f"Go back to the crap 4e chat where you belong {message.author.mention}",
+    #             f"Who's this 4e clown",
+    #             f"{message.author.mention}, please keep your skill issue to yourself its embarrassing",
+    #             f"Of course 4e would want to talk in the superior 8e chat",
+    #         ]
+    #         try:
+    #             fourCom = discord.utils.get(
+    #                 message.guild.roles, name="4e Batterie d'Artillerie à Pied"
+    #             )
+    #         except:
+    #             print("User dm sent, so no role was found")
+    #         else:
+    #             if (
+    #                 message.channel.id == varStore.companyChannel
+    #                 and fourCom in message.author.roles
+    #                 and fourCooldown.count(message.author.id) == 0
+    #             ):
+    #                 choice = randint(0, len(insults) - 1)
+    #                 fourCooldown.append(message.author.id)
+    #                 await channel.send(f"{insults[choice]}")
+    #                 await asyncio.sleep(60)
+    #                 fourCooldown.remove(message.author.id)
 
     if (
         message.channel.id == 950245454317236304
@@ -455,6 +461,7 @@ async def reload(ctx, extension: str = None):
             embed.add_field(name=f"**#{count}**", value=f"{x} reloaded", inline=False)
             count += 1
         await ctx.send(embed=embed)
+        print("All cogs reloaded")
     else:
         bot.reload_extension(f"{extension}")
         embed = discord.Embed(
@@ -463,6 +470,7 @@ async def reload(ctx, extension: str = None):
             color=0xFF00C8,
         )
         await ctx.send(embed=embed)
+        print(f"{extension} reloaded")
 
 
 # Unload cogs command
