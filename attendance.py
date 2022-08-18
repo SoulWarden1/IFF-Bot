@@ -151,7 +151,7 @@ class attendanceCog(commands.Cog):
     async def fill(self, ctx):
         msg = await ctx.reply("Filling out attendance now...")
         start = datetime.now()
-        vcCatId = 948180967607136306
+        vcCatIds = [948180967607136306, 995586698006233219]
         iffGuild = self.bot.get_guild(592559858482544641)
         sevenRole = ctx.guild.get_role(783564469854142464)
         eightRole = ctx.guild.get_role(845007589674188839)
@@ -163,10 +163,10 @@ class attendanceCog(commands.Cog):
         nineSheet = spreadsheet.worksheet("9e Attendance")
         fourSheet = spreadsheet.worksheet("4e Attendance")
         
-        rawSevenUsers = [[user.id for user in channel.members if sevenRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id == vcCatId]
-        rawEightUsers = [[user.id for user in channel.members if eightRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id == vcCatId]
-        rawNineUsers = [[user.id for user in channel.members if nineRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id == vcCatId]
-        rawFourUsers = [[user.id for user in channel.members if fourRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id == vcCatId]
+        rawSevenUsers = [[user.id for user in channel.members if sevenRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
+        rawEightUsers = [[user.id for user in channel.members if eightRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
+        rawNineUsers = [[user.id for user in channel.members if nineRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
+        rawFourUsers = [[user.id for user in channel.members if fourRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
         sevenUsers = [item for sublist in rawSevenUsers for item in sublist]
         eightUsers = [item for sublist in rawEightUsers for item in sublist]
         nineUsers = [item for sublist in rawNineUsers for item in sublist]
@@ -177,10 +177,14 @@ class attendanceCog(commands.Cog):
         
         def calc(date, sheet, users):
             countTickedUsers = 0
-            countAlreadyTickedUsers = 0
-            countFailedUsers = 0
-            dateColumn = sheet.find(date, in_row = 1)
-            print("Date found")
+            failedUser = []
+            try:
+                dateColumn = sheet.find(date, in_row = 1)
+            except:
+                print("Date NOT found")
+            else:
+                print("Date found")
+                
             for id in users:
                 try:
                     try:
@@ -190,34 +194,40 @@ class attendanceCog(commands.Cog):
                     finally:
                         sheet.update_cell(cell.row, dateColumn.col, True)
                 except:
-                    countFailedUsers += 1
+                    username = self.bot.get_user(id)
+                    failedUser.append(username.name)
                     print(f"Failed id: {id}")
                 else:
                     countTickedUsers += 1
-            return countTickedUsers, countFailedUsers, countAlreadyTickedUsers
+            return countTickedUsers, failedUser
         
         #7e
         seven = calc(currentDate, sevenSheet, sevenUsers)
         print("7e done")
+        await msg.edit(content=msg.content + f" 7e done ({seven[0]})...")
         #8
         eight = calc(currentDate, eightSheet, eightUsers)
         print("8e done")
+        await msg.edit(content=msg.content + f" 8e done ({eight[0]})...")
         #9
         nine = calc(currentDate, nineSheet, nineUsers)
         print("9e done")
+        await msg.edit(content=msg.content + f" 9e done ({nine[0]})...")
         #4e
         four = calc(currentDate, fourSheet, fourUsers)
         print("4e done")
-
+        await msg.edit(content=msg.content + f" 4e done ({four[0]})...")
+                
         end = datetime.now()
-        embed=discord.Embed(title="Auto Attendance", description=f"Done! This took: {end-start}", color=0xff0000)
-        embed.add_field(name="7e", value=f"Ticked Count = {seven[0]}, Failed Count = {seven[1]}, Already Ticked Count = {seven[2]}", inline=True)
-        embed.add_field(name="8e", value=f"Ticked Count = {eight[0]}, Failed Count = {eight[1]}, Already Ticked Count = {eight[2]}", inline=True)
-        embed.add_field(name="9e", value=f"Ticked Count = {nine[0]}, Failed Count = {nine[1]}, Already Ticked Count = {nine[2]}", inline=True)
-        embed.add_field(name="4e", value=f"Ticked Count = {four[0]}, Failed Count = {four[1]}, Already Ticked Count = {four[2]}", inline=True)
+        embed=discord.Embed(title="Auto Attendance", description=f"Done! This took: {end-start}. Please inform the relevant people if there are failed users", color=0xff0000)
+        embed.add_field(name="7e", value=f"No. Ticked= {seven[0]}, Failed Users: {seven[1]},", inline=True)
+        embed.add_field(name="8e", value=f"No. Ticked= {eight[0]}, Failed Users: {eight[1]},", inline=True)
+        embed.add_field(name="9e", value=f"No. Ticked= {nine[0]}, Failed Users: {nine[1]}", inline=True)
+        embed.add_field(name="4e", value=f"No. Ticked= {four[0]}, Failed Users: {four[1]}", inline=True)
+        if seven[1] and seven[0] > 0 or seven[1] or eight[1] and eight[0] > 0 or eight[1] or nine[1] and nine[0] > 0 or nine[1] or four[1] and four[0] > 0 or four[1] :
+            embed.set_footer(text=f"WARNING THERE ARE FAILED USERS, PLEASE CHECK YOUR ATTENDANCE SHEET")
         
-        await msg.delete()
-        await ctx.send(embed=embed)
+        await msg.edit(content=None, embed=embed)
 
 def setup(bot:commands.Bot):
     bot.add_cog(attendanceCog(bot))
