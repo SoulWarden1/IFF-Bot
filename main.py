@@ -4,18 +4,8 @@ import traceback
 import discord
 from discord.ext import commands
 from random import randint
-import logging
-import time
 import platform
 
-import asyncio
-
-from helpCmd import helpCog
-from adminCmd import adminCog
-from iffCmd import iffCog
-from randomCmd import randomCog
-from backgroundTasks import backgroundTasks
-from attendance import attendanceCog
 import varStore
 
 from dotenv import load_dotenv
@@ -23,9 +13,8 @@ from os import getenv
 import os
 
 load_dotenv()
-
 token = os.getenv("TOKEN")
-class MyClient(commands.Bot):
+class MyBot(commands.Bot):
     def __init__(self):
         super().__init__(
             command_prefix=commands.when_mentioned_or('_'),
@@ -38,40 +27,12 @@ class MyClient(commands.Bot):
             )
         self.cogList = ["adminCmd", "helpCmd", "iffCmd", "randomCmd", "backgroundTasks", "attendance"]
 
-
     async def setup_hook(self): 
         for cog in self.cogList:
             await self.load_extension(cog)
-        # await bot.add_cog(helpCog(bot))
-        # await bot.add_cog(adminCog(bot))
-        # await bot.add_cog(iffCog(bot))
-        # await bot.add_cog(randomCog(bot))
-        # await bot.add_cog(backgroundTasks(bot))
-        # await bot.add_cog(attendanceCog(bot))
-        
         print("Setup run")
         
-
-bot = MyClient()
-
-logger = logging.getLogger("discord")
-logger.setLevel(logging.DEBUG)
-try:
-    handler = logging.FileHandler(
-        filename="IFF Bot/storage/discord.log",
-        encoding="utf-8",
-        mode="w",
-    )
-except:
-    handler = logging.FileHandler(
-        filename="/home/pi/Desktop/iffBot/storage/discord.log",
-        encoding="utf-8",
-        mode="w",
-    )
-handler.setFormatter(
-    logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
-)
-logger.addHandler(handler)
+bot = MyBot()
 
 # Bot starting
 @bot.event
@@ -91,7 +52,6 @@ async def on_ready():
         )
     except:
         f = open("/home/pi/Desktop/iffBot/storage/memberList.txt", "r")
-        varStore.platform = True
 
     file_lines = f.read()
     varStore.members = file_lines.split("\n")
