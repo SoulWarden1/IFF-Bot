@@ -11,7 +11,6 @@ members = []
 pastSelectIds = []
 logChannel = 948702866414112818
 companyChannel = 806427204896292864
-platform = False
 statusRotation = True
 leaderPingMsgId = 0
 botDms = {}

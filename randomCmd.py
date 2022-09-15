@@ -195,12 +195,5 @@ class randomCog(commands.Cog):
     async def github(self, ctx:commands.Context):
         await ctx.reply("The link to the github page is: https://github.com/SoulWarden1/IFF-Bot")
 
-    # @commands.command()
-    # @commands.cooldown(1, 1, commands.BucketType.user)
-    # async def test(self, ctx:commands.Context):
-    #     channel = await self.bot.get_context(907599229629911104)
-    #     rollcall = self.bot.get_command("rollcall")
-    #     await channel.invoke(rollcall)
-
 async def setup(bot):
     await bot.add_cog(randomCog(bot))
