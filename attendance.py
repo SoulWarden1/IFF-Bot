@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import gspread
+from gspread.cell import Cell
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import re
@@ -173,35 +174,78 @@ class attendanceCog(commands.Cog):
         nineUsers = [item for sublist in rawNineUsers for item in sublist]
         fourUsers = [item for sublist in rawFourUsers for item in sublist]
         
-        now = datetime.now()
-        currentDate = now.strftime("%d/%m/%Y")
+        currentDate = start.strftime("%d/%m/%Y")
+        
+        # def calc(date, sheet, users):
+        #     countTickedUsers = 0
+        #     failedUser = []
+        #     #Attempting to find the correct column with the right date
+        #     try:
+        #         dateColumn = sheet.find(date, in_row = 1)
+        #     except:
+        #         print("Date NOT found")
+        #     else:
+        #         print("Date found")
+                
+        #     for id in users:
+        #         try:
+        #             try:
+        #                 cell = sheet.find(str(id), in_column = 3)
+        #             except:
+        #                 cell = sheet.find(str(id), in_column = 2)
+        #             finally:
+        #                 sheet.update_cell(cell.row, dateColumn.col, True)
+        #         except:
+        #             username = self.bot.get_user(id)
+        #             failedUser.append(username.name)
+        #             print(f"Failed id: {id}")
+        #         else:
+        #             countTickedUsers += 1
+        #     return countTickedUsers, failedUser
         
         def calc(date, sheet, users):
             countTickedUsers = 0
             failedUser = []
+            #Attempting to find the correct column with the right date
             try:
                 dateColumn = sheet.find(date, in_row = 1)
             except:
                 print("Date NOT found")
             else:
                 print("Date found")
+            
+            idColumnIndex = sheet.find("Discord Id's")
+            idColumnValues = sheet.col_values(idColumnIndex.col)
+            ticked = []
+            
+            # Make this not a number
+            for i in range(1,150):
+                ticked.append(False)
                 
+            count = 1
             for id in users:
-                try:
-                    try:
-                        cell = sheet.find(str(id), in_column = 3)
-                    except:
-                        cell = sheet.find(str(id), in_column = 2)
-                    finally:
-                        sheet.update_cell(cell.row, dateColumn.col, True)
-                except:
+                if str(id) in idColumnValues:
+                    ticked[idColumnValues.index(str(id))] = True
+                    countTickedUsers += 1
+                else:
                     username = self.bot.get_user(id)
                     failedUser.append(username.name)
                     print(f"Failed id: {id}")
-                else:
-                    countTickedUsers += 1
+                count += 1
+            
+            count = 0
+            cells = []
+            for value in ticked:
+                if value == True:
+                    print("true")
+                    cells.append(Cell(row=count, col=dateColumn.col, value=True))
+                count += 1
+            print(cells)
+            sheet.update_cells(cells)
+            
             return countTickedUsers, failedUser
-        
+                  
+            
         #7e
         seven = calc(currentDate, sevenSheet, sevenUsers)
         print("7e done")
