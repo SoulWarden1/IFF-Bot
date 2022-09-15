@@ -6,6 +6,7 @@ from discord.ext import commands
 from random import randint
 import logging
 import time
+import platform
 
 import asyncio
 
@@ -14,6 +15,7 @@ from adminCmd import adminCog
 from iffCmd import iffCog
 from randomCmd import randomCog
 from backgroundTasks import backgroundTasks
+from attendance import attendanceCog
 import varStore
 
 from dotenv import load_dotenv
@@ -23,34 +25,34 @@ import os
 load_dotenv()
 
 token = os.getenv("TOKEN")
+class MyClient(commands.Bot):
+    def __init__(self):
+        super().__init__(
+            command_prefix=commands.when_mentioned_or('_'),
+            description="""A bot developed by SoulWarden for the IFF""",
+            intents=discord.Intents.all(),
+            activity=discord.Activity(type=discord.ActivityType.watching, name="me start up"),
+            status=discord.Status.online,
+            owner_ids=set(varStore.owners),
+            help_command=None
+            )
+        self.cogList = ["adminCmd", "helpCmd", "iffCmd", "randomCmd", "backgroundTasks", "attendance"]
 
-# intents = discord.Intents.default()
-intents = discord.Intents.all()
-intents.members = True
 
-# Sets up bot
-description = """A bot developed by SoulWarden for the IFF"""
-activity = discord.Activity(type=discord.ActivityType.watching, name="me start up")
-bot = commands.Bot(
-    command_prefix=commands.when_mentioned_or('_'),
-    description=description,
-    intents=intents,
-    activity=activity,
-    status=discord.Status.online,
-    owner_ids=set(varStore.owners),
-    help_command=None,
-)
+    async def setup_hook(self): 
+        for cog in self.cogList:
+            await self.load_extension(cog)
+        # await bot.add_cog(helpCog(bot))
+        # await bot.add_cog(adminCog(bot))
+        # await bot.add_cog(iffCog(bot))
+        # await bot.add_cog(randomCog(bot))
+        # await bot.add_cog(backgroundTasks(bot))
+        # await bot.add_cog(attendanceCog(bot))
+        
+        print("Setup run")
+        
 
-bot.cogList = ["adminCmd", "helpCmd", "iffCmd", "randomCmd", "backgroundTasks", "attendance"]
-# bot.statuses = ["Avyn", "Alvyn", "Arvin", "Alvym"]
-
-# Loads all cogs
-bot.load_extension("helpCmd")
-bot.load_extension("adminCmd")
-bot.load_extension("iffCmd")
-bot.load_extension("randomCmd")
-bot.load_extension("backgroundTasks")
-bot.load_extension("attendance")
+bot = MyClient()
 
 logger = logging.getLogger("discord")
 logger.setLevel(logging.DEBUG)
@@ -115,7 +117,7 @@ async def on_ready():
         print("Past id loaded")
 
     # Sets prefix
-    if varStore.platform:
+    if platform.system == "Windows":
         bot.command_prefix = commands.when_mentioned_or('_')
     else:
         bot.command_prefix = commands.when_mentioned_or('?')
@@ -445,8 +447,7 @@ async def on_guild_remove(ctx, error):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     print(f"Bot has left {ctx.guild} at {current_time}")
-
-
+    
 # Reload cogs command
 @bot.command()
 @commands.is_owner()
@@ -457,13 +458,13 @@ async def reload(ctx, extension: str = None):
             title="Reload", description="Reloaded cogs: ", color=0xFF00C8
         )
         for x in bot.cogList:
-            bot.reload_extension(x)
+            await bot.reload_extension(x)
             embed.add_field(name=f"**#{count}**", value=f"{x} reloaded", inline=False)
             count += 1
         await ctx.send(embed=embed)
         print("All cogs reloaded")
     else:
-        bot.reload_extension(f"{extension}")
+        await bot.reload_extension(f"{extension}")
         embed = discord.Embed(
             title="Reload",
             description=f"{extension} successfully reloaded",
@@ -471,7 +472,6 @@ async def reload(ctx, extension: str = None):
         )
         await ctx.send(embed=embed)
         print(f"{extension} reloaded")
-
 
 # Unload cogs command
 @bot.command()
@@ -484,7 +484,7 @@ async def unload(ctx, extension: str = None):
         )
         for x in bot.cogList:
             try:
-                bot.unload_extension(x)
+                await bot.unload_extension(x)
             except commands.ExtensionNotLoaded:
                 embed.add_field(
                     name=f"**#{count}**", value=f"{x} is already unloaded", inline=False
@@ -497,7 +497,7 @@ async def unload(ctx, extension: str = None):
                 count += 1
         await ctx.send(embed=embed)
     else:
-        bot.unload_extension(extension)
+        await bot.unload_extension(extension)
         embed = discord.Embed(
             title="Unload", description=f"{extension} cog unloaded", color=0x109319
         )
@@ -513,7 +513,7 @@ async def load(ctx, extension: str = None):
         embed = discord.Embed(title="Load", description="Loaded cogs", color=0x109319)
         for x in bot.cogList:
             try:
-                bot.load_extension(x)
+                await bot.load_extension(x)
             except commands.ExtensionAlreadyLoaded:
                 embed.add_field(
                     name=f"**#{count}**", value=f"{x} is already loaded", inline=False
@@ -524,7 +524,7 @@ async def load(ctx, extension: str = None):
                 count += 1
         await ctx.send(embed=embed)
     else:
-        bot.load_extension(extension)
+        await bot.load_extension(extension)
         embed = discord.Embed(
             title="Load", description=f"{extension} cog loaded", color=0x109319
         )

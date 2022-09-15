@@ -202,5 +202,5 @@ class randomCog(commands.Cog):
     #     rollcall = self.bot.get_command("rollcall")
     #     await channel.invoke(rollcall)
 
-def setup(bot):
-    bot.add_cog(randomCog(bot))
+async def setup(bot):
+    await bot.add_cog(randomCog(bot))

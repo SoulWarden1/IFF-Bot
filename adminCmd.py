@@ -176,6 +176,6 @@ class adminCog(commands.Cog):
         else:
             await ctx.reply("Loop is not running")
         
-def setup(bot):
-    bot.add_cog(adminCog(bot))
+async def setup(bot):
+    await bot.add_cog(adminCog(bot))
     

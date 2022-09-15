@@ -183,5 +183,5 @@ class backgroundTasks(commands.Cog):
         print("Background tasks started")
 
 
-def setup(bot):
-    bot.add_cog(backgroundTasks(bot))
+async def setup(bot):
+    await bot.add_cog(backgroundTasks(bot))

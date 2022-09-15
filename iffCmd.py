@@ -1169,5 +1169,5 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             await ctx.send(file=cavImg, embed=specEmbed)
             await ctx.send(embed = infoEmbed)
 
-def setup(bot):
-    bot.add_cog(iffCog(bot))
+async def setup(bot):
+    await bot.add_cog(iffCog(bot))

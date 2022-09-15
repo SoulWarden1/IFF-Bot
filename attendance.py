@@ -230,5 +230,5 @@ class attendanceCog(commands.Cog):
         
         await msg.edit(content=None, embed=embed)
 
-def setup(bot:commands.Bot):
-    bot.add_cog(attendanceCog(bot))
+async def setup(bot:commands.Bot):
+    await bot.add_cog(attendanceCog(bot))
