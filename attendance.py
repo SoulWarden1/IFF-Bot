@@ -146,7 +146,8 @@ class attendanceCog(commands.Cog):
         
         await msg.delete()
         await ctx.send(embed=embed)
-        
+    
+    # Auto fills out attendance
     @attend.command(name = "fill", aliases=["Fill"])
     async def fill(self, ctx):
         msg = await ctx.reply("Filling out attendance now...")
