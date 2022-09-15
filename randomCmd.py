@@ -95,6 +95,13 @@ class randomCog(commands.Cog):
                     await ctx.send(f"{user.mention} get spammed")
         else:
             await ctx.reply("Nope, owner privilege get rekt")
+            
+    #Ghost ping
+    @commands.is_owner()
+    @commands.command(aliases=["gping"])
+    async def ghostping(self, ctx, user: discord.User):
+        await ctx.message.delete()
+        await ctx.send(user.mention, delete_after = 0.1)
         
     #Send dm's through bot
     @commands.is_owner()
