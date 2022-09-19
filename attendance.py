@@ -233,35 +233,32 @@ class attendanceCog(commands.Cog):
                     print(f"Failed id: {id}")
                 count += 1
             
-            count = 0
+            count = 1
             cells = []
             for value in ticked:
                 if value == True:
-                    print("true")
                     cells.append(Cell(row=count, col=dateColumn.col, value=True))
                 count += 1
-            print(cells)
             sheet.update_cells(cells)
             
             return countTickedUsers, failedUser
-                  
             
         #7e
         seven = calc(currentDate, sevenSheet, sevenUsers)
         print("7e done")
-        await msg.edit(content=msg.content + f" 7e done ({seven[0]})...")
+        msg = await msg.edit(content=msg.content + f" 7e done ({seven[0]})...")
         #8
         eight = calc(currentDate, eightSheet, eightUsers)
         print("8e done")
-        await msg.edit(content=msg.content + f" 8e done ({eight[0]})...")
+        msg = await msg.edit(content=msg.content + f" 8e done ({eight[0]})...")
         #9
         nine = calc(currentDate, nineSheet, nineUsers)
         print("9e done")
-        await msg.edit(content=msg.content + f" 9e done ({nine[0]})...")
+        msg = await msg.edit(content=msg.content + f" 9e done ({nine[0]})...")
         #4e
         four = calc(currentDate, fourSheet, fourUsers)
         print("4e done")
-        await msg.edit(content=msg.content + f" 4e done ({four[0]})...")
+        msg = await msg.edit(content=msg.content + f" 4e done ({four[0]})...")
                 
         end = datetime.now()
         embed=discord.Embed(title="Auto Attendance", description=f"Done! This took: {end-start}. Please inform the relevant people if there are failed users", color=0xff0000)

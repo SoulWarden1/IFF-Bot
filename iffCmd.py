@@ -1,6 +1,7 @@
 from ntpath import join
 import discord
 from discord.ext import commands
+from discord import app_commands
 from discord.utils import get
 import varStore
 from random import randint
@@ -13,11 +14,65 @@ officers = [
     661522627646586893,
     948862889815597079,
 ]
+class enlistForm(discord.ui.Modal, title='Enlistment Form'):
+    name = discord.ui.TextInput(
+        label='What is your username you use for Holdfast?',
+        placeholder='Enter username here...',
+    )
+
+    region = discord.ui.TextInput(
+        label="What region are you from?",
+        placeholder='Enter region here...',
+    )
+    
+    find = discord.ui.TextInput(
+        label='How did you find out about the IFF?',
+        placeholder='Enter username here...',
+    )
+
+    joined = discord.ui.TextInput(
+        label='Have you joined the in-game IFF regiment?',
+        placeholder='Yes/No',
+    )
+    
+    rules = discord.ui.TextInput(
+        label='Do you agree with our rules and discord ToS?',
+        placeholder='Yes/No',
+    )
+    
+    async def on_submit(self, interaction: discord.Interaction):
+        rctRole = interaction.guild.get_role(845563588324098058)
+        iffRole = interaction.guild.get_role(611927973838323724)
+        nickRole = interaction.guild.get_role(893824145299746816)
+        newcomerRole = interaction.guild.get_role(627801587351289856)
+        
+        embed=discord.Embed(title=f"{interaction.user.name}", description="Enlistment Form",color=0x141599)
+        embed.add_field(name="Name", value=f"{self.name.value}", inline=False)
+        embed.add_field(name="Region", value=f"{self.region.value}", inline=False)
+        embed.add_field(name="Find the IFF", value=f"{self.find.value}", inline=False)
+        embed.add_field(name="In-game reg", value=f"{self.joined.value}", inline=False)
+        embed.add_field(name="Rules", value=f"{self.rules.value}", inline=False)
+        
+        await interaction.response.send_message(f'Thanks for your enlistment, {self.name.value}!', embed=embed)
+        
+        await interaction.user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
+        await interaction.user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
+        await interaction.user.edit(nick=f"Rct. {self.name.value}")
+        
+    async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
+        await interaction.response.send_message('An error has occured', ephemeral=True)
+        print(error)
 
 class iffCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        super().__init__()
+    
+    @app_commands.command(name="enlist")
+    async def enlist(self, interaction: discord.Interaction):
+        await interaction.response.send_modal(enlistForm())
 
+        
     # Rolls the person doing the announcement
     @commands.has_any_role(
         907603010438459402, 907603359048040488

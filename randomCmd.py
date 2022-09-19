@@ -12,11 +12,13 @@ import time
 import badwords
 
 
+        
 class randomCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
     #Testing ping command with latency
+    @commands.has_role(varStore.iffRole)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["pong", "Ping", "Pong"])
     async def ping(self,ctx):
@@ -34,7 +36,11 @@ class randomCog(commands.Cog):
 
             await message.edit(content=f"Ping!\nResponse Time: {round(self.bot.latency * 1000)}ms\nAPI Latency: {round(((end_time - start_time)-self.bot.latency) * 1000)}ms\nTotal Latency: {round((end_time - start_time) * 1000)}ms")
             #await ctx.reply(f"Ping! (Response time: {round(self.bot.latency*1000, 2)}ms)")
-        
+    
+    # @commands.command()
+    # async def testMsg(self):
+    #     print("Test")
+    
     #Converts id to username
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["Username","user","User","name","Name"], pass_context=True)

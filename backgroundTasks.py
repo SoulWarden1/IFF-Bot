@@ -6,6 +6,7 @@ from random import randint, choice
 import asyncio
 import varStore
 import iffCmd
+#from randomCmd import testMsg
 
 class backgroundTasks(commands.Cog):
     def __init__(self, bot):
@@ -174,12 +175,17 @@ class backgroundTasks(commands.Cog):
             await asyncio.sleep(5)
             await self.bot.change_presence(status=discord.Status.online)
             await asyncio.sleep(5)
+            
+    # @tasks.loop(seconds=5)
+    # async def test(self):
+    #     await testMsg(self)
 
     @commands.Cog.listener()
     async def on_ready(self):
         # Creates backgroup loops
         self.statusRotation.start()
         self.autoRoll.start()
+        # self.test.start()
         print("Background tasks started")
 
 

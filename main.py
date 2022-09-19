@@ -3,6 +3,7 @@ import sys
 import traceback
 import discord
 from discord.ext import commands
+from discord import app_commands
 from random import randint
 import platform
 
@@ -25,14 +26,17 @@ class MyBot(commands.Bot):
             owner_ids=set(varStore.owners),
             help_command=None
             )
-        self.cogList = ["adminCmd", "helpCmd", "iffCmd", "randomCmd", "backgroundTasks", "attendance"]
+        self.cogList = ["adminCmd", "helpCmd", "iffCmd","backgroundTasks", "randomCmd", "attendance"]
 
     async def setup_hook(self): 
         for cog in self.cogList:
             await self.load_extension(cog)
+        self.tree.copy_global_to(guild=discord.Object(varStore.iffGuild))
+        await self.tree.sync(guild=discord.Object(varStore.iffGuild))
         print("Setup run")
         
 bot = MyBot()
+tree = bot.tree
 
 # Bot starting
 @bot.event
@@ -77,10 +81,12 @@ async def on_ready():
         print("Past id loaded")
 
     # Sets prefix
-    if platform.system == "Windows":
-        bot.command_prefix = commands.when_mentioned_or('_')
-    else:
+    if platform.system() == 'Windows':
         bot.command_prefix = commands.when_mentioned_or('?')
+        print("Platform: Windows")
+    else:
+        bot.command_prefix = commands.when_mentioned_or('_')
+        print("Platform: Linux")
 
 dmChannelId = 950245454317236304
 nineCooldown = []
@@ -422,6 +428,8 @@ async def reload(ctx, extension: str = None):
             embed.add_field(name=f"**#{count}**", value=f"{x} reloaded", inline=False)
             count += 1
         await ctx.send(embed=embed)
+        tree.copy_global_to(guild=ctx.guild)
+        await tree.sync(guild=discord.Object(varStore.iffGuild))
         print("All cogs reloaded")
     else:
         await bot.reload_extension(f"{extension}")
