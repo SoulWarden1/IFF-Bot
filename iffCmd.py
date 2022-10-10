@@ -9,35 +9,53 @@ from datetime import datetime
 import asyncio
 
 officers = [
-    661521548061966357,
-    660353960514813952,
-    661522627646586893,
-    948862889815597079,
+    990267891330977813, #Reg HQ
+    661521548061966357, #Company Cmd
+    660353960514813952, #CO
+    661522627646586893, #NCO
+    948862889815597079, 
 ]
-class enlistForm(discord.ui.Modal, title='Enlistment Form'):
+
+
+class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
+    start = datetime.now()
     name = discord.ui.TextInput(
         label='What is your username you use for Holdfast?',
         placeholder='Enter username here...',
+        required = True,
+        max_length = 20,
     )
 
     region = discord.ui.TextInput(
         label="What region are you from?",
-        placeholder='Enter region here...',
+        placeholder='OCE, NA, SEA, ETC. If from SEA, please state your country',
+        required = True,
+        max_length = 20,
     )
     
     find = discord.ui.TextInput(
         label='How did you find out about the IFF?',
-        placeholder='Enter username here...',
+        placeholder='Enter reason/source here...',
+        required = True,
+        style = discord.TextStyle.long,
+        max_length = 150,
     )
 
     joined = discord.ui.TextInput(
         label='Have you joined the in-game IFF regiment?',
-        placeholder='Yes/No',
+        placeholder='Yes/No...',
+        required = True,
+        max_length = 3,
+        min_length = 2,
     )
     
     rules = discord.ui.TextInput(
         label='Do you agree with our rules and discord ToS?',
-        placeholder='Yes/No',
+        placeholder='Yes/No...',
+        default = "Yes",
+        required = True,
+        max_length = 3,
+        min_length = 2,
     )
     
     async def on_submit(self, interaction: discord.Interaction):
@@ -45,22 +63,26 @@ class enlistForm(discord.ui.Modal, title='Enlistment Form'):
         iffRole = interaction.guild.get_role(611927973838323724)
         nickRole = interaction.guild.get_role(893824145299746816)
         newcomerRole = interaction.guild.get_role(627801587351289856)
+        end = datetime.now()
         
-        embed=discord.Embed(title=f"{interaction.user.name}", description="Enlistment Form",color=0x141599)
+        embed=discord.Embed(title=f"{interaction.user.name}'s Enlistment Form", description=f"It took {end-self.start} to be filled out. Filled out on {end.strftime('%d/%m/%Y on %a %I:%M:%S %p')}",color=0x141599)
         embed.add_field(name="Name", value=f"{self.name.value}", inline=False)
         embed.add_field(name="Region", value=f"{self.region.value}", inline=False)
         embed.add_field(name="Find the IFF", value=f"{self.find.value}", inline=False)
         embed.add_field(name="In-game reg", value=f"{self.joined.value}", inline=False)
         embed.add_field(name="Rules", value=f"{self.rules.value}", inline=False)
+        embed.set_footer(text = f"User ID: {interaction.user.id}")
+        embed.set_author(name = interaction.user, icon_url = interaction.user.avatar)
         
-        await interaction.response.send_message(f'Thanks for your enlistment, {self.name.value}!', embed=embed)
+        await interaction.response.send_message(f'Thanks for your enlistment, {self.name.value}! Your tags will be given shortly.', embed=embed)
+        await asyncio.sleep(5)
         
         await interaction.user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
         await interaction.user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
         await interaction.user.edit(nick=f"Rct. {self.name.value}")
         
     async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
-        await interaction.response.send_message('An error has occured', ephemeral=True)
+        await interaction.response.send_message('An error has occurred', ephemeral=True)
         print(error)
 
 class iffCog(commands.Cog):
@@ -68,7 +90,17 @@ class iffCog(commands.Cog):
         self.bot = bot
         super().__init__()
     
-    @app_commands.command(name="enlist")
+
+    @app_commands.checks.has_any_role(
+        990267891330977813,#Reg HQ
+        661521548061966357, #Company Cmd
+        660353960514813952, #CO
+        661522627646586893, #NCO 
+        948862889815597079, 
+        627801587351289856 #Newcomer
+        )
+    @app_commands.guild_only()
+    @app_commands.command(name="enlist", description='The IFF enlistment form')
     async def enlist(self, interaction: discord.Interaction):
         await interaction.response.send_modal(enlistForm())
 
@@ -992,9 +1024,9 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             maj8eEmbed.add_field(name="Major Bronze", value="Major for 8e Chasseurs de la Garde", inline=False)
             
             # Maj 9e ----------------------------------------------------
-            maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9e", description="", color=0xffff00)
-            maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/358445969399873557/4d93e7f0f552c91e5e2dc213b899a0d7.webp?size=1024")
-            maj9eEmbed.add_field(name="Major Ghost", value="Major for 9e Grenadiers de la Garde", inline=False)
+            # maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9e", description="", color=0xffff00)
+            # maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/358445969399873557/4d93e7f0f552c91e5e2dc213b899a0d7.webp?size=1024")
+            # maj9eEmbed.add_field(name="Major Ghost", value="Major for 9e Grenadiers de la Garde", inline=False)
             
             # 7e ---------------------------------------------------------------------
             sevenEmbed = discord.Embed(
@@ -1215,7 +1247,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             await ctx.send(file=cmd2Img, embed=cmd2Embed)
             await ctx.send(embed=maj7eEmbed)
             await ctx.send(embed=maj8eEmbed)
-            await ctx.send(embed=maj9eEmbed)
+            # await ctx.send(embed=maj9eEmbed)
             await ctx.send(file=sevenImg, embed=sevenEmbed)
             await ctx.send(file=eightImg, embed=eightEmbed)
             await ctx.send(file=nineImg, embed=nineEmbed)
