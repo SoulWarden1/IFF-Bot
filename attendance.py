@@ -202,15 +202,22 @@ class attendanceCog(commands.Cog):
         #         else:
         #             countTickedUsers += 1
         #     return countTickedUsers, failedUser
-        
+
         def calc(date, sheet, users):
             countTickedUsers = 0
             failedUser = []
+            failed = False
+            
+            if not users:
+                print("No users")
+                return
+            
             #Attempting to find the correct column with the right date
-            try:
-                dateColumn = sheet.find(date, in_row = 1)
-            except:
+            dateColumn = sheet.find(date, in_row = 1)
+            if dateColumn is None:
                 print("Date NOT found")
+                failed = True
+                return failed
             else:
                 print("Date found")
             
@@ -224,50 +231,112 @@ class attendanceCog(commands.Cog):
                 
             count = 1
             for id in users:
-                if str(id) in idColumnValues:
-                    ticked[idColumnValues.index(str(id))] = True
-                    countTickedUsers += 1
-                else:
-                    username = self.bot.get_user(id)
-                    failedUser.append(username.name)
-                    print(f"Failed id: {id}")
-                count += 1
+                try:
+                    if str(id) in idColumnValues:
+                        ticked[idColumnValues.index(str(id))] = True
+                        countTickedUsers += 1
+                    else:
+                        username = self.bot.get_user(id)
+                        failedUser.append(username.name)
+                        print(f"Failed id: {id}")
+                    count += 1
+                except:
+                    print("Failed")
+                    failed = True
+                    return failed
             
             count = 1
             cells = []
             for value in ticked:
-                if value == True:
-                    cells.append(Cell(row=count, col=dateColumn.col, value=True))
-                count += 1
-            sheet.update_cells(cells)
+                try:
+                    if value == True:
+                        cells.append(Cell(row=count, col=dateColumn.col, value=True))
+                    count += 1
+                except:
+                    print("Failed")
+                    failed = True
+                    return failed
+            
+            # Ticks all users
+            try:
+                sheet.update_cells(cells)
+            except:
+                    print("Failed")
+                    failed = True
+                    return failed
             
             return countTickedUsers, failedUser
-            
+
+
+        embed=discord.Embed(title="Auto Attendance", description=f"Done! Please inform the relevant people if there are failed users", color=0xff0000)
         #7e
         seven = calc(currentDate, sevenSheet, sevenUsers)
-        print("7e done")
-        msg = await msg.edit(content=msg.content + f" 7e done ({seven[0]})...")
+        print("7e done")  
+        try:
+            if isinstance(seven[0], int):
+                msg = await msg.edit(content=msg.content + f" 7e done ({seven[0]})...")
+                embed.add_field(name="7e", value=f"No. Ticked= {seven[0]}, Failed Users: {seven[1]}", inline=True)
+        except:
+            if seven is None:
+                msg = await msg.edit(content=msg.content + f" No 7e users...")
+                embed.add_field(name="7e", value=f"No players in 7e", inline=True)
+            else:
+                msg = await msg.edit(content=msg.content + f" 7e has failed...")
+                embed.add_field(name="7e", value=f"**7e has failed**", inline=True)
+            
         #8
         eight = calc(currentDate, eightSheet, eightUsers)
         print("8e done")
-        msg = await msg.edit(content=msg.content + f" 8e done ({eight[0]})...")
+        try:
+            if isinstance(eight[0], int):
+                msg = await msg.edit(content=msg.content + f" 8e done ({eight[0]})...")
+                embed.add_field(name="8e", value=f"No. Ticked= {eight[0]}, Failed Users: {eight[1]}", inline=True)
+        except:
+            if eight is None:
+                msg = await msg.edit(content=msg.content + f" No 8e users...")
+                embed.add_field(name="8e", value=f"No players in 8e", inline=True)
+            else:
+                msg = await msg.edit(content=msg.content + f" 8e has failed...")
+                embed.add_field(name="8e", value=f"**8e has failed**", inline=True)
+        
         #9
         nine = calc(currentDate, nineSheet, nineUsers)
         print("9e done")
-        msg = await msg.edit(content=msg.content + f" 9e done ({nine[0]})...")
+        try:
+            if isinstance(nine[0], int):
+                msg = await msg.edit(content=msg.content + f" 9e done ({nine[0]})...")
+                embed.add_field(name="9e", value=f"No. Ticked= {nine[0]}, Failed Users: {nine[1]}", inline=True)
+        except:
+            if nine is None:
+                msg = await msg.edit(content=msg.content + f" No 9e users...")
+                embed.add_field(name="9e", value=f"No players in 9e", inline=True)
+            else:
+                msg = await msg.edit(content=msg.content + f" 9e has failed...")
+                embed.add_field(name="9e", value=f"**9e has failed**", inline=True)
+        
         #4e
         four = calc(currentDate, fourSheet, fourUsers)
         print("4e done")
-        msg = await msg.edit(content=msg.content + f" 4e done ({four[0]})...")
+        try:
+            if isinstance(four[0], int):
+                msg = await msg.edit(content=msg.content + f" 4e done ({four[0]})...")
+                embed.add_field(name="4e", value=f"No. Ticked= {four[0]}, Failed Users: {four[1]}", inline=True)
+        except:
+            if four is None:
+                msg = await msg.edit(content=msg.content + f" No 4e users...")
+                embed.add_field(name="4e", value=f"No players in 4e", inline=True)
+            else:
+                msg = await msg.edit(content=msg.content + f" 4e has failed...")
+                embed.add_field(name="4e", value=f"**4e has failed**", inline=True)
                 
         end = datetime.now()
-        embed=discord.Embed(title="Auto Attendance", description=f"Done! This took: {end-start}. Please inform the relevant people if there are failed users", color=0xff0000)
-        embed.add_field(name="7e", value=f"No. Ticked= {seven[0]}, Failed Users: {seven[1]},", inline=True)
-        embed.add_field(name="8e", value=f"No. Ticked= {eight[0]}, Failed Users: {eight[1]},", inline=True)
-        embed.add_field(name="9e", value=f"No. Ticked= {nine[0]}, Failed Users: {nine[1]}", inline=True)
-        embed.add_field(name="4e", value=f"No. Ticked= {four[0]}, Failed Users: {four[1]}", inline=True)
-        if seven[1] and seven[0] > 0 or seven[1] or eight[1] and eight[0] > 0 or eight[1] or nine[1] and nine[0] > 0 or nine[1] or four[1] and four[0] > 0 or four[1] :
-            embed.set_footer(text=f"WARNING THERE ARE FAILED USERS, PLEASE CHECK YOUR ATTENDANCE SHEET")
+        
+        try:
+            #Check if there are failed users, if so alert user
+            if len(seven[1]) == 0 or len(eight[1]) == 0 or len(nine[1]) == 0 or len(four[1]) == 0 :
+                embed.set_footer(text=f"Took {end-start}. WARNING THERE ARE FAILED USERS, PLEASE CHECK YOUR ATTENDANCE SHEET")
+        except:
+            embed.set_footer(text=f"Took {end-start}")
         
         await msg.edit(content=None, embed=embed)
 
