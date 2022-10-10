@@ -27,13 +27,14 @@ class MyBot(commands.Bot):
             help_command=None
             )
         self.cogList = ["adminCmd", "helpCmd", "iffCmd","backgroundTasks", "randomCmd", "attendance"]
-
+        self.synced = False
+        
     async def setup_hook(self): 
         for cog in self.cogList:
             await self.load_extension(cog)
         self.tree.copy_global_to(guild=discord.Object(varStore.iffGuild))
         await self.tree.sync(guild=discord.Object(varStore.iffGuild))
-        print("Setup run")
+        print("Cogs loaded and tree synced")
         
 bot = MyBot()
 tree = bot.tree
@@ -414,6 +415,21 @@ async def on_guild_remove(ctx, error):
     current_time = now.strftime("%H:%M:%S")
     print(f"Bot has left {ctx.guild} at {current_time}")
     
+    
+@bot.command()
+@commands.is_owner()
+async def sync(ctx):
+    tree.copy_global_to(guild=discord.Object(id = varStore.iffGuild))
+    await tree.sync(guild=discord.Object(id = varStore.iffGuild))
+    await ctx.reply("Tree synced")
+    
+@bot.command()
+@commands.is_owner()
+async def clear(ctx):
+    tree.clear_commands(guild=discord.Object(id = varStore.iffGuild))
+    await tree.sync(guild=discord.Object(id = varStore.iffGuild))
+    await ctx.reply("Tree cleared")
+    
 # Reload cogs command
 @bot.command()
 @commands.is_owner()
@@ -428,8 +444,6 @@ async def reload(ctx, extension: str = None):
             embed.add_field(name=f"**#{count}**", value=f"{x} reloaded", inline=False)
             count += 1
         await ctx.send(embed=embed)
-        tree.copy_global_to(guild=ctx.guild)
-        await tree.sync(guild=discord.Object(varStore.iffGuild))
         print("All cogs reloaded")
     else:
         await bot.reload_extension(f"{extension}")
