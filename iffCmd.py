@@ -18,7 +18,10 @@ officers = [
 
 
 class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
-    start = datetime.now()
+    def __init__(self, start):
+        self.start = start
+        super().__init__()
+            
     name = discord.ui.TextInput(
         label='What is your username you use for Holdfast?',
         placeholder='Enter username here...',
@@ -65,7 +68,7 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
         newcomerRole = interaction.guild.get_role(627801587351289856)
         end = datetime.now()
         
-        embed=discord.Embed(title=f"{interaction.user.name}'s Enlistment Form", description=f"It took {end-self.start} to be filled out. Filled out on {end.strftime('%d/%m/%Y on %a %I:%M:%S %p')}",color=0x141599)
+        embed=discord.Embed(title=f"{interaction.user.name}'s Enlistment Form", description=f"It took {end-self.start}s to filled out. Completed on {end.strftime('%d/%m/%Y on %a %I:%M:%S %p %Z')}",color=0x141599)
         embed.add_field(name="Name", value=f"{self.name.value}", inline=False)
         embed.add_field(name="Region", value=f"{self.region.value}", inline=False)
         embed.add_field(name="Find the IFF", value=f"{self.find.value}", inline=False)
@@ -82,8 +85,8 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
         await interaction.user.edit(nick=f"Rct. {self.name.value}")
         
     async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
-        await interaction.response.send_message('An error has occurred', ephemeral=True)
-        print(error)
+        await interaction.response.send_message('An error has occurred, if this issue persists please contact SoulWarden#8946', ephemeral=True)
+        print(f"An error occurred with the enlistment form: {error}")
 
 class iffCog(commands.Cog):
     def __init__(self, bot):
@@ -102,8 +105,7 @@ class iffCog(commands.Cog):
     @app_commands.guild_only()
     @app_commands.command(name="enlist", description='The IFF enlistment form')
     async def enlist(self, interaction: discord.Interaction):
-        await interaction.response.send_modal(enlistForm())
-
+        await interaction.response.send_modal(enlistForm(start = datetime.now()))
         
     # Rolls the person doing the announcement
     @commands.has_any_role(
@@ -150,7 +152,7 @@ class iffCog(commands.Cog):
 
         print(f"Announcement rolled at {current_time}")
 
-        # Stops the auto rotation of status for 10 minues
+        # Stops the auto rotation of status for 10 minutes
         cog = self.bot.get_cog("backgroundTasks")
         cog.statusRotation.cancel()
         await asyncio.sleep(600)
