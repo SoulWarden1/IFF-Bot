@@ -3,17 +3,10 @@ import sys
 import traceback
 import discord
 from discord.ext import commands
+from discord import app_commands
 from random import randint
-import logging
-import time
+import platform
 
-import asyncio
-
-from helpCmd import helpCog
-from adminCmd import adminCog
-from iffCmd import iffCog
-from randomCmd import randomCog
-from backgroundTasks import backgroundTasks
 import varStore
 
 from dotenv import load_dotenv
@@ -21,55 +14,30 @@ from os import getenv
 import os
 
 load_dotenv()
-
 token = os.getenv("TOKEN")
-
-# intents = discord.Intents.default()
-intents = discord.Intents.all()
-intents.members = True
-
-# Sets up bot
-description = """A bot developed by SoulWarden for the IFF"""
-activity = discord.Activity(type=discord.ActivityType.watching, name="me start up")
-bot = commands.Bot(
-    command_prefix=commands.when_mentioned_or('_'),
-    description=description,
-    intents=intents,
-    activity=activity,
-    status=discord.Status.online,
-    owner_ids=set(varStore.owners),
-    help_command=None,
-)
-
-bot.cogList = ["adminCmd", "helpCmd", "iffCmd", "randomCmd", "backgroundTasks", "attendance"]
-# bot.statuses = ["Avyn", "Alvyn", "Arvin", "Alvym"]
-
-# Loads all cogs
-bot.load_extension("helpCmd")
-bot.load_extension("adminCmd")
-bot.load_extension("iffCmd")
-bot.load_extension("randomCmd")
-bot.load_extension("backgroundTasks")
-bot.load_extension("attendance")
-
-logger = logging.getLogger("discord")
-logger.setLevel(logging.DEBUG)
-try:
-    handler = logging.FileHandler(
-        filename="IFF Bot/storage/discord.log",
-        encoding="utf-8",
-        mode="w",
-    )
-except:
-    handler = logging.FileHandler(
-        filename="/home/pi/Desktop/iffBot/storage/discord.log",
-        encoding="utf-8",
-        mode="w",
-    )
-handler.setFormatter(
-    logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
-)
-logger.addHandler(handler)
+class MyBot(commands.Bot):
+    def __init__(self):
+        super().__init__(
+            command_prefix=commands.when_mentioned_or('_'),
+            description="""A bot developed by SoulWarden for the IFF""",
+            intents=discord.Intents.all(),
+            activity=discord.Activity(type=discord.ActivityType.watching, name="me start up"),
+            status=discord.Status.online,
+            owner_ids=set(varStore.owners),
+            help_command=None
+            )
+        self.cogList = ["adminCmd", "helpCmd", "iffCmd","backgroundTasks", "randomCmd", "attendance"]
+        self.synced = False
+        
+    async def setup_hook(self): 
+        for cog in self.cogList:
+            await self.load_extension(cog)
+        self.tree.copy_global_to(guild=discord.Object(varStore.iffGuild))
+        await self.tree.sync(guild=discord.Object(varStore.iffGuild))
+        print("Cogs loaded and tree synced")
+        
+bot = MyBot()
+tree = bot.tree
 
 # Bot starting
 @bot.event
@@ -89,7 +57,6 @@ async def on_ready():
         )
     except:
         f = open("/home/pi/Desktop/iffBot/storage/memberList.txt", "r")
-        varStore.platform = True
 
     file_lines = f.read()
     varStore.members = file_lines.split("\n")
@@ -115,10 +82,12 @@ async def on_ready():
         print("Past id loaded")
 
     # Sets prefix
-    if varStore.platform:
-        bot.command_prefix = commands.when_mentioned_or('_')
-    else:
+    if platform.system() == 'Windows':
         bot.command_prefix = commands.when_mentioned_or('?')
+        print("Platform: Windows")
+    else:
+        bot.command_prefix = commands.when_mentioned_or('_')
+        print("Platform: Linux")
 
 dmChannelId = 950245454317236304
 nineCooldown = []
@@ -445,8 +414,22 @@ async def on_guild_remove(ctx, error):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     print(f"Bot has left {ctx.guild} at {current_time}")
-
-
+    
+    
+@bot.command()
+@commands.is_owner()
+async def sync(ctx):
+    tree.copy_global_to(guild=ctx.guild)
+    await tree.sync(guild=ctx.guild)
+    await ctx.reply("Tree synced")
+    
+@bot.command()
+@commands.is_owner()
+async def clear(ctx):
+    tree.clear_commands(guild=discord.Object(id = varStore.iffGuild))
+    await tree.sync(guild=discord.Object(id = varStore.iffGuild))
+    await ctx.reply("Tree cleared")
+    
 # Reload cogs command
 @bot.command()
 @commands.is_owner()
@@ -457,13 +440,13 @@ async def reload(ctx, extension: str = None):
             title="Reload", description="Reloaded cogs: ", color=0xFF00C8
         )
         for x in bot.cogList:
-            bot.reload_extension(x)
+            await bot.reload_extension(x)
             embed.add_field(name=f"**#{count}**", value=f"{x} reloaded", inline=False)
             count += 1
         await ctx.send(embed=embed)
         print("All cogs reloaded")
     else:
-        bot.reload_extension(f"{extension}")
+        await bot.reload_extension(f"{extension}")
         embed = discord.Embed(
             title="Reload",
             description=f"{extension} successfully reloaded",
@@ -471,7 +454,6 @@ async def reload(ctx, extension: str = None):
         )
         await ctx.send(embed=embed)
         print(f"{extension} reloaded")
-
 
 # Unload cogs command
 @bot.command()
@@ -484,7 +466,7 @@ async def unload(ctx, extension: str = None):
         )
         for x in bot.cogList:
             try:
-                bot.unload_extension(x)
+                await bot.unload_extension(x)
             except commands.ExtensionNotLoaded:
                 embed.add_field(
                     name=f"**#{count}**", value=f"{x} is already unloaded", inline=False
@@ -497,7 +479,7 @@ async def unload(ctx, extension: str = None):
                 count += 1
         await ctx.send(embed=embed)
     else:
-        bot.unload_extension(extension)
+        await bot.unload_extension(extension)
         embed = discord.Embed(
             title="Unload", description=f"{extension} cog unloaded", color=0x109319
         )
@@ -513,7 +495,7 @@ async def load(ctx, extension: str = None):
         embed = discord.Embed(title="Load", description="Loaded cogs", color=0x109319)
         for x in bot.cogList:
             try:
-                bot.load_extension(x)
+                await bot.load_extension(x)
             except commands.ExtensionAlreadyLoaded:
                 embed.add_field(
                     name=f"**#{count}**", value=f"{x} is already loaded", inline=False
@@ -524,7 +506,7 @@ async def load(ctx, extension: str = None):
                 count += 1
         await ctx.send(embed=embed)
     else:
-        bot.load_extension(extension)
+        await bot.load_extension(extension)
         embed = discord.Embed(
             title="Load", description=f"{extension} cog loaded", color=0x109319
         )

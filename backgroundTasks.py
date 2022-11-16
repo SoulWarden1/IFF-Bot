@@ -6,6 +6,9 @@ from random import randint, choice
 import asyncio
 import varStore
 import iffCmd
+import platform
+
+#from randomCmd import testMsg
 
 class backgroundTasks(commands.Cog):
     def __init__(self, bot):
@@ -34,12 +37,12 @@ class backgroundTasks(commands.Cog):
     # Automatically rolls the announcement picker
     @tasks.loop(seconds=59.0)
     async def autoRoll(self):
-        eventDays = [1, 2, 4, 5]
+        eventDays = [2, 4, 5]
         now = datetime.now()
         current_time = now.strftime("%H:%M")
 
         # Auto role
-        if current_time == "14:30" and datetime.today().weekday() in eventDays and varStore.platform:
+        if current_time == "14:30" and datetime.today().weekday() in eventDays and platform.system() == 'Linux':
             roll = 0
             while True:
                 randId = randint(0, len(varStore.members)-1)
@@ -80,7 +83,7 @@ class backgroundTasks(commands.Cog):
             cog.statusRotation.start()
 
         # Auto leadership attendance ping
-        elif current_time == "16:00" and datetime.today().weekday() in eventDays and varStore.platform:
+        elif current_time == "16:00" and datetime.today().weekday() in eventDays and platform.system() == 'Linux':
             leadershipChannel = self.bot.get_channel(907599229629911104)
 
             embed = discord.Embed(title="Leadership Attendance", description="React with :thumbsup: or :thumbsdown: if you're coming tonight", color=0x109319)
@@ -100,7 +103,7 @@ class backgroundTasks(commands.Cog):
             varStore.leaderPingMsgId = msg.id
             
         #Auto roll call
-        elif current_time == "20:20" and datetime.today().weekday() in eventDays and varStore.platform:
+        elif current_time == "20:20" and datetime.today().weekday() in eventDays and platform.system() == 'Linux':
             vcCatId = 948180967607136306
             iffGuild = self.bot.get_guild(592559858482544641)
             vcChannelsIds = []
@@ -174,14 +177,19 @@ class backgroundTasks(commands.Cog):
             await asyncio.sleep(5)
             await self.bot.change_presence(status=discord.Status.online)
             await asyncio.sleep(5)
+            
+    # @tasks.loop(seconds=5)
+    # async def test(self):
+    #     await testMsg(self)
 
     @commands.Cog.listener()
     async def on_ready(self):
         # Creates backgroup loops
         self.statusRotation.start()
         self.autoRoll.start()
+        # self.test.start()
         print("Background tasks started")
 
 
-def setup(bot):
-    bot.add_cog(backgroundTasks(bot))
+async def setup(bot):
+    await bot.add_cog(backgroundTasks(bot))

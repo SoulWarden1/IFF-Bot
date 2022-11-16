@@ -12,11 +12,13 @@ import time
 import badwords
 
 
+        
 class randomCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
     #Testing ping command with latency
+    @commands.has_role(varStore.iffRole)
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["pong", "Ping", "Pong"])
     async def ping(self,ctx):
@@ -34,7 +36,11 @@ class randomCog(commands.Cog):
 
             await message.edit(content=f"Ping!\nResponse Time: {round(self.bot.latency * 1000)}ms\nAPI Latency: {round(((end_time - start_time)-self.bot.latency) * 1000)}ms\nTotal Latency: {round((end_time - start_time) * 1000)}ms")
             #await ctx.reply(f"Ping! (Response time: {round(self.bot.latency*1000, 2)}ms)")
-        
+    
+    # @commands.command()
+    # async def testMsg(self):
+    #     print("Test")
+    
     #Converts id to username
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["Username","user","User","name","Name"], pass_context=True)
@@ -60,28 +66,10 @@ class randomCog(commands.Cog):
             messages = ["Get spammed","Get rekt","Get destroyed"]
             message = messages[randint(len(messages)-1)]
             
-        # for i in range(times): 
-        #     await user.send(message)
-        #     if i > times*0.1:
-        #         await info.edit(content="Spamming now (10%)")
-        #     elif i > times*0.2:
-        #         await info.edit(content="Spamming now (20%)")
-        #     elif i > times*0.3:
-        #         await info.edit(content="Spamming now (30%)")
-        #     elif i > times*0.4:
-        #         await info.edit(content="Spamming now (40%)")
-        #     elif i > times*0.5:
-        #         await info.edit(content="Spamming now (50%)")
-        #     elif i > times*0.6:
-        #         await info.edit(content="Spamming now (60%)")
-        #     elif i > times*0.7:
-        #         await info.edit(content="Spamming now (70%)")
-        #     elif i > times*0.8:
-        #         await info.edit(content="Spamming now (80%)")
-        #     elif i > times*0.9:
-        #         await info.edit(content="Spamming now (90%)")
+        for i in range(times): 
+            await user.send(message)
                 
-        await ctx.reply("Spam complete (100%)")
+        await info.edit(content="Spamming complete")
         
     #Spams command
     @commands.command()
@@ -95,6 +83,13 @@ class randomCog(commands.Cog):
                     await ctx.send(f"{user.mention} get spammed")
         else:
             await ctx.reply("Nope, owner privilege get rekt")
+            
+    #Ghost ping
+    @commands.is_owner()
+    @commands.command(aliases=["gping"])
+    async def ghostping(self, ctx, user: discord.User):
+        await ctx.message.delete()
+        await ctx.send(user.mention, delete_after = 0.1)
         
     #Send dm's through bot
     @commands.is_owner()
@@ -188,12 +183,5 @@ class randomCog(commands.Cog):
     async def github(self, ctx:commands.Context):
         await ctx.reply("The link to the github page is: https://github.com/SoulWarden1/IFF-Bot")
 
-    # @commands.command()
-    # @commands.cooldown(1, 1, commands.BucketType.user)
-    # async def test(self, ctx:commands.Context):
-    #     channel = await self.bot.get_context(907599229629911104)
-    #     rollcall = self.bot.get_command("rollcall")
-    #     await channel.invoke(rollcall)
-
-def setup(bot):
-    bot.add_cog(randomCog(bot))
+async def setup(bot):
+    await bot.add_cog(randomCog(bot))
