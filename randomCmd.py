@@ -66,28 +66,10 @@ class randomCog(commands.Cog):
             messages = ["Get spammed","Get rekt","Get destroyed"]
             message = messages[randint(len(messages)-1)]
             
-        # for i in range(times): 
-        #     await user.send(message)
-        #     if i > times*0.1:
-        #         await info.edit(content="Spamming now (10%)")
-        #     elif i > times*0.2:
-        #         await info.edit(content="Spamming now (20%)")
-        #     elif i > times*0.3:
-        #         await info.edit(content="Spamming now (30%)")
-        #     elif i > times*0.4:
-        #         await info.edit(content="Spamming now (40%)")
-        #     elif i > times*0.5:
-        #         await info.edit(content="Spamming now (50%)")
-        #     elif i > times*0.6:
-        #         await info.edit(content="Spamming now (60%)")
-        #     elif i > times*0.7:
-        #         await info.edit(content="Spamming now (70%)")
-        #     elif i > times*0.8:
-        #         await info.edit(content="Spamming now (80%)")
-        #     elif i > times*0.9:
-        #         await info.edit(content="Spamming now (90%)")
+        for i in range(times): 
+            await user.send(message)
                 
-        await ctx.reply("Spam complete (100%)")
+        await info.edit(content="Spamming complete")
         
     #Spams command
     @commands.command()

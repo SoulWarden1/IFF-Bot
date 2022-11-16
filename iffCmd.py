@@ -96,7 +96,7 @@ class iffCog(commands.Cog):
         661521548061966357, #Company Cmd
         660353960514813952, #CO
         661522627646586893, #NCO 
-        948862889815597079, 
+        948862889815597079, #Bot dev
         627801587351289856 #Newcomer
         )
     @app_commands.guild_only()

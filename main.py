@@ -419,8 +419,8 @@ async def on_guild_remove(ctx, error):
 @bot.command()
 @commands.is_owner()
 async def sync(ctx):
-    tree.copy_global_to(guild=discord.Object(id = varStore.iffGuild))
-    await tree.sync(guild=discord.Object(id = varStore.iffGuild))
+    tree.copy_global_to(guild=ctx.guild)
+    await tree.sync(guild=ctx.guild)
     await ctx.reply("Tree synced")
     
 @bot.command()
