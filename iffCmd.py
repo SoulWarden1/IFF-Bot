@@ -7,6 +7,7 @@ import varStore
 from random import randint
 from datetime import datetime
 import asyncio
+from pathlib import Path
 
 officers = [
     990267891330977813, #Reg HQ
@@ -134,7 +135,7 @@ class iffCog(commands.Cog):
         varStore.pastSelectIds.append(str(varStore.members[randId]))
         try:
             f = open(
-                "IFF Bot/storage/pastSelectId.txt", "w")
+                "iffBot/storage/pastSelectId.txt", "w")
         except:
             f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
 
@@ -244,7 +245,7 @@ class iffCog(commands.Cog):
             
         try:
             img = discord.File(
-                "IFF Bot/files/8e.png",
+                "iffBot/files/8e.png",
                 filename="8e.png",
             )
         except:
@@ -329,7 +330,7 @@ class iffCog(commands.Cog):
 
         try:
             file = discord.File(
-                "IFF Bot/files/8e.png",
+                "iffBot/files/8e.png",
                 filename="8e.png",
             )
         except:
@@ -779,7 +780,6 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
         sevenRole = ctx.guild.get_role(783564469854142464)
         eightRole = ctx.guild.get_role(845007589674188839)
         nineRole = ctx.guild.get_role(863756344494260224)
-        fourRole = ctx.guild.get_role(760440084880162838)
         coRole = ctx.guild.get_role(660353960514813952)
         ncoRole = ctx.guild.get_role(661522627646586893)
         cplRole = ctx.guild.get_role(863757684674920519)
@@ -892,14 +892,13 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 return enlistedCount
                                  
             #Stuff for creating muster roll
-            companies = ["four", "seven", "eight", "nine"]
+            companies = ["seven", "eight", "nine"]
             rankGroups = ["Co", "Nco", "Cpl", "Enlisted"]
             muster = {}
             
             #Creates muster roll information
             for company in companies:
-                if company == "four": role = fourRole
-                elif company == "seven": role = sevenRole
+                if company == "seven": role = sevenRole
                 elif company == "eight": role = eightRole
                 elif company == "nine": role = nineRole
                 
@@ -912,98 +911,34 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                     muster[f"{company}{rank}"] = func(role)
                     muster[f"{company}{rank}"] = "\n".join(muster[f"{company}{rank}"])
  
-            fourEnlistedCount = enlistedCountCalc(fourRole)
+            # fourEnlistedCount = enlistedCountCalc(fourRole)
             sevenEnlistedCount = enlistedCountCalc(sevenRole)
             eightEnlistedCount = enlistedCountCalc(eightRole)
             nineEnlistedCount = enlistedCountCalc(nineRole)
             
+            imageFolder = Path().absolute() / "files"
+            
             # Command skin 1 pic
-            try:
-                cmdImg = discord.File(
-                    "IFF Bot/files/cmd_skin.png",
-                    filename="cmd_skin.png",
-                )
-            except:
-                cmdImg = discord.File(
-                    "/home/pi/Desktop/iffBot/files/cmd_skin.png", filename="cmd_skin.png"
-                )
-                
-            # Command skin 2 pic
-            try:
-                cmd2Img = discord.File(
-                    "IFF Bot/files/cmd_skin2.png",
-                    filename="cmd_skin2.png",
-                )
-            except:
-                cmd2Img = discord.File(
-                    "/home/pi/Desktop/iffBot/files/cmd_skin2.png", filename="cmd_skin2.png"
-                )
-
-            # 4e skin pic
-            try:
-                fourImg = discord.File(
-                    "IFF Bot/files/4e_skin.jpeg",
-                    filename="4e_skin.jpeg",
-                )
-            except:
-                fourImg = discord.File(
-                    "/home/pi/Desktop/iffBot/files/4e_skin.jpeg", filename="4e_skin.jpeg"
-                )
-
-            # 7e skin pic
-            try:
-                sevenImg = discord.File(
-                    "IFF Bot/files/7e_skin.png",
-                    filename="7e_skin.png",
-                )
-            except:
-                sevenImg = discord.File(
-                    "/home/pi/Desktop/iffBot/files/7e_skin.png", filename="7e_skin.png"
-                )
-
-            # 8e skin pic
-            try:
-                eightImg = discord.File(
-                    "IFF Bot/files/8e_skin.png",
-                    filename="8e_skin.png",
-                )
-            except:
-                eightImg = discord.File(
-                    "/home/pi/Desktop/iffBot/files/8e_skin.png", filename="8e_skin.png"
-                )
-
-            # 9e skin pic
-            try:
-                nineImg = discord.File(
-                    "IFF Bot/files/9e_skin.png",
-                    filename="9e_skin.png",
-                )
-            except:
-                nineImg = discord.File(
-                    "/home/pi/Desktop/iffBot/files/9e_skin.png", filename="9e_skin.png"
-                )
-                
-            # Admin skin pic
-            try:
-                adminImg = discord.File(
-                    "IFF Bot/files/admin_skin.png",
-                    filename="admin_skin.png",
-                )
-            except:
-                adminImg = discord.File(
-                    "/home/pi/Desktop/iffBot/files/admin_skin.png", filename="admin_skin.png"
-                )
-                
-            # Cav skin pic
-            try:
-                cavImg = discord.File(
-                    "IFF Bot/files/cav_skin.png",
-                    filename="cav_skin.png",
-                )
-            except:
-                cavImg = discord.File(
-                    "/home/pi/Desktop/iffBot/files/cav_skin.png", filename="cav_skin.png"
-                )
+            cmdImgDir = imageFolder / "cmd_skin.png"
+            cmdImg = discord.File(cmdImgDir)
+            
+            cmdImg2Dir = imageFolder / "cmd_skin2.png"
+            cmdImg2 = discord.File(cmdImg2Dir)
+            
+            sevenImgDir = imageFolder / "7e_skin.png"
+            sevenImg = discord.File(sevenImgDir)
+            
+            eightImgDir = imageFolder / "8e_skin.png"
+            eightImg = discord.File(eightImgDir)
+            
+            nineImgDir = imageFolder / "9e_skin.png"
+            nineImg = discord.File(nineImgDir)
+            
+            adminImgDir = imageFolder / "admin_skin.png"
+            adminImg = discord.File(adminImgDir)
+            
+            cavImgDir = imageFolder / "cav_skin.png"
+            cavImg = discord.File(cavImgDir)
 
             # Command Col----------------------------------------------------
             cmd1Embed=discord.Embed(title="Imperial Frontier Force - 1ic", description="", color=0xffff00)
@@ -1011,9 +946,9 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             cmd1Embed.add_field(name="Colonel Joshlols", value='"Shutup when he\'s talking"', inline=False)
             
             # Command 2ic----------------------------------------------------
-            cmd2Embed=discord.Embed(title="Imperial Frontier Force - 2ic", description="", color=0xffff00)
-            cmd2Embed.set_thumbnail(url="attachment://cmd_skin2.png")
-            cmd2Embed.add_field(name="Lieutenant Colonel Ballistic", value='"But I\'m not a rapper"', inline=False)
+            # cmd2Embed=discord.Embed(title="Imperial Frontier Force - 2ic", description="", color=0xffff00)
+            # cmd2Embed.set_thumbnail(url="attachment://cmd_skin2.png")
+            # cmd2Embed.add_field(name="Lieutenant Colonel Ballistic", value='"But I\'m not a rapper"', inline=False)
             
             # Maj 7e ----------------------------------------------------
             maj7eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 7e", description="", color=0xffff00)
@@ -1032,7 +967,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             
             # 7e ---------------------------------------------------------------------
             sevenEmbed = discord.Embed(
-                title="7e Voltigeurs de la Garde",
+                title="7th Voltigeurs de la Garde",
                 description="Muster roll for 7e",
                 color=0xb12222,
             )
@@ -1169,67 +1104,22 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             
-            # 4e ---------------------------------------------------------------------
-            fourEmbed = discord.Embed(
-                title="4e Batterie d'Artillerie à Pied",
-                description="Muster roll for 4e",
-                color=0x87cfeb,
-            )
-            fourEmbed.set_thumbnail(url="attachment://4e_skin.jpeg")
-            fourEmbed.add_field(
-                name=f"Commissioned Officers", value=f"\u200b{muster['fourCo']}", inline=False
-            )
-            fourEmbed.add_field(
-                name=f"\u200b",
-                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-                inline=False,
-            )
-            fourEmbed.add_field(
-                name=f"Non-Commissioned Officers", value=f"\u200b{muster['fourNco']}", inline=False
-            )
-            fourEmbed.add_field(
-                name=f"\u200b",
-                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-                inline=False,
-            )
-            fourEmbed.add_field(
-                name=f"Corporals", value=f"\u200b{muster['fourCpl']}", inline=False
-            )
-            fourEmbed.add_field(
-                name=f"\u200b",
-                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-                inline=False,
-            )
-            fourEmbed.add_field(
-                name=f"Enlisted", value=f"\u200b{muster['fourEnlisted']}", inline=False
-            )
-            fourEmbed.add_field(
-                name=f"\u200b",
-                value=f"=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=",
-                inline=False,
-            )
-            fourEmbed.add_field(
-                name=f"Soldats → Voltigeurs",
-                value=f"\u200b{fourEnlistedCount}",
-                inline=False,
-            )
-            
             #Could automate admins in future
             #Admins ------------------------------------------------------
             adminEmbed=discord.Embed(title="I 'Administration Regimentaire", description="", color=0xe74c25)
             adminEmbed.set_thumbnail(url="attachment://admin_skin.png")
-            adminEmbed.add_field(name="Commissioned Officer", value="Adjutant Peenoire", inline=False)
+            adminEmbed.add_field(name="Commissioned Officer", value="Quartermaster Peenoire\nQuartermaster Ace", inline=False)
             adminEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            adminEmbed.add_field(name="Non-Commissioned Officer", value="Sous-Adjutant Ping\nSous-Adjutant Minz\nSous-Adjutant Donke", inline=False)
+            adminEmbed.add_field(name="Non-Commissioned Officer", value="Adjutant Ping\nAdjutant Minz\nAdjutant Donke", inline=False)
             
             #Specials ------------------------------------------------------
             specEmbed=discord.Embed(title="Non-Infantry Specialisation Leadership", description="Leadership for the specialisations and Auxiliary you may gain quals for and play as during events.", color=0xf8e61c    )
             specEmbed.set_thumbnail(url="attachment://cav_skin.png")
-            specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols\nSergeant Kiwi", inline=False)
+            specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols\nSergeant Major Kiwi", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Garde Chevau-Léger", value="Major Bronze\nLieutenant Ace", inline=False)
+            specEmbed.add_field(name="Garde Chevau-Léger", value="Major Bronze\nQuartermaster Ace", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Major Tobakshi (Aux)\nLanspessade Milk (Sapper)", inline=False)
+            specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Major Tobakshi (Aux)\nKingsman Milk (Sapper)", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
             specEmbed.add_field(name="Asian Volunteer Expeditionary Force", value="Major Tobakshi\nCorporal King", inline=False)
 
@@ -1246,14 +1136,13 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             await workingMsg.delete()
             
             await ctx.send(file=cmdImg,embed=cmd1Embed)
-            await ctx.send(file=cmd2Img, embed=cmd2Embed)
+            # await ctx.send(file=cmd2Img, embed=cmd2Embed)
             await ctx.send(embed=maj7eEmbed)
             await ctx.send(embed=maj8eEmbed)
             # await ctx.send(embed=maj9eEmbed)
             await ctx.send(file=sevenImg, embed=sevenEmbed)
             await ctx.send(file=eightImg, embed=eightEmbed)
             await ctx.send(file=nineImg, embed=nineEmbed)
-            await ctx.send(file=fourImg, embed=fourEmbed)
             await ctx.send(file=adminImg, embed=adminEmbed)
             await ctx.send(file=cavImg, embed=specEmbed)
             await ctx.send(embed = infoEmbed)
