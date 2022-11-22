@@ -12,6 +12,7 @@ import varStore
 from dotenv import load_dotenv
 from os import getenv
 import os
+from pathlib import Path
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -49,30 +50,23 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print(f"Started at {current_time}")
-
-    try:
-        f = open(
-            f"IFF Bot/storage/memberList.txt",
-            "r",
-        )
-    except:
-        f = open("/home/pi/Desktop/iffBot/storage/memberList.txt", "r")
-
-    file_lines = f.read()
+    
+    storageFolder = Path().absolute() / "storage"
+    
+    memberListTxt = storageFolder / "memberList.txt"
+    memberList = open(memberListTxt)
+        
+    file_lines = memberList.read()
     varStore.members = file_lines.split("\n")
     try:
         varStore.members.remove("")
     finally:
-        f.close()
+        memberList.close()
         print("Member list updated")
 
-    try:
-        f = open(
-            "IFF Bot/storage/pastSelectId.txt",
-            "r",
-        )
-    except:
-        f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "r")
+    pastIdTxt = storageFolder / "pastSelectId.txt"
+    f = open(pastIdTxt)
+        
     file_lines = f.read()
     varStore.pastSelectIds = file_lines.split("\n")
     try:
@@ -88,6 +82,8 @@ async def on_ready():
     else:
         bot.command_prefix = commands.when_mentioned_or('_')
         print("Platform: Linux")
+    
+    print("Bot ready")
 
 dmChannelId = 950245454317236304
 nineCooldown = []
