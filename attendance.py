@@ -5,13 +5,14 @@ from gspread.cell import Cell
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import re
+from pathlib import Path
 
 scope = ['https://spreadsheets.google.com/feeds',
                 'https://www.googleapis.com/auth/drive']
-try:
-    creds = ServiceAccountCredentials.from_json_keyfile_name('IFF Bot/storage/iffAttendanceCreds.json', scope)
-except:
-    creds = ServiceAccountCredentials.from_json_keyfile_name('/home/pi/Desktop/iffBot/storage/iffAttendanceCreds.json', scope)
+
+iffAttendanceCreds = Path().absolute() / "storage" / "iffAttendanceCreds.json"
+
+creds = ServiceAccountCredentials.from_json_keyfile_name(iffAttendanceCreds, scope)
 client = gspread.authorize(creds)
 spreadsheet = client.open("IFF Attendance")
 
@@ -30,14 +31,12 @@ class attendanceCog(commands.Cog):
 
     @attend.command(name = "individual", aliases=["indv"])
     async def individual(self, ctx, company: str, *, name: str):
-        if company == "7e":
+        if company == "7th":
             sheet = spreadsheet.worksheet("7e Attendance")
-        elif company == "8e":
+        elif company == "8th":
             sheet = spreadsheet.worksheet("8e Attendance")
-        elif company == "9e":
+        elif company == "9th":
             sheet = spreadsheet.worksheet("9e Attendance")
-        elif company == "4e":
-            sheet = spreadsheet.worksheet("4e Attendance")
         else:
             await ctx.reply("Invalid company")
 
@@ -60,7 +59,6 @@ class attendanceCog(commands.Cog):
         sevenSheet = spreadsheet.worksheet("7e Attendance")
         eightSheet = spreadsheet.worksheet("8e Attendance")
         nineSheet = spreadsheet.worksheet("9e Attendance")
-        fourSheet = spreadsheet.worksheet("4e Attendance")
         
         def calc(sheet):
             nameColumn = sheet.col_values(4)
@@ -73,9 +71,7 @@ class attendanceCog(commands.Cog):
         users = {}
         users.update(calc(sevenSheet))
         users.update(calc(eightSheet))
-        users.update(calc(nineSheet))
-        users.update(calc(fourSheet))
-        
+        users.update(calc(nineSheet))     
         cleanedUsers = {}
         
         for user in users.items():
@@ -110,7 +106,6 @@ class attendanceCog(commands.Cog):
         sevenSheet = spreadsheet.worksheet("7e Attendance")
         eightSheet = spreadsheet.worksheet("8e Attendance")
         nineSheet = spreadsheet.worksheet("9e Attendance")
-        fourSheet = spreadsheet.worksheet("4e Attendance")
         
         def calc(sheet):
             totalAttendance = []
@@ -135,14 +130,12 @@ class attendanceCog(commands.Cog):
         sevenAttendTotal = calc(sevenSheet)
         eightAttendTotal = calc(eightSheet)
         nineAttendTotal = calc(nineSheet)
-        fourAttendTotal = calc(fourSheet)
         
         end = datetime.now()
         embed=discord.Embed(title="Company Total Attendance", description=f"The individual attendances of each member of each company totaled", color=0xff0000)
-        embed.add_field(name="7e", value=f"{sevenAttendTotal}", inline=True)
-        embed.add_field(name="8e", value=f"{eightAttendTotal}", inline=True)
-        embed.add_field(name="9e", value=f"{nineAttendTotal}", inline=True)
-        embed.add_field(name="4e", value=f"{fourAttendTotal}", inline=True)
+        embed.add_field(name="7th", value=f"{sevenAttendTotal}", inline=True)
+        embed.add_field(name="8th", value=f"{eightAttendTotal}", inline=True)
+        embed.add_field(name="9th", value=f"{nineAttendTotal}", inline=True)
         embed.set_footer(text = f"Calculation time: {end-start}")
         
         await msg.delete()
@@ -240,71 +233,71 @@ class attendanceCog(commands.Cog):
 
         error = False
         embed=discord.Embed(title="Auto Attendance", description=f"Done! Please inform the relevant people if there are failed users", color=0xff0000)
-        #7e
+        #7th
         seven = calc(currentDate, sevenSheet, sevenUsers)
-        print("7e done")  
+        print("7th done")  
         try:
             if isinstance(seven[0], int):
-                msg = await msg.edit(content=msg.content + f" 7e done ({seven[0]})...")
-                embed.add_field(name="7e", value=f"No. Ticked= {seven[0]}, Failed Users: {seven[1]}", inline=True)
+                msg = await msg.edit(content=msg.content + f" 7th done ({seven[0]})...")
+                embed.add_field(name="7th", value=f"No. Ticked= {seven[0]}, Failed Users: {seven[1]}", inline=True)
             elif seven[2]:
-                msg = await msg.edit(content=msg.content + f" No date for 7e...")
-                embed.add_field(name="7e", value=f"No date was entered", inline=True)
+                msg = await msg.edit(content=msg.content + f" No date for 7th...")
+                embed.add_field(name="7th", value=f"No date was entered", inline=True)
             else:
-                msg = await msg.edit(content=msg.content + f"7e has failed...")
-                embed.add_field(name="7e", value=f"No date was entered", inline=True)
+                msg = await msg.edit(content=msg.content + f"7th has failed...")
+                embed.add_field(name="7th", value=f"No date was entered", inline=True)
         except:
             error = True
             if seven is None:
-                msg = await msg.edit(content=msg.content + f" No 7e users...")
-                embed.add_field(name="7e", value=f"No players in 7e", inline=True)
+                msg = await msg.edit(content=msg.content + f" No 7th users...")
+                embed.add_field(name="7th", value=f"No players in 7th", inline=True)
             else:
-                msg = await msg.edit(content=msg.content + f" 7e has failed...")
-                embed.add_field(name="7e", value=f"**7e has failed**", inline=True)
+                msg = await msg.edit(content=msg.content + f" 7th has failed...")
+                embed.add_field(name="7th", value=f"**7th has failed**", inline=True)
             
         #8
         eight = calc(currentDate, eightSheet, eightUsers)
-        print("8e done")
+        print("8th done")
         try:
             if isinstance(eight[0], int) and not eight[2]:
-                msg = await msg.edit(content=msg.content + f"8e done ({eight[0]})...")
-                embed.add_field(name="8e", value=f"No. Ticked= {eight[0]}, Failed Users: {eight[1]}", inline=True)
+                msg = await msg.edit(content=msg.content + f"8th done ({eight[0]})...")
+                embed.add_field(name="8th", value=f"No. Ticked= {eight[0]}, Failed Users: {eight[1]}", inline=True)
             elif eight[2]:
-                msg = await msg.edit(content=msg.content + f"No date for 8e...")
-                embed.add_field(name="8e", value=f"No date was entered", inline=True)
+                msg = await msg.edit(content=msg.content + f"No date for 8th...")
+                embed.add_field(name="8th", value=f"No date was entered", inline=True)
             else:
-                msg = await msg.edit(content=msg.content + f"8e has failed...")
-                embed.add_field(name="8e", value=f"No date was entered", inline=True)
+                msg = await msg.edit(content=msg.content + f"8th has failed...")
+                embed.add_field(name="8th", value=f"No date was entered", inline=True)
         except:
             error = True
             if eight is None:
-                msg = await msg.edit(content=msg.content + f"No 8e users...")
-                embed.add_field(name="8e", value=f"No players in 8e", inline=True)
+                msg = await msg.edit(content=msg.content + f"No 8th users...")
+                embed.add_field(name="8th", value=f"No players in 8th", inline=True)
             else:
-                msg = await msg.edit(content=msg.content + f"8e has failed...")
-                embed.add_field(name="8e", value=f"**8e has failed**", inline=True)
+                msg = await msg.edit(content=msg.content + f"8th has failed...")
+                embed.add_field(name="8th", value=f"**8th has failed**", inline=True)
         
         #9
         nine = calc(currentDate, nineSheet, nineUsers)
-        print("9e done")
+        print("9th done")
         try:
             if isinstance(nine[0], int):
-                msg = await msg.edit(content=msg.content + f" 9e done ({nine[0]})...")
-                embed.add_field(name="9e", value=f"No. Ticked= {nine[0]}, Failed Users: {nine[1]}", inline=True)
+                msg = await msg.edit(content=msg.content + f" 9th done ({nine[0]})...")
+                embed.add_field(name="9th", value=f"No. Ticked= {nine[0]}, Failed Users: {nine[1]}", inline=True)
             elif nine[2]:
-                msg = await msg.edit(content=msg.content + f" No date for 9e...")
-                embed.add_field(name="9e", value=f"No date was entered", inline=True)
+                msg = await msg.edit(content=msg.content + f" No date for 9th...")
+                embed.add_field(name="9th", value=f"No date was entered", inline=True)
             else:
-                msg = await msg.edit(content=msg.content + f"9e has failed...")
-                embed.add_field(name="9e", value=f"No date was entered", inline=True)
+                msg = await msg.edit(content=msg.content + f"9th has failed...")
+                embed.add_field(name="9th", value=f"No date was entered", inline=True)
         except:
             error = True
             if nine is None:
-                msg = await msg.edit(content=msg.content + f" No 9e users...")
-                embed.add_field(name="9e", value=f"No players in 9e", inline=True)
+                msg = await msg.edit(content=msg.content + f" No 9th users...")
+                embed.add_field(name="9th", value=f"No players in 9th", inline=True)
             else:
-                msg = await msg.edit(content=msg.content + f" 9e has failed...")
-                embed.add_field(name="9e", value=f"**9e has failed**", inline=True)
+                msg = await msg.edit(content=msg.content + f" 9th has failed...")
+                embed.add_field(name="9th", value=f"**9th has failed**", inline=True)
                 
         end = datetime.now()
         #Check if there are failed users, if so alert user
