@@ -151,21 +151,17 @@ class attendanceCog(commands.Cog):
         sevenRole = ctx.guild.get_role(783564469854142464)
         eightRole = ctx.guild.get_role(845007589674188839)
         nineRole = ctx.guild.get_role(863756344494260224)
-        #fourRole = ctx.guild.get_role(760440084880162838)
         
         sevenSheet = spreadsheet.worksheet("7e Attendance")
         eightSheet = spreadsheet.worksheet("8e Attendance")
         nineSheet = spreadsheet.worksheet("9e Attendance")
-        #fourSheet = spreadsheet.worksheet("4e Attendance")
         
         rawSevenUsers = [[user.id for user in channel.members if sevenRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
         rawEightUsers = [[user.id for user in channel.members if eightRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
         rawNineUsers = [[user.id for user in channel.members if nineRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
-        #rawFourUsers = [[user.id for user in channel.members if fourRole in user.roles] for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
         sevenUsers = [item for sublist in rawSevenUsers for item in sublist]
         eightUsers = [item for sublist in rawEightUsers for item in sublist]
         nineUsers = [item for sublist in rawNineUsers for item in sublist]
-        #fourUsers = [item for sublist in rawFourUsers for item in sublist]
         
         currentDate = start.strftime("%d/%m/%Y")
         
