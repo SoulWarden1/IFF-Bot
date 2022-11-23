@@ -15,7 +15,7 @@ class backgroundTasks(commands.Cog):
         self.bot = bot
 
     # Rotates the status
-    @tasks.loop(seconds=30.0)
+    @tasks.loop(seconds=60.0)
     async def statusRotation(self):
         statuses = ["_help", 
                     "your shotcalls", 
