@@ -19,8 +19,9 @@ officers = [
 
 
 class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
-    def __init__(self, start):
+    def __init__(self, start, bot):
         self.start = start
+        self.bot = bot
         super().__init__()
             
     name = discord.ui.TextInput(
@@ -79,6 +80,7 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
         embed.set_author(name = interaction.user, icon_url = interaction.user.avatar)
         
         await interaction.response.send_message(f'Thanks for your enlistment, {self.name.value}! Your tags will be given shortly.', embed=embed)
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{self.name.value}'s enlistment"))
         await asyncio.sleep(5)
         
         await interaction.user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
@@ -106,7 +108,7 @@ class iffCog(commands.Cog):
     @app_commands.guild_only()
     @app_commands.command(name="enlist", description='The IFF enlistment form')
     async def enlist(self, interaction: discord.Interaction):
-        await interaction.response.send_modal(enlistForm(start = datetime.now()))
+        await interaction.response.send_modal(enlistForm(start = datetime.now(), bot = self.bot))
         
     # Rolls the person doing the announcement
     @commands.has_any_role(
@@ -801,7 +803,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                     if companyRole in user.roles:
                         if coRole in user.roles:
                             if '"Cpt. ' in user.display_name:
-                                nick = (user.display_name).replace('"Cpt. ', "Capitaine ").split("|",1)
+                                nick = (user.display_name).replace('"Cpt. ', "Capitain ").split("|",1)
                                 cleanNick = nick[0]
                                 coList.insert(0, cleanNick)
                             elif '"Lt.' in user.display_name:
@@ -809,6 +811,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                                 cleanNick = nick[0]
                                 coList.append(cleanNick)
                 if coList == []: coList = ["Currently vacant"]
+                coList.sort()
                 return coList
             
             def ncoCalc(companyRole):
@@ -832,8 +835,11 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 for user in ctx.guild.members:
                         if companyRole in user.roles:
                             if cplRole in user.roles:
-                                nick = user.display_name
-                                nick = nick.replace(".Cpl. ", "Corporal ").split("|",1)
+                                nick = (user.display_name).replace(".Cpl. ", "Corporal ").split("|",1)
+                                cleanNick = nick[0]
+                                cplList.append(cleanNick)
+                            elif ".LCpl." in user.display_name:
+                                nick = (user.display_name).replace(".LCpl. ", "Lance Corporal ").split("|",1)
                                 cleanNick = nick[0]
                                 cplList.append(cleanNick)
                 if cplList == []: cplList = ["Currently vacant"]
@@ -841,40 +847,50 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 return cplList
                         
             def enlistedCalc(companyRole):
-                chasList = []
-                gdaList = []
-                lansList = []
+                kgsmList = []
                 grenList = []
-                gdeList = []
+                regList = []
+                pfcList = []
+                
+                sgdList = []
+                gdmList = []
+
                 for user in ctx.guild.members:
                     if companyRole in user.roles and "[" not in user.display_name:
-                        if "Lans. " in user.display_name:
-                            nick = (user.display_name).replace("Lans. ", "Lanspessade ").split("|",1)
+                        if "Kgsm. " in user.display_name:
+                            nick = (user.display_name).replace("Kgsm. ", "Kingsman ").split("|",1)
                             cleanNick = nick[0]
-                            lansList.append(cleanNick)
-                        elif "Gde. " in user.display_name:
-                            nick = (user.display_name).replace("Gde. ", "Grenadier de Elite ").split("|",1)
-                            cleanNick = nick[0]
-                            gdeList.append(cleanNick)
-                        elif "Gda. " in user.display_name:
-                            nick = (user.display_name).replace("Gda. ", "Gendarme ").split("|",1)
-                            cleanNick = nick[0]
-                            gdaList.append(cleanNick)
+                            kgsmList.append(cleanNick)
                         elif "Gren. " in user.display_name:
                             nick = (user.display_name).replace("Gren. ", "Grenadier ").split("|",1)
                             cleanNick = nick[0]
                             grenList.append(cleanNick)
-                        elif "Chas. " in user.display_name:
-                            nick = (user.display_name).replace("Chas. ", "Chasseur ").split("|",1)
+                        elif "Reg. " in user.display_name:
+                            nick = (user.display_name).replace("Reg. ", "Regular ").split("|",1)
                             cleanNick = nick[0]
-                            chasList.append(cleanNick)
-                lansList.sort()
-                gdeList.sort()
+                            regList.append(cleanNick)
+                        elif "PFC. " in user.display_name:
+                            nick = (user.display_name).replace("PFC. ", "Private First Class ").split("|",1)
+                            cleanNick = nick[0]
+                            pfcList.append(cleanNick)
+                        elif "Sgd. " in user.display_name:
+                            nick = (user.display_name).replace("Sgd. ", "Senior Guardsman ").split("|",1)
+                            cleanNick = nick[0]
+                            sgdList.append(cleanNick)
+                        elif "Gdm. " in user.display_name:
+                            nick = (user.display_name).replace("Gdm. ", "Guardsman ").split("|",1)
+                            cleanNick = nick[0]
+                            gdmList.append(cleanNick)
+                            
+                kgsmList.sort()
                 grenList.sort()
-                gdaList.sort()
-                chasList.sort()
+                regList.sort()
+                pfcList.sort()
                 
-                enlistedList = [lansList, gdeList, gdaList, grenList, chasList]
+                sgdList.sort()
+                gdmList.sort()
+                
+                enlistedList = [sgdList, gdmList, kgsmList, grenList, regList, pfcList]
                 flatEnlistedList = [name for list in enlistedList for name in list]
                 
                 return flatEnlistedList
@@ -883,11 +899,11 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 enlistedCount = 0
                 for user in ctx.guild.members:
                     if companyRole in user.roles and "[" not in user.display_name:
-                        if "Sdt." in user.display_name:
+                        if "Rct." in user.display_name:
                             enlistedCount += 1
-                        elif "Fus. " in user.display_name:
+                        elif "Cdt." in user.display_name:
                             enlistedCount += 1
-                        elif "Volt. " in user.display_name:
+                        elif "Pte." in user.display_name:
                             enlistedCount += 1
                 return enlistedCount
                                  
@@ -951,24 +967,24 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             # cmd2Embed.add_field(name="Lieutenant Colonel Ballistic", value='"But I\'m not a rapper"', inline=False)
             
             # Maj 7e ----------------------------------------------------
-            maj7eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 7e", description="", color=0xffff00)
+            maj7eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 7th Company", description="", color=0xffff00)
             maj7eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/224567016671936512/a1652bca7807f02b9d3fbbfc648de545.webp?size=1024")
-            maj7eEmbed.add_field(name="Major Tobakshi", value="Major for 7e Voltigeurs de la Garde", inline=False)
+            maj7eEmbed.add_field(name="Major Tobakshi", value="Major for 7th Brunswick Field Corps", inline=False)
             
             # Maj 8e ----------------------------------------------------
-            maj8eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 8e", description="", color=0xffff00)
+            maj8eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 8th Company", description="", color=0xffff00)
             maj8eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/292613296148709377/88be4d0db7f1d221f4f624474ac6de60.webp?size=1024")
-            maj8eEmbed.add_field(name="Major Bronze", value="Major for 8e Chasseurs de la Garde", inline=False)
+            maj8eEmbed.add_field(name="Major Bronze", value="Major for 8th Connaught Rangers", inline=False)
             
             # Maj 9e ----------------------------------------------------
-            # maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9e", description="", color=0xffff00)
+            # maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9th Company", description="", color=0xffff00)
             # maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/358445969399873557/4d93e7f0f552c91e5e2dc213b899a0d7.webp?size=1024")
-            # maj9eEmbed.add_field(name="Major Ghost", value="Major for 9e Grenadiers de la Garde", inline=False)
+            # maj9eEmbed.add_field(name="Major Ghost", value="Major for 9th Gordon Highlanders, inline=False)
             
             # 7e ---------------------------------------------------------------------
             sevenEmbed = discord.Embed(
-                title="7th Voltigeurs de la Garde",
-                description="Muster roll for 7e",
+                title="7th Brunswick Field Corps - 'Black Legion'",
+                description="Muster roll for 7th company",
                 color=0xb12222,
             )
             sevenEmbed.set_thumbnail(url="attachment://7e_skin.png")
@@ -1007,15 +1023,15 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             sevenEmbed.add_field(
-                name=f"Soldats → Voltigeurs",
+                name=f"Recruit → Private",
                 value=f"\u200b{sevenEnlistedCount}",
                 inline=False,
             )
 
             # 8e ---------------------------------------------------------------------
             eightEmbed = discord.Embed(
-                title="8e Chasseurs de la Garde",
-                description="Muster roll for 8e",
+                title="8th Connaught Rangers - 'Devil's Own'",
+                description="Muster roll for 8th company",
                 color=0x1f8b4c,
             )
             eightEmbed.set_thumbnail(url="attachment://8e_skin.png")
@@ -1054,15 +1070,15 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             eightEmbed.add_field(
-                name=f"Soldats → Voltigeurs",
+                name=f"Recruit → Private",
                 value=f"\u200b{eightEnlistedCount}",
                 inline=False,
             )
 
             # 9e ---------------------------------------------------------------------
             nineEmbed = discord.Embed(
-                title="9e Grenadiers de la Garde",
-                description="Muster roll for 9e",
+                title="9th Gordon Highlanders - 'Skirted Devils'",
+                description="Muster roll for 9th company",
                 color=0x206694,
             )
             nineEmbed.set_thumbnail(url="attachment://9e_skin.png")
@@ -1099,14 +1115,14 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 inline=False,
             )
             nineEmbed.add_field(
-                name=f"Soldats → Voltigeurs",
+                name=f"Recruit → Private",
                 value=f"\u200b{nineEnlistedCount}",
                 inline=False,
             )
             
             #Could automate admins in future
             #Admins ------------------------------------------------------
-            adminEmbed=discord.Embed(title="I 'Administration Regimentaire", description="", color=0xe74c25)
+            adminEmbed=discord.Embed(title="Administration", description="", color=0xe74c25)
             adminEmbed.set_thumbnail(url="attachment://admin_skin.png")
             adminEmbed.add_field(name="Commissioned Officer", value="Quartermaster Peenoire\nQuartermaster Ace", inline=False)
             adminEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
