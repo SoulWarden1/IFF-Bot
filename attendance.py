@@ -50,7 +50,7 @@ class attendanceCog(commands.Cog):
       
     @attend.command(name = "leaderboard", aliases=["lead","leader"])
     async def leaderboard(self, ctx, minAttend = 100):
-        if minAttend < 70:
+        if minAttend <= 99:
             await ctx.reply("This will show too many users, please choose a higher cap")
             return
         
@@ -61,9 +61,12 @@ class attendanceCog(commands.Cog):
         nineSheet = spreadsheet.worksheet("9e Attendance")
         
         def calc(sheet):
-            nameColumn = sheet.col_values(4)
-            attendanceColumn = sheet.col_values(6)
-            zip_iterator = zip(nameColumn, attendanceColumn)
+            nameCol = sheet.find("Name")
+            totalCol = sheet.find("Total")
+            
+            nameColumnVal = sheet.col_values(nameCol.col)
+            attendanceColumnVal = sheet.col_values(totalCol.col)
+            zip_iterator = zip(nameColumnVal, attendanceColumnVal)
             users = dict(zip_iterator)
             users.pop("Name")
             return users
@@ -146,11 +149,13 @@ class attendanceCog(commands.Cog):
     async def fill(self, ctx):
         msg = await ctx.reply("Filling out attendance now...", mention_author = False)
         start = datetime.now()
+        eventDays = [2, 4, 5]
         vcCatIds = [948180967607136306, 995586698006233219]
         iffGuild = self.bot.get_guild(592559858482544641)
         sevenRole = ctx.guild.get_role(783564469854142464)
         eightRole = ctx.guild.get_role(845007589674188839)
         nineRole = ctx.guild.get_role(863756344494260224)
+        
         
         sevenSheet = spreadsheet.worksheet("7e Attendance")
         eightSheet = spreadsheet.worksheet("8e Attendance")
@@ -168,7 +173,7 @@ class attendanceCog(commands.Cog):
         def calc(date, sheet, users):
             countTickedUsers = 0
             failedUser = []
-            noDate = False
+            errorMsg = ""
             
             # Checks if there are no members of a company, if so exit
             if not users:
@@ -178,9 +183,34 @@ class attendanceCog(commands.Cog):
             #Attempting to find the correct column with the right date
             dateColumn = sheet.find(date, in_row = 1)
             if dateColumn is None:
-                print("Date NOT found")
-                noDate = True
-                return countTickedUsers, failedUser, noDate
+                # Checks if the current day is a day with an event in it
+                if datetime.today().weekday() in eventDays:
+                    # Gets all the values from the row with the dates on it
+                    dateRow = sheet.row_values(1)
+                    # Checks from the end of the row and counts backwards to find the last empty cell
+                    for dateRowIndex in range(len(dateRow)-1, 0, -1):
+                        if dateRow[dateRowIndex] != "" and dateRow[dateRowIndex] != "-":
+                                # The 8th sheet has black col seperating weeks, so checking if hat is the case
+                            try:
+                                if dateRow[dateRowIndex + 1] == "-":
+                                    # Updates sheet to have the current date at the correct cell. Repeated below
+                                    currentDateCol = dateRowIndex + 3
+                                    sheet.update_cell(1, currentDateCol, start.strftime("%d/%m/%Y"))
+                                    dateColumn = sheet.cell(1,currentDateCol)
+                                # Other sheets don't have week seperators
+                                else:
+                                    currentDateCol = dateRowIndex + 2
+                                    sheet.update_cell(1, currentDateCol, start.strftime("%d/%m/%Y"))
+                                    dateColumn = sheet.cell(1,currentDateCol)
+                            except:
+                                currentDateCol = dateRowIndex + 2
+                                sheet.update_cell(1, currentDateCol, start.strftime("%d/%m/%Y"))
+                                dateColumn = sheet.cell(1,currentDateCol)
+                            break
+                else:
+                    print("Today is not an event day")
+                    errorMsg = "Today is not an event day"
+                    return countTickedUsers, failedUser, errorMsg
             else:
                 print("Date found")
             
@@ -189,6 +219,7 @@ class attendanceCog(commands.Cog):
             ticked = []
             
             # Make this not a number
+            # Sets the ticked list to have 150 falses
             for i in range(1,150):
                 ticked.append(False)
                 
@@ -205,7 +236,8 @@ class attendanceCog(commands.Cog):
                     count += 1
                 except:
                     print("Failed")
-                    return countTickedUsers, failedUser, noDate
+                    errorMsg = "An unknown error has occurred (0)"
+                    return countTickedUsers, failedUser, errorMsg
             
             count = 1
             cells = []
@@ -216,84 +248,60 @@ class attendanceCog(commands.Cog):
                     count += 1
                 except:
                     print("Failed")
-                    return countTickedUsers, failedUser, noDate
+                    errorMsg = "An unknown error has occurred (1)"
+                    return countTickedUsers, failedUser, errorMsg
             
             # Ticks all users
             try:
                 sheet.update_cells(cells)
             except:
                     print("Failed")
-                    return countTickedUsers, failedUser, noDate
+                    errorMsg = "An unknown error has occurred (2)"
+                    return countTickedUsers, failedUser, errorMsg
             
-            return countTickedUsers, failedUser, noDate
+            return countTickedUsers, failedUser, errorMsg
 
         error = False
         embed=discord.Embed(title="Auto Attendance", description=f"Done! Please inform the relevant people if there are failed users", color=0xff0000)
+        
         #7th
         seven = calc(currentDate, sevenSheet, sevenUsers)
         print("7th done")  
-        try:
-            if isinstance(seven[0], int):
-                msg = await msg.edit(content=msg.content + f" 7th done ({seven[0]})...")
+        if seven is None:
+            msg = await msg.edit(content=msg.content + f"No 7th users...")
+            embed.add_field(name="7th", value=f"No players in 7th", inline=True)
+        elif isinstance(seven[0], int) and not seven[2]:
+                msg = await msg.edit(content=msg.content + f"7th done ({seven[0]})...")
                 embed.add_field(name="7th", value=f"No. Ticked= {seven[0]}, Failed Users: {seven[1]}", inline=True)
-            elif seven[2]:
-                msg = await msg.edit(content=msg.content + f" No date for 7th...")
-                embed.add_field(name="7th", value=f"No date was entered", inline=True)
-            else:
-                msg = await msg.edit(content=msg.content + f"7th has failed...")
-                embed.add_field(name="7th", value=f"No date was entered", inline=True)
-        except:
-            error = True
-            if seven is None:
-                msg = await msg.edit(content=msg.content + f" No 7th users...")
-                embed.add_field(name="7th", value=f"No players in 7th", inline=True)
-            else:
-                msg = await msg.edit(content=msg.content + f" 7th has failed...")
-                embed.add_field(name="7th", value=f"**7th has failed**", inline=True)
+        elif seven[2]:
+            msg = await msg.edit(content=msg.content + f"An error has occurred for 7th...")
+            embed.add_field(name="7th", value=seven[2], inline=True)
             
         #8
         eight = calc(currentDate, eightSheet, eightUsers)
         print("8th done")
-        try:
-            if isinstance(eight[0], int) and not eight[2]:
+        if eight is None:
+            msg = await msg.edit(content=msg.content + f"No 8th users...")
+            embed.add_field(name="8th", value=f"No players in 8th", inline=True)
+        elif isinstance(eight[0], int) and not eight[2]:
                 msg = await msg.edit(content=msg.content + f"8th done ({eight[0]})...")
                 embed.add_field(name="8th", value=f"No. Ticked= {eight[0]}, Failed Users: {eight[1]}", inline=True)
-            elif eight[2]:
-                msg = await msg.edit(content=msg.content + f"No date for 8th...")
-                embed.add_field(name="8th", value=f"No date was entered", inline=True)
-            else:
-                msg = await msg.edit(content=msg.content + f"8th has failed...")
-                embed.add_field(name="8th", value=f"No date was entered", inline=True)
-        except:
-            error = True
-            if eight is None:
-                msg = await msg.edit(content=msg.content + f"No 8th users...")
-                embed.add_field(name="8th", value=f"No players in 8th", inline=True)
-            else:
-                msg = await msg.edit(content=msg.content + f"8th has failed...")
-                embed.add_field(name="8th", value=f"**8th has failed**", inline=True)
+        elif eight[2]:
+            msg = await msg.edit(content=msg.content + f"An error has occurred for 8th...")
+            embed.add_field(name="8th", value=eight[2], inline=True)
         
         #9
         nine = calc(currentDate, nineSheet, nineUsers)
         print("9th done")
-        try:
-            if isinstance(nine[0], int):
-                msg = await msg.edit(content=msg.content + f" 9th done ({nine[0]})...")
+        if nine is None:
+            msg = await msg.edit(content=msg.content + f"No 9th users...")
+            embed.add_field(name="9th", value=f"No players in 9th", inline=True)
+        elif isinstance(nine[0], int) and not nine[2]:
+                msg = await msg.edit(content=msg.content + f"9th done ({nine[0]})...")
                 embed.add_field(name="9th", value=f"No. Ticked= {nine[0]}, Failed Users: {nine[1]}", inline=True)
-            elif nine[2]:
-                msg = await msg.edit(content=msg.content + f" No date for 9th...")
-                embed.add_field(name="9th", value=f"No date was entered", inline=True)
-            else:
-                msg = await msg.edit(content=msg.content + f"9th has failed...")
-                embed.add_field(name="9th", value=f"No date was entered", inline=True)
-        except:
-            error = True
-            if nine is None:
-                msg = await msg.edit(content=msg.content + f" No 9th users...")
-                embed.add_field(name="9th", value=f"No players in 9th", inline=True)
-            else:
-                msg = await msg.edit(content=msg.content + f" 9th has failed...")
-                embed.add_field(name="9th", value=f"**9th has failed**", inline=True)
+        elif nine[2]:
+            msg = await msg.edit(content=msg.content + f"An error has occurred for 9th...")
+            embed.add_field(name="9th", value=nine[2], inline=True)
                 
         end = datetime.now()
         #Check if there are failed users, if so alert user
