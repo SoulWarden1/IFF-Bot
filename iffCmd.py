@@ -17,7 +17,6 @@ officers = [
     948862889815597079, 
 ]
 
-
 class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
     def __init__(self, start, bot):
         self.start = start
@@ -95,7 +94,6 @@ class iffCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         super().__init__()
-    
 
     @app_commands.checks.has_any_role(
         990267891330977813,#Reg HQ
@@ -118,7 +116,7 @@ class iffCog(commands.Cog):
     @commands.guild_only()
     @commands.command(aliases=["Roll"])
     async def roll(self, ctx):
-        eventDays = [1, 2, 3, 4, 5]
+        eventDays = [2, 4, 5]
         now = datetime.now()
         current_time = now.strftime("%H:%M")
 
@@ -395,13 +393,11 @@ class iffCog(commands.Cog):
         sevenUsers = []
         eightUsers = []
         nineUsers = []
-        fourUsers = []
         otherUsers = []
         
         sevenRole = ctx.guild.get_role(783564469854142464)
         eightRole = ctx.guild.get_role(845007589674188839)
         nineRole = ctx.guild.get_role(863756344494260224)
-        fourRole = ctx.guild.get_role(760440084880162838)
         
         vcChannelsIds = [channel.id for channel in iffGuild.voice_channels if channel.category_id in vcCatIds]
     
@@ -421,14 +417,10 @@ class iffCog(commands.Cog):
                 elif nineRole in x.roles:
                     nineUsers.append(x.display_name) 
                     continue
-                elif fourRole in x.roles:
-                    fourUsers.append(x.display_name)
-                    continue
                 else:
                     otherUsers.append(x.display_name)
                     continue
         
-        fourStr = ", ".join(fourUsers)
         sevenStr = ", ".join(sevenUsers)
         eightStr = ", ".join(eightUsers)
         nineStr = ", ".join(nineUsers)
@@ -438,10 +430,9 @@ class iffCog(commands.Cog):
         
         embed=discord.Embed(title="IFF Attendance", description="Current IFF attendance", color=0x151798)
         embed.add_field(name=f"Total Players", value=f"{totalUsers}", inline=False)
-        embed.add_field(name=f"4e Players (Total: {len(fourUsers)})", value=f"\u200b{fourStr}", inline=False)
-        embed.add_field(name=f"7e Players (Total: {len(sevenUsers)})", value=f"\u200b{sevenStr}", inline=False)
-        embed.add_field(name=f"8e Players (Total: {len(eightUsers)})", value=f"\u200b{eightStr}", inline=False)
-        embed.add_field(name=f"9e Players (Total: {len(nineUsers)})", value=f"\u200b{nineStr}", inline=False)
+        embed.add_field(name=f"7th Players (Total: {len(sevenUsers)})", value=f"\u200b{sevenStr}", inline=False)
+        embed.add_field(name=f"8th Players (Total: {len(eightUsers)})", value=f"\u200b{eightStr}", inline=False)
+        embed.add_field(name=f"9th Players (Total: {len(nineUsers)})", value=f"\u200b{nineStr}", inline=False)
         embed.add_field(name=f"Other Players (Total: {len(otherUsers)})", value=f"\u200b{otherStr}", inline=False)
         await ncoChannel.send(embed=embed)
         
