@@ -10,7 +10,8 @@ from os import getenv
 import os
 import time
 import badwords
-
+import json
+from urllib.request import urlopen
 
         
 class randomCog(commands.Cog):
@@ -182,6 +183,21 @@ class randomCog(commands.Cog):
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def github(self, ctx:commands.Context):
         await ctx.reply("The link to the github page is: https://github.com/SoulWarden1/IFF-Bot")
-
+        
+    @commands.hybrid_command(name = "xkcd", description='Grabs a XKCD comic')
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    async def xkcd_command(self, ctx: commands.Context, comicnum: int = commands.parameter(default = None, description ="Optionally input the comic number you're after")) -> None:
+        if comicnum is None: 
+            xkcdUrl = "https://xkcd.com/info.0.json"
+        else: 
+            try:
+                xkcdUrl = f"https://xkcd.com/{comicnum}/info.0.json "
+            except:
+                await ctx.send("An invalid comic number was inputted")
+            
+        response = urlopen(xkcdUrl)
+        xkcdData = json.loads(response.read())
+        await ctx.send(f"#{xkcdData.get('num')} {xkcdData.get('title')}\n{xkcdData.get('alt')}\n{xkcdData.get('img')}")
+            
 async def setup(bot):
     await bot.add_cog(randomCog(bot))
