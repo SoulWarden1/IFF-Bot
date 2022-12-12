@@ -5,7 +5,7 @@ from discord.ext import tasks
 from random import randint, choice
 import asyncio
 import varStore
-import iffCmd
+import attendance
 import platform
 
 #from randomCmd import testMsg
@@ -36,7 +36,7 @@ class backgroundTasks(commands.Cog):
     # Automatically rolls the announcement picker
     @tasks.loop(seconds=59.0)
     async def autoRoll(self):
-        eventDays = [2, 4, 5]
+        eventDays = [2, 4, 5, 6]
         now = datetime.now()
         current_time = now.strftime("%H:%M")
 
@@ -170,7 +170,7 @@ class backgroundTasks(commands.Cog):
             await self.bot.change_presence(status=discord.Status.online)
             await asyncio.sleep(5)
             
-    # @tasks.loop(seconds=5)
+    # @tasks.loop(seconds=30)
     # async def test(self):
     #     await testMsg(self)
 

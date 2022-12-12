@@ -63,12 +63,14 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
     )
     
     async def on_submit(self, interaction: discord.Interaction):
+        # Setup to get roles to assign to rct
         rctRole = interaction.guild.get_role(845563588324098058)
         iffRole = interaction.guild.get_role(611927973838323724)
         nickRole = interaction.guild.get_role(893824145299746816)
         newcomerRole = interaction.guild.get_role(627801587351289856)
         end = datetime.now()
         
+        # Sends embed contained enlistment info
         embed=discord.Embed(title=f"{interaction.user.name}'s Enlistment Form", description=f"It took {end-self.start}s to filled out. Completed on {end.strftime('%d/%m/%Y on %a %I:%M:%S %p %Z')}",color=0x141599)
         embed.add_field(name="Name", value=f"{self.name.value}", inline=False)
         embed.add_field(name="Region", value=f"{self.region.value}", inline=False)

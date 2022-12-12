@@ -82,7 +82,7 @@ class randomCog(commands.Cog):
                 for i in range(times):
                     await ctx.send(f"{user.mention} get spammed")
         else:
-            await ctx.reply("Nope, owner privilege get rekt")
+            await ctx.reply("Nope, owner privilege get rekt", ephemeral=True)
             
     #Ghost ping
     @commands.is_owner()
@@ -108,7 +108,7 @@ class randomCog(commands.Cog):
             finally:
                 await ctx.send(message)
         else:
-            await ctx.reply("Invalid perms")
+            await ctx.reply("Invalid perms", ephemeral=True)
         
     #Minecraft username to UUID
     @commands.cooldown(1, 1, commands.BucketType.user)

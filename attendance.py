@@ -149,13 +149,12 @@ class attendanceCog(commands.Cog):
     async def fill(self, ctx):
         msg = await ctx.reply("Filling out attendance now...", mention_author = False)
         start = datetime.now()
-        eventDays = [2, 4, 5]
+        eventDays = [2, 4, 5, 6]
         vcCatIds = [948180967607136306, 995586698006233219]
         iffGuild = self.bot.get_guild(592559858482544641)
         sevenRole = ctx.guild.get_role(783564469854142464)
         eightRole = ctx.guild.get_role(845007589674188839)
         nineRole = ctx.guild.get_role(863756344494260224)
-        
         
         sevenSheet = spreadsheet.worksheet("7e Attendance")
         eightSheet = spreadsheet.worksheet("8e Attendance")
