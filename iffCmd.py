@@ -78,6 +78,30 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
         embed.set_footer(text = f"User ID: {interaction.user.id}")
         embed.set_author(name = interaction.user, icon_url = interaction.user.avatar)
         
+        # Auto generates welcome message
+        iffBotTestChannel = self.bot.get_channel(954194296809095188)
+        await iffBotTestChannel.send(f"""
+Welcome message for {self.name.value}/<@{interaction.user.id}>
+
+```:IFF4: **WELCOME TO THE IMPERIAL FRONTIER FORCE** :IFF4:
+
+Everyone welcome <@{interaction.user.id}> to the Imperial Frontier Force!
+
+Make sure you change your in-game name to `IFF | Rct. {self.name.value}` during events
+and to join the in-game regiment registry!
+
+**__CHECK OUT THESE AWESOME CHANNELS!__**
+#🍻︱mess-hall - Where we chat everything up!
+#🏰︱announcements - For information about upcoming events!
+#🥇︱medals-and-ribbons - For information about achievements within the IFF!
+#🎮︱games - For the other games we play!
+
+#💻︱server-info - For the mods we use in event servers! (Recommended to pre-subscribe for faster loading times)
+
+
+Feel free to tag any Officer or NCO if you have any questions!```
+""")
+        
         await interaction.response.send_message(f'Thanks for your enlistment, {self.name.value}! Your tags will be given shortly.', embed=embed)
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{self.name.value}'s enlistment"))
         await asyncio.sleep(5)
@@ -116,7 +140,7 @@ class iffCog(commands.Cog):
     @commands.guild_only()
     @commands.command(aliases=["Roll"])
     async def roll(self, ctx):
-        eventDays = [2, 4, 5]
+        eventDays = [2, 4, 5, 6]
         now = datetime.now()
         current_time = now.strftime("%H:%M")
 
