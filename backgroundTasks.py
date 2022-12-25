@@ -37,11 +37,12 @@ class backgroundTasks(commands.Cog):
     @tasks.loop(seconds=59.0)
     async def autoRoll(self):
         eventDays = [2, 4, 5, 6]
+        pingDays = [2, 4, 5]
         now = datetime.now()
         current_time = now.strftime("%H:%M")
 
         # Auto role
-        if current_time == "14:30" and datetime.today().weekday() in eventDays and platform.system() == 'Linux':
+        if current_time == "14:30" and datetime.today().weekday() in pingDays and platform.system() == 'Linux':
             roll = 0
             while True:
                 randId = randint(0, len(varStore.members)-1)
@@ -82,7 +83,7 @@ class backgroundTasks(commands.Cog):
             cog.statusRotation.start()
 
         # Auto leadership attendance ping
-        elif current_time == "16:00" and datetime.today().weekday() in eventDays and platform.system() == 'Linux':
+        elif current_time == "16:00" and datetime.today().weekday() in pingDays and platform.system() == 'Linux':
             leadershipChannel = self.bot.get_channel(907599229629911104)
 
             embed = discord.Embed(title="Leadership Attendance", description="React with :thumbsup: or :thumbsdown: if you're coming tonight", color=0x109319)

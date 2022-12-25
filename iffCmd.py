@@ -142,7 +142,7 @@ class iffCog(commands.Cog):
     @commands.guild_only()
     @commands.command(aliases=["Roll"])
     async def roll(self, ctx):
-        eventDays = [2, 4, 5, 6]
+        pingDays = [2, 4, 5]
         now = datetime.now()
         current_time = now.strftime("%H:%M")
 
