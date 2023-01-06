@@ -37,20 +37,20 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
         max_length = 20,
     )
     
+    game = discord.ui.TextInput(
+        label='Which games were you joining us for?',
+        placeholder='Holdfast, S&M, or both',
+        required = True,
+        max_length = 8,
+        min_length = 2,
+    )
+    
     find = discord.ui.TextInput(
         label='How did you find out about the IFF?',
         placeholder='Enter reason/source here...',
         required = True,
         style = discord.TextStyle.long,
         max_length = 150,
-    )
-
-    joined = discord.ui.TextInput(
-        label='Have you joined the in-game IFF regiment?',
-        placeholder='Yes/No...',
-        required = True,
-        max_length = 3,
-        min_length = 2,
     )
     
     rules = discord.ui.TextInput(
@@ -68,20 +68,26 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
         iffRole = interaction.guild.get_role(611927973838323724)
         nickRole = interaction.guild.get_role(893824145299746816)
         newcomerRole = interaction.guild.get_role(627801587351289856)
+        bannerlordRole = interaction.guild.get_role(1058392135847661598)
+        holdfastRole = interaction.guild.get_role(1058390730378334328)
+        iffBotTestChannel = self.bot.get_channel(954194296809095188)
+        enlistmentLogChannel = self.bot.get_channel(592560417394393098)
         end = datetime.now()
         
         # Sends embed contained enlistment info
         embed=discord.Embed(title=f"{interaction.user.name}'s Enlistment Form", description=f"It took {end-self.start}s to filled out. Completed on {end.strftime('%d/%m/%Y on %a %I:%M:%S %p %Z')}",color=0x141599)
         embed.add_field(name="Name", value=f"{self.name.value}", inline=False)
         embed.add_field(name="Region", value=f"{self.region.value}", inline=False)
+        embed.add_field(name="Game", value=f"{self.game.value}", inline=False)
         embed.add_field(name="Find the IFF", value=f"{self.find.value}", inline=False)
-        embed.add_field(name="In-game reg", value=f"{self.joined.value}", inline=False)
         embed.add_field(name="Rules", value=f"{self.rules.value}", inline=False)
         embed.set_footer(text = f"User ID: {interaction.user.id}")
         embed.set_author(name = interaction.user, icon_url = interaction.user.avatar)
         
+        await interaction.response.send_message(f'Enlistment successful! Welcome to the Imperial Frontier Force, {self.name.value}! Your tags will be given shortly. If there are any issues with your tags please let an officer or nco know.', ephemeral=True)
+        await enlistmentLogChannel.send(embed=embed)
+        
         # Auto generates welcome message
-        iffBotTestChannel = self.bot.get_channel(954194296809095188)
         await iffBotTestChannel.send(f"""
 Welcome message for {self.name.value}/<@{interaction.user.id}>
 
@@ -103,14 +109,25 @@ and to join the in-game regiment registry!
 
 Feel free to tag any Officer or NCO if you have any questions!```
 """)
-        
-        await interaction.response.send_message(f'Thanks for your enlistment, {self.name.value}! Your tags will be given shortly.', embed=embed)
+                
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{self.name.value}'s enlistment"))
         await asyncio.sleep(5)
         
         await interaction.user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
-        await interaction.user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
         await interaction.user.edit(nick=f"Rct. {self.name.value}")
+        await interaction.user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
+        
+        if "F" in (self.game.value).upper():
+            await interaction.user.add_roles(holdfastRole, reason = "Bot adding holdfast role")
+            await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given the **Holdfast** game role")
+        elif "M" in (self.game.value).upper():
+            await interaction.user.add_roles(bannerlordRole, reason = "Bot adding bannerlord roles")
+            await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given the **Bannerlord** game role")
+        elif "B" in (self.game.value).upper():
+            await interaction.user.add_roles(holdfastRole, bannerlordRole, reason = "Bot adding holdfast and bannerlord roles")
+            await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given the **Holdfast and Bannerlord** game role")
+        else:
+            await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given **no** game roles")
         
     async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
         await interaction.response.send_message('An error has occurred, if this issue persists please contact SoulWarden#8946', ephemeral=True)
