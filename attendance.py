@@ -149,7 +149,7 @@ class attendanceCog(commands.Cog):
     async def fill(self, ctx):
         msg = await ctx.reply("Filling out attendance now...", mention_author = False)
         start = datetime.now()
-        eventDays = [2, 4, 5, 6]
+        eventDays = [1, 2, 4, 5, 6]
         vcCatIds = [948180967607136306, 995586698006233219]
         iffGuild = self.bot.get_guild(592559858482544641)
         sevenRole = ctx.guild.get_role(783564469854142464)
@@ -264,7 +264,10 @@ class attendanceCog(commands.Cog):
         embed=discord.Embed(title="Auto Attendance", description=f"Done! Please inform the relevant people if there are failed users", color=0xff0000)
         
         #7th
-        seven = calc(currentDate, sevenSheet, sevenUsers)
+        try:
+            seven = calc(currentDate, sevenSheet, sevenUsers)
+        except:
+            msg = await msg.edit(content=msg.content + f"An error has occurred for 7th...")
         print("7th done")  
         if seven is None:
             msg = await msg.edit(content=msg.content + f"No 7th users...")
@@ -277,7 +280,10 @@ class attendanceCog(commands.Cog):
             embed.add_field(name="7th", value=seven[2], inline=True)
             
         #8
-        eight = calc(currentDate, eightSheet, eightUsers)
+        try:
+            eight = calc(currentDate, eightSheet, eightUsers)
+        except:
+            msg = await msg.edit(content=msg.content + f"An error has occurred for 8th...")
         print("8th done")
         if eight is None:
             msg = await msg.edit(content=msg.content + f"No 8th users...")
@@ -290,7 +296,10 @@ class attendanceCog(commands.Cog):
             embed.add_field(name="8th", value=eight[2], inline=True)
         
         #9
-        nine = calc(currentDate, nineSheet, nineUsers)
+        try:
+            nine = calc(currentDate, nineSheet, nineUsers)
+        except:
+            msg = await msg.edit(content=msg.content + f"An error has occurred for 9th...")
         print("9th done")
         if nine is None:
             msg = await msg.edit(content=msg.content + f"No 9th users...")
