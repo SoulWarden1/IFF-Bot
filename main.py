@@ -4,6 +4,7 @@ import traceback
 import discord
 from discord.ext import commands
 from discord.ext.commands import Greedy, Context
+from discord.utils import get
 from typing import Literal, Optional
 from discord import app_commands
 from random import randint
@@ -412,6 +413,33 @@ async def on_guild_remove(ctx, error):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     print(f"Bot has left {ctx.guild} at {current_time}")
+    
+# For giving return members their roles back
+@bot.event
+async def on_member_remove(member):
+    iffGuild = bot.get_guild(592559858482544641)
+    iffRole = get(iffGuild.roles, id = 611927973838323724)
+    retiredRole = get(iffGuild.roles, id= 707125172699660288)
+    retiredLeadership = get(iffGuild.roles, id= 887542975821905970)
+    
+    # Check if in IFF guild
+    # if member.guild is iffGuild and retiredRole in member.roles or retiredLeadership in member.roles or iffRole in member.roles:
+    storageFolder = Path().absolute() / "storage"
+    leftMembersFile = storageFolder / "leftMembers.txt"
+    
+    roleIds = []
+    
+    # Gets all the roles from a user and makes a list of strings with the role id's
+    for role in member.roles:
+        roleIds.append(str(role.id))
+    
+    # Converts the list into a string seperated by commas
+    roleIds = ",".join(roleIds)
+
+    # Writes the user ID with the following line containing the role id's
+    with open(leftMembersFile, "a") as file:
+        file.write(str(member.id) + "\n" + roleIds + "\n")
+            
     
     
 @bot.command()
