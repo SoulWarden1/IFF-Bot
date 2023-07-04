@@ -39,7 +39,7 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
     
     game = discord.ui.TextInput(
         label='Which games were you joining us for?',
-        placeholder='Holdfast, S&M, or both',
+        placeholder='Holdfast, S&M or both',
         required = True,
         max_length = 8,
         min_length = 2,
@@ -88,15 +88,27 @@ class enlistForm(discord.ui.Modal, title='IFF Enlistment Form'):
         await enlistmentLogChannel.send(embed=embed)
         
         # Auto generates welcome message
-        await iffBotTestChannel.send(f"""
+
+                
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{self.name.value}'s enlistment"))
+        await asyncio.sleep(5)
+        
+        await interaction.user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
+        await interaction.user.edit(nick=f"Rct. {self.name.value}")
+        await interaction.user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
+        
+        #HOLDFAST
+        if "F" in (self.game.value).upper():
+            await interaction.user.add_roles(holdfastRole, reason = "Bot adding holdfast role")
+            await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given the **Holdfast** game role")
+            await iffBotTestChannel.send(f"""
 Welcome message for {self.name.value}/<@{interaction.user.id}>
 
 ```:IFF4: **WELCOME TO THE IMPERIAL FRONTIER FORCE** :IFF4:
 
 Everyone welcome <@{interaction.user.id}> to the Imperial Frontier Force!
 
-Make sure you change your in-game name to `IFF | Rct. {self.name.value}` during events
-and to join the in-game regiment registry!
+Make sure you change your in-game name to `IFF | Rct. {self.name.value}` during events and to join the in-game regiment registry!
 
 **__CHECK OUT THESE AWESOME CHANNELS!__**
 #🍻︱mess-hall - Where we chat everything up!
@@ -109,23 +121,50 @@ and to join the in-game regiment registry!
 
 Feel free to tag any Officer or NCO if you have any questions!```
 """)
-                
-        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{self.name.value}'s enlistment"))
-        await asyncio.sleep(5)
-        
-        await interaction.user.remove_roles(newcomerRole, reason = "Bot removing newcomer role")
-        await interaction.user.edit(nick=f"Rct. {self.name.value}")
-        await interaction.user.add_roles(rctRole, iffRole, nickRole, reason = "Bot adding recruit roles")
-        
-        if "F" in (self.game.value).upper():
-            await interaction.user.add_roles(holdfastRole, reason = "Bot adding holdfast role")
-            await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given the **Holdfast** game role")
+        # BANNERLORD
         elif "M" in (self.game.value).upper():
             await interaction.user.add_roles(bannerlordRole, reason = "Bot adding bannerlord roles")
             await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given the **Bannerlord** game role")
+            await iffBotTestChannel.send(f"""
+Welcome message for {self.name.value}/<@{interaction.user.id}>
+
+```:IFF4: **WELCOME TO THE IMPERIAL FRONTIER FORCE** :IFF4:
+
+Everyone welcome <@{interaction.user.id}> to the Imperial Frontier Force!
+
+Make sure you change your in-game name to `3IC | IFF | {self.name.value}` during events by going to the Oceanic S&M server and typing !nick 3IC | IFF | {self.name.value}!
+
+**__CHECK OUT THESE AWESOME CHANNELS!__**
+#🍻︱mess-hall - Where we chat everything up!
+#🏰︱announcements - For information about upcoming events!
+#🎮︱games - For the other games we play!
+
+Feel free to tag any Officer or NCO if you have any questions!```
+""")
+        # BOTH
         elif "B" in (self.game.value).upper():
             await interaction.user.add_roles(holdfastRole, bannerlordRole, reason = "Bot adding holdfast and bannerlord roles")
             await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given the **Holdfast and Bannerlord** game role")
+            await iffBotTestChannel.send(f"""
+Welcome message for {self.name.value}/<@{interaction.user.id}>
+
+```:IFF4: **WELCOME TO THE IMPERIAL FRONTIER FORCE** :IFF4:
+
+Everyone welcome <@{interaction.user.id}> to the Imperial Frontier Force!
+
+Make sure you change your in-game name to `IFF | Rct. {self.name.value}` during Holdfast events and to join the in-game regiment registry! Also make sure you change your in-game name to `3IC | IFF | {self.name.value}` during Sword and Musket events by going to the Oceanic S&M server and typing !nick 3IC | IFF | {self.name.value}!
+
+**__CHECK OUT THESE AWESOME CHANNELS!__**
+#🍻︱mess-hall - Where we chat everything up!
+#🏰︱announcements - For information about upcoming events!
+#🥇︱medals-and-ribbons - For information about achievements within the IFF!
+#🎮︱games - For the other games we play!
+
+#💻︱server-info - For the mods we use in event servers! (Recommended to pre-subscribe for faster loading times)
+
+
+Feel free to tag any Officer or NCO if you have any questions!```
+""")
         else:
             await enlistmentLogChannel.send(f"<@{interaction.user.id}> was given **no** game roles")
         
@@ -137,6 +176,7 @@ class iffCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         super().__init__()
+        self.event_vc_category_id = 948180967607136306
 
     @app_commands.checks.has_any_role(
         990267891330977813,#Reg HQ
@@ -170,9 +210,7 @@ class iffCog(commands.Cog):
             roll += 1
             if varStore.members[randId] not in varStore.pastSelectIds:
                 break
-        logChannel = self.bot.get_channel(varStore.logChannel)
         announceChannel = self.bot.get_channel(907599229629911104)
-        await logChannel.send(f"Rolled {roll} times")
 
         varStore.pastSelectIds.pop(0)
         varStore.pastSelectIds.append(str(varStore.members[randId]))
@@ -319,6 +357,26 @@ class iffCog(commands.Cog):
         embed.add_field(name="\u200b", value="Enjoy your stay here!", inline=True)
         embed.set_author(name=rct.display_name, icon_url=rct.avatar_url)
         await channel.send(file=img, embed=embed)
+        
+        
+    # Wargames rotation
+    @commands.has_any_role(
+        661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
+    )
+    @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.guild)
+    @commands.guild_only()
+    async def wgsplit(self,ctx,target_channel: int):
+        if ctx.author.voice.channel.category_id == self.event_vc_category_id:
+            i = True
+            channel = self.bot.get_channel(target_channel)
+            for user in ctx.author.voice.channel.members:
+                if i:
+                    await user.move_to(channel)
+                    i = False
+                else:
+                    i = True
+            
 
     # Wargames rotation
     @commands.has_any_role(
@@ -723,8 +781,8 @@ class iffCog(commands.Cog):
         platMerit = [] #3 years
                       
         for user in ctx.guild.members:
-            if iffRole in user.roles and retiredRole not in user.roles and retiredLeadership not in user.roles:
-                duration = int((datetime.now() - user.joined_at).days)
+            if iffRole in user.roles and retiredRole not in user.roles and retiredLeadership not in user.roles and "Rct." not in user.display_name and "Cdt." not in user.display_name and "Sdt." not in user.display_name:
+                duration = int((datetime.now() - user.joined_at.replace(tzinfo=None)).days)
                 if duration >= 183:
                     if bronzeMeritRole not in user.roles:
                         bronzeMerit.append(user.display_name)
@@ -738,12 +796,91 @@ class iffCog(commands.Cog):
                     if platMeritRole not in user.roles:
                         platMerit.append(user.display_name)
                     
-        embed=discord.Embed(title="Service Medals", description="All the users who need to be awarded service medals", color=0xff0000)
-        embed.add_field(name="Bronze Military Merit", value=", ".join(bronzeMerit) + "\u200b", inline=False)
-        embed.add_field(name="Silver Military Merit", value=", ".join(silverMerit) + "\u200b", inline=False)
-        embed.add_field(name="Gold Military Merit", value=", ".join(goldMerit) + "\u200b", inline=False)
-        embed.add_field(name="Platinum Military Merit", value=", ".join(platMerit) + "\u200b", inline=False)
-        await ctx.send(embed=embed)
+        # embed=discord.Embed(title="Service Medals", description="All the users who need to be awarded service medals", color=0xff0000)
+        # embed.add_field(name="Bronze Military Merit", value=", ".join(bronzeMerit) + "\u200b", inline=False)
+        # embed.add_field(name="Silver Military Merit", value=", ".join(silverMerit) + "\u200b", inline=False)
+        # embed.add_field(name="Gold Military Merit", value=", ".join(goldMerit) + "\u200b", inline=False)
+        # embed.add_field(name="Platinum Military Merit", value=", ".join(platMerit) + "\u200b", inline=False)
+        # await ctx.send(embed=embed)
+        await ctx.send("**Service Medals**")
+        await ctx.send("**Bronze Service:** " + ", ".join(bronzeMerit) + "\u200b")
+        await ctx.send("**Silver Service:** " + ", ".join(goldMerit) + "\u200b")
+        await ctx.send("**Gold Service:** " + ", ".join(goldMerit) + "\u200b")
+        await ctx.send("**Platinium Service:** " + ", ".join(platMerit) + "\u200b")
+        
+    #Anniversaries     
+    @commands.has_any_role(
+        661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
+    )
+    @commands.guild_only()
+    @commands.command(aliases=["anni"])
+    async def anniversaries(self, ctx):
+        iffRole = get(ctx.guild.roles, id = 611927973838323724)
+        retiredRole = get(ctx.guild.roles, id= 707125172699660288)
+        retiredLeadership = get(ctx.guild.roles, id= 887542975821905970)
+        players = []
+        msg = ""
+                      
+        for user in ctx.guild.members:
+            if iffRole in user.roles and retiredRole not in user.roles and retiredLeadership not in user.roles and "Rct." not in user.display_name and "Cdt." not in user.display_name and "Sdt." not in user.display_name:
+                duration = int((datetime.now() - user.joined_at.replace(tzinfo=None)).days)
+                if duration >= 730:
+                    players.append([user.display_name, round(duration/365, 2)])
+                    
+        players = sorted(players, key=lambda x: x[1], reverse=True)
+        
+        for player in players:
+            msg += f"{player[0]}: {player[1]}\n"
+        
+        await ctx.send("**Anniversaries**")
+        await ctx.send(msg)
+    
+    # Returns the roles a member had if they return to the server
+    @app_commands.checks.has_any_role(
+        990267891330977813, #Reg HQ
+        661521548061966357, #Company Cmd
+        660353960514813952, #CO
+        661522627646586893, #NCO 
+        948862889815597079, #Bot dev
+        855301506252406795, # Person in "Random shit" server
+        )
+    @app_commands.guild_only()
+    @app_commands.command(name="return_role", description='Returns the roles to a returned user')
+    async def return_role(self, interaction: discord.Interaction, member: discord.Member):
+        storageFolder = Path().absolute() / "storage"
+        leftMembersFile = storageFolder / "leftMembers.txt"
+        await interaction.response.defer()
+
+        # Writes the user ID with the following line containing the role id's
+        with open(leftMembersFile, "r") as file:
+            file = file.readlines()
+            for i,line in enumerate(file):
+                line = line.strip()
+  
+                if line == str(member.id):
+                    # 592559858482544641
+                    iffGuild = self.bot.get_guild(854332552117485569)
+                    roleids = file[i+1].strip().split(",")
+                    failedRoles = []
+                    index_to_remove = [i, i+1]
+                    
+                    for roleid in roleids:
+                        role = get(iffGuild.roles, id = int(roleid))
+                        if role.name != "@everyone": 
+                            try:
+                                await member.add_roles(role, reason = "Restoring roles")
+                            except Exception as E:
+                                if role not in member.roles:
+                                    failedRoles.append(role.name)
+                        
+                    await interaction.followup.send(f"Roles restored. Please manually add the roles {failedRoles} and remove any unnecessary roles.")
+                    
+        with open(leftMembersFile, "w") as newFile:
+            for i,line in enumerate(file):
+                if i not in index_to_remove:
+                    newFile.write(line)
+        
+                    
         
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
@@ -837,7 +974,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                     if companyRole in user.roles:
                         if coRole in user.roles:
                             if '"Cpt. ' in user.display_name:
-                                nick = (user.display_name).replace('"Cpt. ', "Capitain ").split("|",1)
+                                nick = (user.display_name).replace('"Cpt. ', "Captain ").split("|",1)
                                 cleanNick = nick[0]
                                 coList.insert(0, cleanNick)
                             elif '"Lt.' in user.display_name:
@@ -869,13 +1006,14 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 for user in ctx.guild.members:
                         if companyRole in user.roles:
                             if cplRole in user.roles:
-                                nick = (user.display_name).replace(".Cpl. ", "Corporal ").split("|",1)
-                                cleanNick = nick[0]
-                                cplList.append(cleanNick)
-                            elif ".LCpl." in user.display_name:
-                                nick = (user.display_name).replace(".LCpl. ", "Lance Corporal ").split("|",1)
-                                cleanNick = nick[0]
-                                cplList.append(cleanNick)
+                                if "​.Cpl." in user.display_name:
+                                    nick = (user.display_name).replace(".Cpl. ", "Corporal ").split("|",1)
+                                    cleanNick = nick[0]
+                                    cplList.append(cleanNick)
+                                elif ".LCpl." in user.display_name:
+                                    nick = (user.display_name).replace(".LCpl. ", "Lance Corporal ").split("|",1)
+                                    cleanNick = nick[0]
+                                    cplList.append(cleanNick)
                 if cplList == []: cplList = ["Currently vacant"]
                 cplList.sort()
                 return cplList
@@ -1007,13 +1145,13 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             
             # Maj 8e ----------------------------------------------------
             maj8eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 8th Company", description="", color=0xffff00)
-            maj8eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/292613296148709377/88be4d0db7f1d221f4f624474ac6de60.webp?size=1024")
-            maj8eEmbed.add_field(name="Major Bronze", value="Major for 8th Connaught Rangers", inline=False)
+            maj8eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/499816773122654219/910195483a4eb01d7449fea1e0cddeec.webp?size=1024")
+            maj8eEmbed.add_field(name="Major SoulWarden", value="Major for 8th Connaught Rangers", inline=False)
             
-            # Maj 9e ----------------------------------------------------
-            # maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9th Company", description="", color=0xffff00)
-            # maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/358445969399873557/4d93e7f0f552c91e5e2dc213b899a0d7.webp?size=1024")
-            # maj9eEmbed.add_field(name="Major Ghost", value="Major for 9th Gordon Highlanders, inline=False)
+            #Maj 9e ----------------------------------------------------
+            maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9th Company", description="", color=0xffff00)
+            maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/guilds/592559858482544641/users/398731536813522954/avatars/5baa888448db5ddd606ae96f4ff96821.webp?size=1024")
+            maj9eEmbed.add_field(name="Major Kiwi", value="Major for 9th Gordon Highlanders", inline=False)
             
             # 7e ---------------------------------------------------------------------
             sevenEmbed = discord.Embed(
@@ -1158,16 +1296,16 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             #Admins ------------------------------------------------------
             adminEmbed=discord.Embed(title="Administration", description="", color=0xe74c25)
             adminEmbed.set_thumbnail(url="attachment://admin_skin.png")
-            adminEmbed.add_field(name="Commissioned Officer", value="Quartermaster Peenoire\nQuartermaster Ace", inline=False)
+            adminEmbed.add_field(name="Commissioned Officer", value="Quartermaster Peenoire", inline=False)
             adminEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            adminEmbed.add_field(name="Non-Commissioned Officer", value="Adjutant Ping\nAdjutant Minz\nAdjutant Donke", inline=False)
+            adminEmbed.add_field(name="Non-Commissioned Officer", value="Adjutant Ping\nAdjutant Minz\nAdjutant Donke\nAdjutant Bronze", inline=False)
             
             #Specials ------------------------------------------------------
             specEmbed=discord.Embed(title="Non-Infantry Specialisation Leadership", description="Leadership for the specialisations and Auxiliary you may gain quals for and play as during events.", color=0xf8e61c    )
             specEmbed.set_thumbnail(url="attachment://cav_skin.png")
-            specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols\nSergeant Major Kiwi", inline=False)
+            specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols\nMajor Kiwi", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Garde Chevau-Léger", value="Major Bronze\nQuartermaster Ace", inline=False)
+            specEmbed.add_field(name="Garde Chevau-Léger", value="Lieutenant Ace\nSergeant Deedee\nKingsman Nance", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
             specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Major Tobakshi (Aux)\nKingsman Milk (Sapper)", inline=False)
             specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
@@ -1177,11 +1315,11 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             end = datetime.now()
             
             infoEmbed=discord.Embed(title="Muster Roll Information", description="This muster roll is automatically generated, therefore there are a few matters that need to be explained", color=0xd0142a)
-            infoEmbed.add_field(name="Naming", value="If you do not appear on the muster roll, firstly make sure you rank is spelled correctly with the correct prefix and suffix. For most enlisted, this will be a '.' at the end of your rank. Eg Fus. [Name]. For leadership, make sure you have the correct prefix and correct capitalisation.", inline=False)
+            infoEmbed.add_field(name="Naming", value="If you do not appear on the muster roll, firstly make sure you rank is spelt correctly with the correct prefix and suffix. For most enlisted, this will be a '.' at the end of your rank. Eg Cdt. [Name]. For leadership, make sure you have the correct prefix and correct capitalisation.", inline=False)
             infoEmbed.add_field(name="Roles", value="If you do not have the correct company role, you will not appear on the muster roll where you belong", inline=True)
-            infoEmbed.add_field(name="Ranks", value="If you're within the ranks of Rct to Volt, you will not be display on the muster roll to save space", inline=True)
+            infoEmbed.add_field(name="Ranks", value="If you're within the ranks of Rct to Pte, you will not be displayed on the muster roll to save space", inline=True)
             infoEmbed.add_field(name="LOA and Retired", value="If you are on LOA or are retired, you will not be displayed on the muster roll (unless you're a member of leadership)", inline=True)
-            infoEmbed.add_field(name="Other issues", value="Please dm SoulWarden#8946 or the bot directly if there are any problems", inline=True)
+            infoEmbed.add_field(name="Other issues", value="Please dm SoulWarden or the bot directly if there are any problems", inline=True)
             infoEmbed.set_footer(text = f"Generation time: {end-start}")
             await workingMsg.delete()
             
@@ -1189,7 +1327,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             # await ctx.send(file=cmd2Img, embed=cmd2Embed)
             await ctx.send(embed=maj7eEmbed)
             await ctx.send(embed=maj8eEmbed)
-            # await ctx.send(embed=maj9eEmbed)
+            await ctx.send(embed=maj9eEmbed)
             await ctx.send(file=sevenImg, embed=sevenEmbed)
             await ctx.send(file=eightImg, embed=eightEmbed)
             await ctx.send(file=nineImg, embed=nineEmbed)
