@@ -19,7 +19,7 @@ class randomCog(commands.Cog):
         self.bot = bot
         
     #Testing ping command with latency
-    @commands.has_role(varStore.iffRole)
+    @commands.is_owner()
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["pong", "Ping", "Pong"])
     async def ping(self,ctx):
@@ -143,7 +143,7 @@ class randomCog(commands.Cog):
         if avamember.id == 423913295314026507:
             await ctx.reply("Weebs are banned now")
         else:
-            userAvatarUrl = avamember.avatar_url
+            userAvatarUrl = avamember.avatar
             await ctx.send(userAvatarUrl)
         
     #Dice command with custom sides
@@ -186,18 +186,61 @@ class randomCog(commands.Cog):
         
     @commands.hybrid_command(name = "xkcd", description='Grabs a XKCD comic')
     @commands.cooldown(1, 5, commands.BucketType.user)
-    async def xkcd_command(self, ctx: commands.Context, comicnum: int = commands.parameter(default = None, description ="Optionally input the comic number you're after")) -> None:
-        if comicnum is None: 
+    async def xkcd_command(self, ctx: commands.Context, comic_num: int = commands.parameter(default = None, description ="Optionally input the comic number you're after")) -> None:
+        if comic_num is None: 
             xkcdUrl = "https://xkcd.com/info.0.json"
         else: 
             try:
-                xkcdUrl = f"https://xkcd.com/{comicnum}/info.0.json "
+                xkcdUrl = f"https://xkcd.com/{comic_num}/info.0.json "
             except:
                 await ctx.send("An invalid comic number was inputted")
             
         response = urlopen(xkcdUrl)
         xkcdData = json.loads(response.read())
         await ctx.send(f"#{xkcdData.get('num')} {xkcdData.get('title')}\n{xkcdData.get('alt')}\n{xkcdData.get('img')}")
-            
+    
+    @commands.command(name = "math")
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def math(self, ctx:commands.Context, equation: str = None):
+        operators = ["+","-","*","/"]
+        if equation is None:
+            ctx.send("Please enter an equation")
+            return
+        
+        x = 0
+        for char in equation:
+            if char == "/":
+                leftSide = equation[:x]
+                rightSide = equation[x+1:]
+                print(leftSide,rightSide)
+                
+                try:
+                    for y in range(len(leftSide)-1,0,-1):
+                        print(y)
+                        if equation[y] in operators:
+                            leftNum = float(equation[y+1:x])
+                            print(leftNum)
+                            return
+                except:
+                    await ctx.send(float(leftSide)/float(rightSide))
+                    return
+                
+                try:  
+                    for y in range(x+1,50,1):
+                        if equation[y] in operators:
+                            rightNum = float(equation[x+1:y])
+                            print(rightNum)
+                            return
+                except:
+                    await ctx.send(float(leftSide)/float(rightSide))
+                    return
+                
+                await ctx.send(leftNum/rightNum)
+                    
+            x += 1
+                
+        
+        test = 22+22/22*22
+    
 async def setup(bot):
     await bot.add_cog(randomCog(bot))
