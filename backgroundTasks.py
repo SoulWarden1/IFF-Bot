@@ -41,7 +41,7 @@ class backgroundTasks(commands.Cog):
         now = datetime.now()
         current_time = now.strftime("%H:%M")
 
-        # Auto role
+        # Auto roll
         if current_time == "14:30" and datetime.today().weekday() in pingDays and platform.system() == 'Linux':
             roll = 0
             while True:
@@ -49,9 +49,7 @@ class backgroundTasks(commands.Cog):
                 roll += 1
                 if varStore.members[randId] not in varStore.pastSelectIds:
                     break
-            logChannel = self.bot.get_channel(varStore.logChannel)
             announceChannel = self.bot.get_channel(907599229629911104)
-            await logChannel.send(f"Rolled {roll} times")
 
             varStore.pastSelectIds.pop(0)
             varStore.pastSelectIds.append(str(varStore.members[randId]))
