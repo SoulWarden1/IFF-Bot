@@ -271,17 +271,64 @@ class iffCog(commands.Cog):
             "Please add your own ping/ask a nco for one if you wish", delete_after=5
         )
 
-    # Template command
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(aliases=["Template", "temp", "Temp"])
-    async def template(self, ctx):
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @app_commands.guild_only()
+    @app_commands.command(name="template", description='Announcement template')
+    async def template(self, interaction: discord.Interaction, message: str = None, emoji: str = None):
+        iffGuild = self.bot.get_guild(592559858482544641)
+        eightGuild = self.bot.get_guild(907599229629911101)
+        sevenRole = iffGuild.get_role(783564469854142464)
+        eightRole = iffGuild.get_role(845007589674188839)
+        nineRole = iffGuild.get_role(863756344494260224)
+        company_icon = ""
+            
+        # Gets the current day and the event time
         now = datetime.now()
         day = (now.strftime("%A")).upper()
-        await ctx.reply(
-            "Check you dm's! (Making your own announcement is still prefered, only do this if you have little time)"
+        
+        if datetime.today().weekday() not in [6]:
+            event_type = "OCEANIC"
+            event_datetime = datetime(now.year, now.month, now.day, hour = 20, minute = 0, second = 0)
+            training_msg = "We have training \**1 hour** before the event so make sure you come!"
+        else:
+            event_type = "ASIA"
+            event_datetime = datetime(now.year, now.month, now.day, hour = 22, minute = 0, second = 0)
+            training_msg = ""
+            
+        event_epoch = int(event_datetime.timestamp())
+        
+        if message is None:
+            message = "[Inspirational message]"
+            
+        if emoji is None:
+            emoji = "[Emoji]"
+        
+        if sevenRole in interaction.user.roles:
+            company_icon = ":7e:"
+        elif eightRole in interaction.user.roles:
+            company_icon = ":8e:"
+        elif nineRole in interaction.user.roles:
+            company_icon = ":9e:"
+        elif interaction.guild == eightGuild:
+            company_icon = ":8e:"
+                
+        await interaction.response.send_message(
+            "Check you dm's!"
         )
-        await ctx.message.author.send(
-            f":8e: :IFF1:   **══════ {day} OCEANIC LINEBATTLE EVENT ══════**   :IFF1: :8e: \n8:00pm AEDT:flag_au: | 8:00pm AEST :flag_au: | 6:00pm AWST :flag_au: | 10:00pm NZDT :flag_nz: \n6:00pm PHT/MYT :flag_ph: :flag_my: :flag_sg: :flag_id: :flag_bn: :flag_hk: | 5:00pm WIT :flag_id: :flag_vn: :flag_th: | 3:30pm IST :flag_in: \n7:00pm KST/JST :flag_kr: :flag_jp: | 06:00am EDT :flag_us: | 10:00am BST :flag_gb: \n \n[Inspirational message] \n \nThe event starts at **8:00pm AEDT** today \n\nWe have training at **7:00pm AEDT** or 1 hour before the event so make sure you come! \n\nReact [Emoji]  if you'll be attending \nI hope to see all of you coming! \n(Ask an officer for a ping)"
+        await interaction.user.send(
+            f"""
+\# {company_icon} :IFF1:   ══════ {day} {event_type} LINEBATTLE EVENT ══════   :IFF1: {company_icon}
+\## When: \<t:{event_epoch}:t> or \<t:{event_epoch}:R>
+
+{message}
+
+{training_msg}
+
+React {emoji} if you'll be attending 
+
+I hope to see all of you coming! 
+[Ping]
+"""
         )
 
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -879,8 +926,36 @@ class iffCog(commands.Cog):
             for i,line in enumerate(file):
                 if i not in index_to_remove:
                     newFile.write(line)
-        
                     
+    @app_commands.checks.has_any_role(
+        990267891330977813, #Reg HQ
+        661521548061966357, #Company Cmd
+        660353960514813952, #CO
+        661522627646586893, #NCO 
+        948862889815597079, #Bot dev
+        855301506252406795, # Person in "Random shit" server
+        )
+    @app_commands.guild_only()
+    @app_commands.command(name="read_return", description='Reads the list of users who have left')
+    async def read_return(self, interaction: discord.Interaction):
+        storageFolder = Path().absolute() / "storage"
+        leftMembersFile = storageFolder / "leftMembers.txt"
+        
+        users = []
+        not_in_server = 0
+        
+        with open(leftMembersFile, "r") as file:
+            lines = file.readlines()
+            
+            for i in range(0,len(lines), 2):
+                user = self.bot.get_user(int(lines[i].strip()))
+                
+                if user is not None:
+                    users.append(user.display_name)
+                else:
+                    not_in_server += 1
+                    
+        await interaction.response.send_message(f"{users}" + f"\nThere were {not_in_server} other people who are currently not in the IFF server")
         
     @commands.has_any_role(
         661521548061966357, 660353960514813952, 661522627646586893, 948862889815597079
