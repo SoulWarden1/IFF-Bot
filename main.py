@@ -419,13 +419,28 @@ async def on_guild_remove(ctx, error):
 async def on_member_remove(member):
     iffGuild = bot.get_guild(592559858482544641)
     iffRole = get(iffGuild.roles, id = 611927973838323724)
-    retiredRole = get(iffGuild.roles, id= 707125172699660288)
-    retiredLeadership = get(iffGuild.roles, id= 887542975821905970)
     
-    # Check if in IFF guild
-    # if member.guild is iffGuild and retiredRole in member.roles or retiredLeadership in member.roles or iffRole in member.roles:
     storageFolder = Path().absolute() / "storage"
     leftMembersFile = storageFolder / "leftMembers.txt"
+    
+    # Checks if the guild is the IFF guild and if they have the IFF role
+    if member.guild != iffGuild or iffRole not in member.roles:
+        return
+    
+    # Checks if the user is already in the left members list and removes any previous versions
+    with open(leftMembersFile, "r") as file:
+        lines = file.readlines()
+        lines_to_remove = []
+        
+        for i,line in enumerate(lines):
+            if line.strip() == str(member.id):
+                lines_to_remove.append(i)
+                lines_to_remove.append(i+1)
+                
+    with open(leftMembersFile, "w") as file:
+        for i, line in enumerate(lines):
+            if i not in lines_to_remove:
+                file.write(line)
     
     roleIds = []
     
@@ -439,7 +454,21 @@ async def on_member_remove(member):
     # Writes the user ID with the following line containing the role id's
     with open(leftMembersFile, "a") as file:
         file.write(str(member.id) + "\n" + roleIds + "\n")
-            
+        
+@bot.event
+async def on_member_join(member):
+    storageFolder = Path().absolute() / "storage"
+    leftMembersFile = storageFolder / "leftMembers.txt"
+    iffBotTestChannel = bot.get_channel(954194296809095188)
+    
+    with open(leftMembersFile, "r") as file:
+        lines = file.readlines()
+        
+        for line in lines:
+            if line.strip() == str(member.id):
+                await iffBotTestChannel.send(f"{member.display_name} has previously been in the IFF server and can have their roles returned with </return_role:1125667822815694950>")
+                break
+        
     
     
 @bot.command()
