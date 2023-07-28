@@ -219,7 +219,7 @@ class attendanceCog(commands.Cog):
             
             # Make this not a number
             # Sets the ticked list to have 150 falses
-            for i in range(1,150):
+            for i in range(1,200):
                 ticked.append(False)
                 
             count = 1
@@ -233,8 +233,9 @@ class attendanceCog(commands.Cog):
                         failedUser.append(username.name)
                         print(f"Failed id: {id}")
                     count += 1
-                except:
-                    print("Failed")
+                except Exception as e:
+                    print(f"Failed (0) with: {e}")
+                    print(id)
                     errorMsg = "An unknown error has occurred (0)"
                     return countTickedUsers, failedUser, errorMsg
             
@@ -245,16 +246,16 @@ class attendanceCog(commands.Cog):
                     if value == True:
                         cells.append(Cell(row=count, col=dateColumn.col, value=True))
                     count += 1
-                except:
-                    print("Failed")
+                except Exception as e:
+                    print(f"Failed (1) with: {e}")
                     errorMsg = "An unknown error has occurred (1)"
                     return countTickedUsers, failedUser, errorMsg
             
             # Ticks all users
             try:
                 sheet.update_cells(cells)
-            except:
-                    print("Failed")
+            except Exception as e:
+                    print(f"Failed (2) with: {e}")
                     errorMsg = "An unknown error has occurred (2)"
                     return countTickedUsers, failedUser, errorMsg
             
