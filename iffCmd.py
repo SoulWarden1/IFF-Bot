@@ -315,8 +315,11 @@ class iffCog(commands.Cog):
         await interaction.response.send_message(
             "Check you dm's!"
         )
-        await interaction.user.send(
-            f"""
+        
+        # Not on phone
+        if not interaction.user.is_on_mobile():
+            await interaction.user.send(
+                f"""
 \# {company_icon} :IFF1:   ══════ {day} {event_type} LINEBATTLE EVENT ══════   :IFF1: {company_icon}
 \## When: \<t:{event_epoch}:t> or \<t:{event_epoch}:R>
 
@@ -328,8 +331,27 @@ React {emoji} if you'll be attending
 
 I hope to see all of you coming! 
 [Ping]
-"""
-        )
+    """
+            )
+        # On phone
+        else:
+            await interaction.user.send(
+                f"""
+# {company_icon} :IFF1:   ══════ {day} {event_type} LINEBATTLE EVENT ══════   :IFF1: {company_icon}
+## When: <t:{event_epoch}:t> or <t:{event_epoch}:R>
+
+{message}
+
+{training_msg}
+
+React {emoji} if you'll be attending 
+
+I hope to see all of you coming! 
+[Ping]
+    """
+            )
+            
+            
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["Ranks", "rank", "Rank"])
