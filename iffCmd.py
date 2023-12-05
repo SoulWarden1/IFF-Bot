@@ -9,6 +9,8 @@ from datetime import datetime
 import asyncio
 from pathlib import Path
 
+from randomCmd import randomCog
+
 officers = [
     990267891330977813, #Reg HQ
     661521548061966357, #Company Cmd
@@ -177,6 +179,10 @@ class iffCog(commands.Cog):
         self.bot = bot
         super().__init__()
         self.event_vc_category_id = 948180967607136306
+        
+    @commands.command(name = "test")
+    async def test(self, ctx):
+        print(ctx.author.is_on_mobile())
 
     @app_commands.checks.has_any_role(
         990267891330977813,#Reg HQ
@@ -193,7 +199,7 @@ class iffCog(commands.Cog):
         
     # Rolls the person doing the announcement
     @commands.has_any_role(
-        907603010438459402, 907603359048040488
+        907603010438459402, 907603359048040488, 1134451793825378304
     )
     @commands.cooldown(1, 10, commands.BucketType.guild)
     @commands.guild_only()
@@ -226,7 +232,7 @@ class iffCog(commands.Cog):
 
         selectMemberId = varStore.members[randId]
         user = await self.bot.fetch_user(selectMemberId)
-        await announceChannel.send(f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '_template' (Although this isn't recommended)")
+        await announceChannel.send(f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '/template'.")
 
         activity = discord.Activity(
             type=discord.ActivityType.watching, name=f"{user.name}'s announcement")
@@ -286,10 +292,17 @@ class iffCog(commands.Cog):
         now = datetime.now()
         day = (now.strftime("%A")).upper()
         
-        if datetime.today().weekday() not in [6]:
+        # If the day is friday, then the event is 1 hour later
+        if datetime.today().weekday() == 4:
+        # All other days of the week other than sunday
+            event_type = "OCEANIC"
+            event_datetime = datetime(now.year, now.month, now.day, hour = 21, minute = 0, second = 0)
+            training_msg = "We have training **1 hour** before the event so make sure you come!"
+        elif datetime.today().weekday() not in [6]:
             event_type = "OCEANIC"
             event_datetime = datetime(now.year, now.month, now.day, hour = 20, minute = 0, second = 0)
-            training_msg = "We have training \**1 hour** before the event so make sure you come!"
+            training_msg = "We have training **1 hour** before the event so make sure you come!"
+        # Sunday is SEA
         else:
             event_type = "ASIA"
             event_datetime = datetime(now.year, now.month, now.day, hour = 22, minute = 0, second = 0)
@@ -315,29 +328,10 @@ class iffCog(commands.Cog):
         await interaction.response.send_message(
             "Check you dm's!"
         )
-        
-        # Not on phone
-        if not interaction.user.is_on_mobile():
-            await interaction.user.send(
+
+        await interaction.user.send(
                 f"""
-\# {company_icon} :IFF1:   ══════ {day} {event_type} LINEBATTLE EVENT ══════   :IFF1: {company_icon}
-\## When: \<t:{event_epoch}:t> or \<t:{event_epoch}:R>
-
-{message}
-
-{training_msg}
-
-React {emoji} if you'll be attending 
-
-I hope to see all of you coming! 
-[Ping]
-    """
-            )
-        # On phone
-        else:
-            await interaction.user.send(
-                f"""
-# {company_icon} :IFF1:   ══════ {day} {event_type} LINEBATTLE EVENT ══════   :IFF1: {company_icon}
+# {company_icon} :IFF1:   ═════ {day} {event_type} LINEBATTLE EVENT ═════   :IFF1: {company_icon}
 ## When: <t:{event_epoch}:t> or <t:{event_epoch}:R>
 
 {message}
@@ -350,8 +344,6 @@ I hope to see all of you coming!
 [Ping]
     """
             )
-            
-            
 
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(aliases=["Ranks", "rank", "Rank"])
@@ -1103,7 +1095,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
                 for user in ctx.guild.members:
                         if companyRole in user.roles:
                             if cplRole in user.roles:
-                                if "​.Cpl." in user.display_name:
+                                if ".Cpl." in user.display_name:
                                     nick = (user.display_name).replace(".Cpl. ", "Corporal ").split("|",1)
                                     cleanNick = nick[0]
                                     cplList.append(cleanNick)
@@ -1394,19 +1386,17 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             adminEmbed=discord.Embed(title="Administration", description="", color=0xe74c25)
             adminEmbed.set_thumbnail(url="attachment://admin_skin.png")
             adminEmbed.add_field(name="Commissioned Officer", value="Quartermaster Peenoire", inline=False)
-            adminEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            adminEmbed.add_field(name="Non-Commissioned Officer", value="Adjutant Ping\nAdjutant Minz\nAdjutant Donke\nAdjutant Bronze", inline=False)
+            adminEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
+            adminEmbed.add_field(name="Non-Commissioned Officer", value="Adjutant Ping\nAdjutant Minz\nAdjutant Bronze", inline=False)
             
             #Specials ------------------------------------------------------
-            specEmbed=discord.Embed(title="Non-Infantry Specialisation Leadership", description="Leadership for the specialisations and Auxiliary you may gain quals for and play as during events.", color=0xf8e61c    )
+            specEmbed=discord.Embed(title="Non-Infantry Specialisation Leadership", description="Leadership for the specials.", color=0xf8e61c)
             specEmbed.set_thumbnail(url="attachment://cav_skin.png")
-            specEmbed.add_field(name="Jäger Karabiner Infanterie", value="Colonel Joshlols\nMajor Kiwi", inline=False)
-            specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Garde Chevau-Léger", value="Lieutenant Ace\nSergeant Deedee\nKingsman Nance", inline=False)
-            specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Auxiliaire de vie à Pied", value="Major Tobakshi (Aux)\nKingsman Milk (Sapper)", inline=False)
-            specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
-            specEmbed.add_field(name="Asian Volunteer Expeditionary Force", value="Major Tobakshi\nCorporal King", inline=False)
+            specEmbed.add_field(name="Royal Somerset Rangers", value="Colonel Joshlols\nMajor Kiwi\nSergeant Major Bjorn", inline=False)
+            specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
+            specEmbed.add_field(name="King's Royal Hussars", value="Quarter Master Bronze\nLieutenant Ace\nKingsman Nance", inline=False)
+            specEmbed.add_field(name="\u200b", value="=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=", inline=False)
+            specEmbed.add_field(name="Royal Field Artillery Brigade", value="Sergeant Deedee", inline=False)
 
             #Info embed
             end = datetime.now()
@@ -1430,7 +1420,7 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             await ctx.send(file=nineImg, embed=nineEmbed)
             await ctx.send(file=adminImg, embed=adminEmbed)
             await ctx.send(file=cavImg, embed=specEmbed)
-            await ctx.send(embed = infoEmbed)
+            await ctx.send(embed = infoEmbed) 
 
 async def setup(bot):
     await bot.add_cog(iffCog(bot))
