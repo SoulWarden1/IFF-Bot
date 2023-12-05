@@ -169,6 +169,13 @@ class attendanceCog(commands.Cog):
         
         currentDate = start.strftime("%d/%m/%Y")
         
+        
+        # Checks if the current day of the week is an event day
+        if datetime.today().weekday() not in eventDays:
+            await msg.edit(content="Error: today is not an event day")
+            return
+            
+        
         def calc(date, sheet, users):
             countTickedUsers = 0
             failedUser = []
@@ -179,47 +186,49 @@ class attendanceCog(commands.Cog):
                 print("No users")
                 return
             
-            #Attempting to find the correct column with the right date
+            #Attempting to find the correct column with the current date
             dateColumn = sheet.find(date, in_row = 1)
             if dateColumn is None:
-                # Checks if the current day is a day with an event in it
-                if datetime.today().weekday() in eventDays:
-                    # Gets all the values from the row with the dates on it
-                    dateRow = sheet.row_values(1)
-                    # Checks from the end of the row and counts backwards to find the last empty cell
-                    for dateRowIndex in range(len(dateRow)-1, 0, -1):
-                        if dateRow[dateRowIndex] != "" and dateRow[dateRowIndex] != "-":
-                                # The 8th sheet has black col seperating weeks, so checking if hat is the case
-                            try:
-                                if dateRow[dateRowIndex + 1] == "-":
-                                    # Updates sheet to have the current date at the correct cell. Repeated below
-                                    currentDateCol = dateRowIndex + 3
-                                    sheet.update_cell(1, currentDateCol, start.strftime("%d/%m/%Y"))
-                                    dateColumn = sheet.cell(1,currentDateCol)
-                                # Other sheets don't have week seperators
-                                else:
-                                    currentDateCol = dateRowIndex + 2
-                                    sheet.update_cell(1, currentDateCol, start.strftime("%d/%m/%Y"))
-                                    dateColumn = sheet.cell(1,currentDateCol)
-                            except:
+                # Gets all the values from the row with the dates on it
+                dateRow = sheet.row_values(1)
+                # Checks from the end of the row and counts backwards to find the last empty cell
+                for dateRowIndex in range(len(dateRow)-1, 0, -1):
+                    if dateRow[dateRowIndex] != "" and dateRow[dateRowIndex] != "-":
+                            # The 8th sheet has black col seperating weeks, so checking if that is the case
+                        try:
+                            if dateRow[dateRowIndex + 1] == "-":
+                                # Updates sheet to have the current date at the correct cell. Repeated below
+                                currentDateCol = dateRowIndex + 3
+                                sheet.update_cell(1, currentDateCol, start.strftime("%d/%m/%Y"))
+                                dateColumn = sheet.cell(1,currentDateCol)
+                            # Other sheets don't have week seperators
+                            else:
                                 currentDateCol = dateRowIndex + 2
                                 sheet.update_cell(1, currentDateCol, start.strftime("%d/%m/%Y"))
                                 dateColumn = sheet.cell(1,currentDateCol)
-                            break
-                else:
-                    print("Today is not an event day")
-                    errorMsg = "Today is not an event day"
-                    return countTickedUsers, failedUser, errorMsg
+                        except:
+                            currentDateCol = dateRowIndex + 2
+                            sheet.update_cell(1, currentDateCol, start.strftime("%d/%m/%Y"))
+                            dateColumn = sheet.cell(1,currentDateCol)
+                        break
             else:
                 print("Date found")
             
+            # Attempts to finds the column with the discord id's
             idColumnIndex = sheet.find("Discord Id's")
-            idColumnValues = sheet.col_values(idColumnIndex.col)
-            ticked = []
+            # Checks if the column was found
+            if idColumnIndex is None:
+                errorMsg = "Discord Id column could not be found"
+                return countTickedUsers, failedUser, errorMsg
+            else:
+                # Gets the all the discord id's in the column
+                idColumnValues = sheet.col_values(idColumnIndex.col)
             
+            ticked = []
             # Make this not a number
-            # Sets the ticked list to have 150 falses
-            for i in range(1,200):
+            # Sets the ticked list to have 200 falses
+            # len(ticked) >= number of rows, otherwise an error will occur
+            for _ in range(1,200):
                 ticked.append(False)
                 
             count = 1
@@ -269,6 +278,7 @@ class attendanceCog(commands.Cog):
             seven = calc(currentDate, sevenSheet, sevenUsers)
         except:
             msg = await msg.edit(content=msg.content + f"An error has occurred for 7th...")
+            
         print("7th done")  
         if seven is None:
             msg = await msg.edit(content=msg.content + f"No 7th users...")
@@ -279,12 +289,14 @@ class attendanceCog(commands.Cog):
         elif seven[2]:
             msg = await msg.edit(content=msg.content + f"An error has occurred for 7th...")
             embed.add_field(name="7th", value=seven[2], inline=True)
+            error = True
             
         #8
         try:
             eight = calc(currentDate, eightSheet, eightUsers)
         except:
             msg = await msg.edit(content=msg.content + f"An error has occurred for 8th...")
+            
         print("8th done")
         if eight is None:
             msg = await msg.edit(content=msg.content + f"No 8th users...")
@@ -295,12 +307,14 @@ class attendanceCog(commands.Cog):
         elif eight[2]:
             msg = await msg.edit(content=msg.content + f"An error has occurred for 8th...")
             embed.add_field(name="8th", value=eight[2], inline=True)
+            error = True
         
         #9
         try:
             nine = calc(currentDate, nineSheet, nineUsers)
         except:
             msg = await msg.edit(content=msg.content + f"An error has occurred for 9th...")
+            
         print("9th done")
         if nine is None:
             msg = await msg.edit(content=msg.content + f"No 9th users...")
@@ -311,14 +325,16 @@ class attendanceCog(commands.Cog):
         elif nine[2]:
             msg = await msg.edit(content=msg.content + f"An error has occurred for 9th...")
             embed.add_field(name="9th", value=nine[2], inline=True)
+            error = True
                 
         end = datetime.now()
         #Check if there are failed users, if so alert user
         if error:
-            embed.set_footer(text=f"Took {end-start}. WARNING THERE ARE FAILED USERS/COMPANIES, PLEASE CHECK YOUR ATTENDANCE SHEET")
+            embed.set_footer(text=f"Took {end-start}. WARNING THERE ARE FAILED USERS/COMPANIES.")
         else:
             embed.set_footer(text=f"Took {end-start}")
         
+        # Updates the message with the results of the attendance
         await msg.edit(content=None, embed=embed)
 
 async def setup(bot:commands.Bot):
