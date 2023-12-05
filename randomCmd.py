@@ -1,6 +1,7 @@
 import json
 import discord
 from discord.ext import commands
+from discord import app_commands
 import varStore
 import requests
 from random import randint, choice
@@ -37,10 +38,7 @@ class randomCog(commands.Cog):
 
             await message.edit(content=f"Ping!\nResponse Time: {round(self.bot.latency * 1000)}ms\nAPI Latency: {round(((end_time - start_time)-self.bot.latency) * 1000)}ms\nTotal Latency: {round((end_time - start_time) * 1000)}ms")
             #await ctx.reply(f"Ping! (Response time: {round(self.bot.latency*1000, 2)}ms)")
-    
-    # @commands.command()
-    # async def testMsg(self):
-    #     print("Test")
+        
     
     #Converts id to username
     @commands.cooldown(1, 1, commands.BucketType.user)
@@ -241,6 +239,7 @@ class randomCog(commands.Cog):
                 
         
         test = 22+22/22*22
+        
     
 async def setup(bot):
     await bot.add_cog(randomCog(bot))
