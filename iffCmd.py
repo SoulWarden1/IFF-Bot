@@ -222,9 +222,9 @@ class iffCog(commands.Cog):
         varStore.pastSelectIds.append(str(varStore.members[randId]))
         try:
             f = open(
-                "iffBot/storage/pastSelectId.txt", "w")
+                "storage/pastSelectId.txt", "w")
         except:
-            f = open("/home/pi/Desktop/iffBot/storage/pastSelectId.txt", "w")
+            f = open("storage/pastSelectId.txt", "w")
 
         for id in varStore.pastSelectIds:
             f.write(id + "\n")
@@ -293,12 +293,12 @@ class iffCog(commands.Cog):
         day = (now.strftime("%A")).upper()
         
         # If the day is friday, then the event is 1 hour later
-        if datetime.today().weekday() == 4:
-        # All other days of the week other than sunday
-            event_type = "OCEANIC"
-            event_datetime = datetime(now.year, now.month, now.day, hour = 21, minute = 0, second = 0)
-            training_msg = "We have training **1 hour** before the event so make sure you come!"
-        elif datetime.today().weekday() not in [6]:
+        # if datetime.today().weekday() == 4:
+        # # All other days of the week other than sunday
+        #     event_type = "OCEANIC"
+        #     event_datetime = datetime(now.year, now.month, now.day, hour = 21, minute = 0, second = 0)
+        #     training_msg = "We have training **1 hour** before the event so make sure you come!"
+        if datetime.today().weekday() not in [6]:
             event_type = "OCEANIC"
             event_datetime = datetime(now.year, now.month, now.day, hour = 20, minute = 0, second = 0)
             training_msg = "We have training **1 hour** before the event so make sure you come!"
@@ -1234,12 +1234,12 @@ Please check <#853180535303176213>, <#910247350923059211> and <#8531805749570437
             
             # Maj 8e ----------------------------------------------------
             maj8eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 8th Company", description="", color=0xffff00)
-            maj8eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/499816773122654219/910195483a4eb01d7449fea1e0cddeec.webp?size=1024")
+            maj8eEmbed.set_thumbnail(url="https://cdn.discordapp.com/avatars/499816773122654219/2b64003095a012e870fc5638360cdb1c.webp?size=1024")
             maj8eEmbed.add_field(name="Major SoulWarden", value="Major for 8th Connaught Rangers", inline=False)
             
             #Maj 9e ----------------------------------------------------
             maj9eEmbed=discord.Embed(title="Imperial Frontier Force - Head of 9th Company", description="", color=0xffff00)
-            maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/guilds/592559858482544641/users/398731536813522954/avatars/5baa888448db5ddd606ae96f4ff96821.webp?size=1024")
+            maj9eEmbed.set_thumbnail(url="https://cdn.discordapp.com/guilds/592559858482544641/users/398731536813522954/avatars/8b8e1623669d4112ccbb75bde85783a9.webp?size=1024")
             maj9eEmbed.add_field(name="Major Kiwi", value="Major for 9th Gordon Highlanders", inline=False)
             
             # 7e ---------------------------------------------------------------------
