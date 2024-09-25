@@ -5,7 +5,6 @@ from discord.ext import tasks
 from random import randint, choice
 import asyncio
 import varStore
-import attendance
 import platform
 
 # from randomCmd import testMsg
@@ -64,7 +63,7 @@ class backgroundTasks(commands.Cog):
 
             varStore.pastSelectIds.pop(0)
             varStore.pastSelectIds.append(str(varStore.members[randId]))
-            
+
             f = open("storage/pastSelectId.txt", "w")
 
             for id in varStore.pastSelectIds:
@@ -77,7 +76,7 @@ class backgroundTasks(commands.Cog):
                 user = user.name
             except:
                 user = "Error"
-            
+
             await announceChannel.send(
                 f"<@{selectMemberId}> has been chosen to do the announcement! If you want a template, run '/template'."
             )

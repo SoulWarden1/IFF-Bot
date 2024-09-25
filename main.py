@@ -32,14 +32,14 @@ class MyBot(commands.Bot):
             )
         self.cogList = ["adminCmd", "helpCmd", "iffCmd","backgroundTasks", "randomCmd", "attendance"]
         self.synced = False
-        
+
     async def setup_hook(self): 
         for cog in self.cogList:
             await self.load_extension(cog)
         self.tree.copy_global_to(guild=discord.Object(varStore.iffGuild))
         await self.tree.sync(guild=discord.Object(varStore.iffGuild))
         print("Cogs loaded and tree synced")
-        
+
 bot = MyBot()
 tree = bot.tree
 
@@ -398,7 +398,7 @@ async def on_command_error(ctx, error):
         # All other Errors not returned come here. And we can just print the default TraceBack.
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
-            
+
 # Prints when a guild is joined
 @bot.event
 async def on_guild_join(ctx, error):
@@ -413,7 +413,7 @@ async def on_guild_remove(ctx, error):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     print(f"Bot has left {ctx.guild} at {current_time}")
-    
+
 # For giving return members their roles back
 @bot.event
 async def on_member_remove(member):
@@ -454,7 +454,7 @@ async def on_member_remove(member):
     # Writes the user ID with the following line containing the role id's
     with open(leftMembersFile, "a") as file:
         file.write(str(member.id) + "\n" + roleIds + "\n")
-        
+
 @bot.event
 async def on_member_join(member):
     storageFolder = Path().absolute() / "storage"
@@ -468,9 +468,8 @@ async def on_member_join(member):
             if line.strip() == str(member.id):
                 await iffBotTestChannel.send(f"{member.display_name} has previously been in the IFF server and can have their roles returned with </return_role:1125667822815694950>")
                 break
-        
-    
-    
+
+
 @bot.command()
 @commands.guild_only()
 @commands.is_owner()
@@ -504,14 +503,14 @@ async def sync(
             ret += 1
 
     await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
-    
+
 @bot.command()
 @commands.is_owner()
 async def clear(ctx):
     tree.clear_commands(guild=discord.Object(id = varStore.iffGuild))
     await tree.sync(guild=discord.Object(id = varStore.iffGuild))
     await ctx.reply("Tree cleared")
-    
+
 # Reload cogs command
 @bot.command()
 @commands.is_owner()
